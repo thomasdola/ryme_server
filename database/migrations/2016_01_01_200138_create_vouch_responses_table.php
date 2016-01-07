@@ -14,6 +14,9 @@ class CreateVouchResponsesTable extends Migration
     {
         Schema::create('vouch_responses', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('vouch_id')->unsigned()->index();
+            $table->integer('user_id')->unsigned()->index();
+            $table->boolean('text');
             $table->timestamps();
         });
     }

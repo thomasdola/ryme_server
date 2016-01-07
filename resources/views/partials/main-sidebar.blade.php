@@ -4,16 +4,16 @@
   <section class="sidebar">
 
     <!-- Sidebar user panel (optional) -->
-    <div class="user-panel">
-      <div class="pull-left image">
-        <img src="img/user2-160x160.jpg" class="img-circle" alt="User Image">
-      </div>
-      <div class="pull-left info">
-        <p>Alexander Pierce</p>
-        <!-- Status -->
-        <a href="#"> Profile</a>
-      </div>
-    </div>
+    {{--<div class="user-panel">--}}
+      {{--<div class="pull-left image">--}}
+        {{--<img src="img/user2-160x160.jpg" class="img-circle" alt="User Image">--}}
+      {{--</div>--}}
+      {{--<div class="pull-left info">--}}
+        {{--<p>Alexander Pierce</p>--}}
+        {{--<!-- Status -->--}}
+        {{--<a href="#"> Profile</a>--}}
+      {{--</div>--}}
+    {{--</div>--}}
 
     <!-- search form (Optional) -->
     {{-- <form action="#" method="get" class="sidebar-form">
@@ -28,17 +28,14 @@
 
     <!-- Sidebar Menu -->
     <ul class="sidebar-menu">
-      <li class="header">HEADER</li>
+      <li class="header">NAVIGATION</li>
       <!-- Optionally, you can add icons to the links -->
-      <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-      <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-      <li class="treeview">
-        <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
-        <ul class="treeview-menu">
-          <li><a href="#">Link in level 2</a></li>
-          <li><a href="#">Link in level 2</a></li>
-        </ul>
-      </li>
+      <li class="active"><a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+      <li><a href="{{ route('artists') }}"><i class="fa fa-male"></i> <span>Artists</span></a></li>
+      <li><a href="{{ route('admin.categories.index') }}"><i class="fa fa-list"></i> <span>Categories</span></a></li>
+      <li><a href="{{ route('admin.users.index') }}"><i class="fa fa-group"></i> <span>Users</span></a></li>
+      <li><a href="{{ route('admin.ads.index') }}"><i class="fa fa-money"></i> <span>Ads</span></a></li>
+      <li><a href="{{ route('settings') }}"><i class="fa fa-briefcase"></i> <span>Admin</span></a></li>
     </ul><!-- /.sidebar-menu -->
   </section>
   <!-- /.sidebar -->

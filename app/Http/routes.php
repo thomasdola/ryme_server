@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('pages.welcome');
+//});
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +26,17 @@ Route::get('/', function () {
 |
 */
 
-Route::group(['middleware' => ['web']], function () {
-    //
+Route::group(['middleware' => ['web'], 'prefix'=>'admin'], function () {
+    Route::get('/',['as'=>'dashboard', 'uses'=>'PagesController@dashboard']);
+
+    Route::get('/artists', ['as'=>'artists', 'uses'=>'ArtistsController@index']);
+    Route::get('/artists/show', ['as'=>'artist', 'uses'=>'ArtistsController@show']);
+
+    Route::resource('categories', 'CategoriesController');
+
+    Route::resource('users', 'UsersController');
+
+    Route::resource('ads', 'AdsController');
+
+    Route::get('/settings', ['as'=>'settings', 'uses'=>'AdminController@index']);
 });

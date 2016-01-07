@@ -14,5 +14,13 @@ class Stream extends Model
     /**
      * @var array
      */
-    protected $fillable = ['track_id', 'user_id'];
+    protected $fillable = ['track_id', 'user_id', 'streamable_id', 'streamable_type'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function streamable()
+    {
+        return $this->morphTo();
+    }
 }

@@ -14,5 +14,10 @@ class Photo extends Model
     /**
      * @var array
      */
-    protected $fillable = ['path'];
+    protected $fillable = ['path', 'imageable_id', 'imageable_type'];
+
+    public function imageable()
+    {
+        return $this->morphTo();
+    }
 }

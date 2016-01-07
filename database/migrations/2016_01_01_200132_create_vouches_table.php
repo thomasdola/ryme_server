@@ -14,6 +14,9 @@ class CreateVouchesTable extends Migration
     {
         Schema::create('vouches', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->unsigned()->index();
+            $table->timestamp('start_date');
+            $table->timestamp('end_date');
             $table->timestamps();
         });
     }
