@@ -14,6 +14,7 @@
     <!-- Ionicons -->
     <link rel="stylesheet" href="{{ asset('css/ionicons.min.css') }}">
     <!-- Theme style -->
+    <link rel="stylesheet" href="{{ asset('plugins/select2/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/AdminLTE.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
@@ -88,8 +89,15 @@
     <script src="{{ asset('plugins/jQuery/jQuery-2.1.4.min.js') }}"></script>
     <!-- Bootstrap 3.3.5 -->
     <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('plugins/select2/select2.full.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('js/app.min.js') }}"></script>
+
+    <script>
+      $(function(){
+        $('.select2').select2();
+      });
+    </script>
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
          Both of these plugins are recommended to enhance the

@@ -15,12 +15,17 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->uuid('uuid');
-            $table->string('name');
-            $table->string('stage_name')->unique();
-            $table->string('email')->unique();
+            $table->string('name')->nullable();
+            $table->string('phone');
+            $table->string('country');
+            $table->string('stage_name')->unique()->nullable();
+            $table->string('username')->unique()->nullable();
+            $table->string('type');
+            $table->string('email')->unique()->nullable();
             $table->string('password', 60);
-            $table->integer('number_of_artist_request')->unsigned();
+            $table->integer('role_id')->unsigned()->nullable();
             $table->boolean('is_artist')->default(false);
+            $table->timestamp('is_artist_on')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

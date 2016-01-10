@@ -20,6 +20,7 @@ class CreateTracksTable extends Migration
             $table->timestamp('release_date');
             $table->string('duration');
             $table->integer('user_id')->unsigned()->index();
+            $table->integer('category_id')->unsigned()->index();
             $table->timestamps();
         });
     }

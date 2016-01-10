@@ -15,11 +15,10 @@ class CreateAdsTable extends Migration
         Schema::create('ads', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->string('type');
-            $table->string('schedule');
-            $table->timestamp('started_on');
-            $table->timestamp('ending_on');
+            $table->timestamp('start_date');
+            $table->timestamp('end_date');
             $table->boolean('is_active')->default(false);
+            $table->integer('company_id')->usigned()->index();
             $table->timestamps();
         });
     }

@@ -2,13 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Eureka\Repositories\AdRepository;
+use Eureka\Repositories\CompanyRepository;
+use Illuminate\Http\Request;
 
 class AdsController extends Controller
 {
+
+    /**
+     * @var AdRepository
+     */
+    private $adRepository;
+    /**
+     * @var CompanyRepository
+     */
+    private $companyRepository;
+
+    /**
+     * @param AdRepository $adRepository
+     * @param CompanyRepository $companyRepository
+     */
+    public function __construct(AdRepository $adRepository,
+                                CompanyRepository $companyRepository, CompanyRepository $companyRepository){
+        $this->adRepository = $adRepository;
+        $this->companyRepository = $companyRepository;
+        $this->companyRepository = $companyRepository;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +36,16 @@ class AdsController extends Controller
      */
     public function index()
     {
-        return view('ads.index');
+        $activeAdsCount = $this->adRepository->getActiveAdsCount();
+        $pausedAdsCount = $this->adRepository->getPausedAdsCount();
+        $allAdsCount = $this->adRepository->getAllAdsCount();
+        $allCompanyCount = $this->companyRepository->getAllCompaniesCount();
+        return view('ads.index', [
+            'activeOnes' => $activeAdsCount,
+            'pausedOnes' => $pausedAdsCount,
+            'all' => $allAdsCount,
+            'allCompanies' => $allCompanyCount
+        ]);
     }
 
     /**
@@ -37,29 +66,7 @@ class AdsController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return $this->adRepository->createAd($request->all());
     }
 
     /**
@@ -71,7 +78,7 @@ class AdsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return $this->adRepository->editAd($id, $request->all());
     }
 
     /**
@@ -82,6 +89,6 @@ class AdsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return $this->adRepository->deleteAd($id);
     }
 }

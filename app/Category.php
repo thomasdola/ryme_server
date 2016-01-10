@@ -31,4 +31,12 @@ class Category extends Model
     {
         return $this->morphOne(NotificationChannel::class, 'channelable');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function artists()
+    {
+        return $this->hasMany(User::class, 'user_id');
+    }
 }

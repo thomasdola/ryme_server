@@ -14,7 +14,7 @@ class Track extends Model
     /**
      * @var array
      */
-    protected $fillable = ['uuid', 'title', 'duration', 'release_date', 'user_id', 'slug'];
+    protected $fillable = ['uuid', 'title', 'duration', 'release_date', 'user_id', 'slug', 'category_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
@@ -22,6 +22,14 @@ class Track extends Model
     public function photo()
     {
         return $this->morphOne(Photo::class, 'imageable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function file()
+    {
+        return $this->morphOne(File::class, 'filable');
     }
 
     /**
@@ -45,7 +53,7 @@ class Track extends Model
      */
     public function artist()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
@@ -64,13 +72,27 @@ class Track extends Model
         return $this->morphMany(Stream::class, 'streamable');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
     public function channel()
     {
         return $this->morphOne(NotificationChannel::class, 'channelable');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }

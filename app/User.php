@@ -12,13 +12,18 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'type',
+        'role_id',
         'name',
+        'username',
         'stage_name',
         'email',
         'password',
-        'number_of_artist_request',
         'is_artist',
-        'uuid'
+        'is_artist_on',
+        'uuid',
+        'country',
+        'phone'
     ];
 
     /**
@@ -36,6 +41,14 @@ class User extends Authenticatable
     public function photos()
     {
         return $this->morphMany(Photo::class, 'imageable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function role()
+    {
+        return $this->hasOne(Role::class);
     }
 
     /**
@@ -92,5 +105,13 @@ class User extends Authenticatable
     public function channel()
     {
         return $this->morphOne(NotificationChannel::class, 'channelable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function category()
+    {
+       return $this->belongsTo(Category::class, 'user_id');
     }
 }

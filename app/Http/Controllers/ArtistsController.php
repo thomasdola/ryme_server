@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Eureka\Repositories\ArtistRepository;
+use Eureka\Repositories\TrackRepository;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -9,6 +11,25 @@ use App\Http\Controllers\Controller;
 
 class ArtistsController extends Controller
 {
+
+    /**
+     * @var ArtistRepository
+     */
+    private $artistRepository;
+    /**
+     * @var TrackRepository
+     */
+    private $trackRepository;
+
+    /**
+     * @param ArtistRepository $artistRepository
+     * @param TrackRepository $trackRepository
+     */
+    public function __construct(ArtistRepository $artistRepository,
+                                TrackRepository $trackRepository){
+        $this->artistRepository = $artistRepository;
+        $this->trackRepository = $trackRepository;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,28 +37,18 @@ class ArtistsController extends Controller
      */
     public function index()
     {
-        return view('artists.index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        $artistsJoinedToday = $this->artistRepository->getArtistJoinedTodayCount();
+        $artistsJoinedThisWeek = $this->artistRepository->getArtistsJoinedThisWeekCount();
+        $artistsJoinedThisMonth = $this->artistRepository->getArtistsJoinedThisMonthCount();
+        $allArtistsCount = $this->artistRepository->getAllArtistsCount();
+        $artistsToBe = $this->artistRepository->getArtistToBe();
+        return view('artists.index', [
+            'joinedToday'=>$artistsJoinedToday,
+            'joinedThisWeek'=>$artistsJoinedThisWeek,
+            'joinedThisMonth'=>$artistsJoinedThisMonth,
+            'total'=>$allArtistsCount,
+            'toBe'=>$artistsToBe
+        ]);
     }
 
     /**
@@ -46,42 +57,13 @@ class ArtistsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show($id)
     {
-        return view("artists.show");
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $artist = $this->artistRepository->getArtistWithRelatedData($id);
+        $trendingTracks = $this->trackRepository->getArtistTrendingTracks($id);
+        return view("artists.show", [
+            'artist'=>$artist,
+            'trendingTracks'=>$trendingTracks
+        ]);
     }
 }

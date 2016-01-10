@@ -53,6 +53,92 @@
             </div><!-- /.col -->
         </div>
 
+        <div class="row margin-bottom">
+            <div class="col-md-4">
+                <div class="box collapsed-box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Add Company</h3>
+                        <div class="box-tools">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <form role="form">
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label for="name">Company Name</label>
+                                    <input type="text" class="form-control" id="name" placeholder="Category Name">
+                                </div>
+                            </div><!-- /.box-body -->
+
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <span class="fa fa-plus"></span>
+                                    Add
+                                </button>
+                            </div>
+                        </form>
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+            </div>
+            <div class="col-md-8">
+                <div class="box collapsed-box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Create Ad</h3>
+                        <div class="box-tools">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <form role="form">
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label for="adTitle">Title</label>
+                                    <input type="text" name="title" required class="form-control" id="adTitle" placeholder="Ad Title">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="adStartDate">Starting On</label>
+                                            <input type="text" name="start_date" class="form-control" id="adStartDate"
+                                                   placeholder="Start Date">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="adEndDate">Ending On</label>
+                                            <input type="text" name="end_date" class="form-control" id="adEndDate"
+                                                   placeholder="End Date">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="companyName">Name of Company</label>
+                                    <select type="text" name="company_name" data-placeholder="Select company..."
+                                            class="form-control select2" id="companyName"  style="width: 100%;">
+                                        <option>Alabama</option>
+                                        <option>Alaska</option>
+                                        <option>California</option>
+                                        <option>Delaware</option>
+                                        <option>Tennessee</option>
+                                        <option>Texas</option>
+                                        <option>Washington</option>
+                                    </select>
+                                </div>
+                            </div><!-- /.box-body -->
+
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <span class="fa fa-plus"></span>
+                                    Create
+                                </button>
+                            </div>
+                        </form>
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+            </div>
+        </div>
+
         <div class="row margin">
             <div class="box">
                 <div class="box-header">

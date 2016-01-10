@@ -80,6 +80,7 @@
               <tr>
                 <th>Title</th>
                 <th>Artist(s)</th>
+                <th>Category</th>
                 <th>Streams</th>
                 <th>Download</th>
               </tr>

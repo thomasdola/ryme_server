@@ -37,7 +37,7 @@
                         </div><!-- /.box-body -->
 
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary btn-block">
                                 <span class="fa fa-plus"></span>
                                 Add
                             </button>
@@ -70,7 +70,7 @@
 
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">New Staff</h3>
+                    <h3 class="box-title">Staff Details</h3>
                     <div class="box-tools">
                         <button class="btn btn-box-tool" data-widget="collapse">
                             <i class="fa fa-minus"></i>
@@ -82,22 +82,27 @@
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="name">Staff Name</label>
-                                <input type="text" class="form-control" id="staffName" placeholder="Name">
+                                <input type="text" name="name" class="form-control" id="staffName" placeholder="Name">
                             </div>
                             <div class="form-group">
                                 <label for="name">Staff Email</label>
-                                <input type="email" class="form-control" id="StaffEmail" placeholder="Email">
+                                <input type="email" name="email" class="form-control" id="StaffEmail" placeholder="Email">
                             </div>
                             <div class="form-group">
-                                <label for="name">Password</label>
-                                <input type="password" class="form-control" id="password" placeholder="password">
+                                <label for="staffRole">Role</label>
+                                <select  name="role_id" class="form-control select2"
+                                        id="staffRole"  style="width: 100%;">
+                                    <option>Admin</option>
+                                    <option>Marketing</option>
+                                    <option>Manager</option>
+                                </select>
                             </div>
                         </div><!-- /.box-body -->
 
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-primary">
-                                <span class="fa fa-plus"></span>
-                                Add
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <span class="fa fa-save"></span>
+                                Save
                             </button>
                         </div>
                     </form>
@@ -124,7 +129,18 @@
                             <td>Update software</td>
                             <td>Update software</td>
                             <td>
-                                <button type="button">edit</button>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <button type="button" class="btn btn-xs btn-default">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <button type="button" class="btn btn-xs btn-danger">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     </table>

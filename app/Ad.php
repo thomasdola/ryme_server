@@ -14,7 +14,7 @@ class Ad extends Model
     /**
      * @var array
      */
-    protected $fillable = ['title', 'type', 'schedule', 'started_on', 'ending_on', 'is_active'];
+    protected $fillable = ['title', 'start_date', 'end_date', 'is_active', 'company_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
@@ -22,5 +22,21 @@ class Ad extends Model
     public function streams()
     {
         return $this->morphMany(Stream::class, 'streamable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function file()
+    {
+       return $this->morphOne(File::class, 'filable');
     }
 }

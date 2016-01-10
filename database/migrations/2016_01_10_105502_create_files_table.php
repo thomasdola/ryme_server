@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStaffTable extends Migration
+class CreateFilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,13 +12,11 @@ class CreateStaffTable extends Migration
      */
     public function up()
     {
-        Schema::create('staff', function (Blueprint $table) {
+        Schema::create('files', function (Blueprint $table) {
             $table->increments('id');
-            $table->uuid('uuid');
-            $table->string('name')->unique();
-            $table->string('email')->unique();
-            $table->string('password', 60);
-            $table->rememberToken();
+            $table->string('path');
+            $table->integer('filable_id');
+            $table->string('filable_type');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateStaffTable extends Migration
      */
     public function down()
     {
-        Schema::drop('staff');
+        Schema::drop('files');
     }
 }

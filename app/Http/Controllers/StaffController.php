@@ -2,13 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\Role;
+use Eureka\Repositories\StaffRepository;
+use Illuminate\Http\Request;
 
 class StaffController extends Controller
 {
+
+    /**
+     * @var StaffRepository
+     */
+    private $staffRepository;
+    /**
+     * @var Role
+     */
+    private $role;
+
+    public function __construct(StaffRepository $staffRepository, Role $role){
+        $this->staffRepository = $staffRepository;
+        $this->role = $role;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,17 +30,9 @@ class StaffController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $allStaff = $this->staffRepository->getAllStaffs();
+        $allRolesWithStaff = $this->role->with('staff')->get();
+        return response()->json(['roles'=>$allRolesWithStaff, 'staff'=>$allStaff]);
     }
 
     /**
@@ -37,29 +43,7 @@ class StaffController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return $this->staffRepository->addStaff($request->all());
     }
 
     /**
@@ -71,7 +55,7 @@ class StaffController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return $this->staffRepository->editStaff($request->all(), $id);
     }
 
     /**
@@ -82,6 +66,6 @@ class StaffController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return $this->staffRepository->deleteStaff($id);
     }
 }

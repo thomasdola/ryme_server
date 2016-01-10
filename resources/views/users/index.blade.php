@@ -53,14 +53,40 @@
             </div><!-- /.col -->
         </div>
 
-        <div class="row margin">
-            <div class="input-group col-md-5 col-md-offset-3">
-                <input type="text" class="form-control" placeholder="search for users...">
-                    <span class="input-group-btn">
-                      <button class="btn btn-info btn-flat" type="button">
-                          <span class="fa fa-search"></span>
-                      </button>
-                    </span>
+        {{--<div class="row margin">--}}
+            {{--<div class="input-group col-md-5 col-md-offset-3">--}}
+                {{--<input type="text" class="form-control" placeholder="search for users...">--}}
+                    {{--<span class="input-group-btn">--}}
+                      {{--<button class="btn btn-info btn-flat" type="button">--}}
+                          {{--<span class="fa fa-search"></span>--}}
+                      {{--</button>--}}
+                    {{--</span>--}}
+            {{--</div>--}}
+        {{--</div>--}}
+
+        <div class="row">
+            <div class="col-xs-8 col-xs-offset-2">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Users Joined Today</h3>
+                    </div><!-- /.box-header -->
+                    <div class="box-body table-responsive">
+                        <table class="table table-hover">
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone Number</th>
+                                <th> # Category(ies)</th>
+                                <th> # following(s)</th>
+                            </tr>
+                            <tr>
+                                <td>183</td>
+                                <td>John Doe</td>
+                                <td>John Doe</td>
+                                <td>11-7-2014</td>
+                            </tr>
+                        </table>
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
             </div>
         </div>
     </section>

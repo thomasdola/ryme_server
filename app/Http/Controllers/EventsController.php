@@ -2,23 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Eureka\Repositories\UserRepository;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class UsersController extends Controller
+class EventsController extends Controller
 {
-
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    public function __construct(UserRepository $userRepository){
-        $this->userRepository = $userRepository;
-    }
     /**
      * Display a listing of the resource.
      *
@@ -26,16 +16,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $usersJoinedToday = $this->userRepository->getUsersJoinedTodayCount();
-        $usersJoinedThisWeek = $this->userRepository->getUsersJoinedThisWeekCount();
-        $usersJoinedThisMonth = $this->userRepository->getUsersJoinedThisMonthCount();
-        $allUsers = $this->userRepository->getAllUsersCount();
-        return view('users.index', [
-            'joinedToday' => $usersJoinedToday,
-            'joinedThisWeek' => $usersJoinedThisWeek,
-            'joinedThisMonth' => $usersJoinedThisMonth,
-            'total' => $allUsers
-        ]);
+        //
     }
 
     /**
@@ -65,9 +46,9 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function showProfile()
+    public function show($id)
     {
-       return view('users.profile');
+        //
     }
 
     /**
@@ -101,8 +82,6 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        $this->userRepository->deleteUserById($id);
+        //
     }
-
-    public function searchUserByName(Request $request){}
 }
