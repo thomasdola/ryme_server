@@ -16,7 +16,7 @@ class CreateVouchResponsesTable extends Migration
             $table->increments('id');
             $table->integer('vouch_id')->unsigned()->index();
             $table->integer('user_id')->unsigned()->index();
-            $table->boolean('text');
+            $table->boolean('answer');
             $table->timestamps();
         });
     }

@@ -8,7 +8,7 @@ class NotificationChannel extends Model
 {
     protected $table = 'notification_channels';
 
-    protected $fillable = ['name', 'channelable_id', 'channelable_type'];
+    protected $fillable = ['name', 'uuid', 'channelable_id', 'channelable_type'];
 
     public function channelable()
     {

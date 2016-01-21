@@ -14,7 +14,7 @@ class Ad extends Model
     /**
      * @var array
      */
-    protected $fillable = ['title', 'start_date', 'end_date', 'is_active', 'company_id'];
+    protected $fillable = ['title', 'uuid', 'start_date', 'end_date', 'is_active', 'company_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
@@ -35,8 +35,8 @@ class Ad extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */
-    public function file()
+    public function files()
     {
-       return $this->morphOne(File::class, 'filable');
+       return $this->morphMany(File::class, 'filable');
     }
 }

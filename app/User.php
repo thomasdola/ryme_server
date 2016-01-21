@@ -4,6 +4,10 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * Class User
+ * @package App
+ */
 class User extends Authenticatable
 {
     /**
@@ -14,13 +18,15 @@ class User extends Authenticatable
     protected $fillable = [
         'type',
         'role_id',
+        'category_id',
         'name',
         'username',
         'stage_name',
         'email',
         'password',
         'is_artist',
-        'is_artist_on',
+        'artist_on',
+        'is_request_active',
         'uuid',
         'country',
         'phone'
@@ -36,14 +42,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function photos()
-    {
-        return $this->morphMany(Photo::class, 'imageable');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function role()
@@ -54,15 +52,15 @@ class User extends Authenticatable
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function followers()
+    public function photos()
     {
-        return $this->morphMany(Following::class, 'followable');
+        return $this->morphMany(Photo::class, 'imageable');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function tracks()
+    public function uploadedTracks()
     {
         return $this->hasMany(Track::class, 'user_id');
     }
@@ -70,15 +68,31 @@ class User extends Authenticatable
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function downloads()
+    public function downloadedTracks()
     {
         return $this->belongsToMany(Track::class, 'downloads', 'user_id');
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function streamedTracks()
+    {
+        return $this->hasMany(Stream::class, 'user_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function viewedTracks()
+    {
+        return $this->hasMany(View::class, 'user_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function favorites()
+    public function likedTracks()
     {
         return $this->belongsToMany(Track::class, 'favorites', 'user_id');
     }
@@ -86,17 +100,9 @@ class User extends Authenticatable
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function vouches()
+    public function vouchRequestsSent()
     {
         return $this->hasMany(Vouch::class, 'user_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function vouch_responses()
-    {
-        return $this->belongsToMany(VouchResponse::class, 'vouch_responses', 'user_id');
     }
 
     /**
@@ -112,6 +118,30 @@ class User extends Authenticatable
      */
     public function category()
     {
-       return $this->belongsTo(Category::class, 'user_id');
+       return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function followers()
+    {
+        return $this->morphMany(Following::class, 'followable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function followingCategories()
+    {
+        return $this->morphMany(Following::class, 'followable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function followingArtists()
+    {
+        return $this->morphMany(Following::class, 'followable');
     }
 }

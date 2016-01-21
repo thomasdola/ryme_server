@@ -16,9 +16,7 @@ class CreateTracksTable extends Migration
             $table->increments('id');
             $table->uuid('uuid');
             $table->string('title')->unique();
-            $table->string('slug')->unique();
-            $table->timestamp('release_date');
-            $table->string('duration');
+            $table->timestamp('released_date');
             $table->integer('user_id')->unsigned()->index();
             $table->integer('category_id')->unsigned()->index();
             $table->timestamps();

@@ -4,6 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class View
+ * @package App
+ */
 class View extends Model
 {
     /**
@@ -23,4 +27,13 @@ class View extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 }

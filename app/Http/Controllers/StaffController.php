@@ -4,12 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Role;
+use Eureka\Helpers\Transformers\StaffTransformer;
 use Eureka\Repositories\StaffRepository;
 use Illuminate\Http\Request;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
+use League\Fractal\Serializer\JsonApiSerializer;
 
 class StaffController extends Controller
 {
 
+
+    /**
+     *internal api base url
+     */
+    const BASE_URL = "localhost:8000/api";
+
+    const RESOURCE_KEY = 'staff';
     /**
      * @var StaffRepository
      */
@@ -18,21 +30,46 @@ class StaffController extends Controller
      * @var Role
      */
     private $role;
+    /**
+     * @var Manager
+     */
+    private $fractal;
 
-    public function __construct(StaffRepository $staffRepository, Role $role){
+    /**
+     * @param StaffRepository $staffRepository
+     * @param Role $role
+     * @param Manager $fractal
+     */
+    public function __construct(StaffRepository $staffRepository, Role $role, Manager $fractal){
         $this->staffRepository = $staffRepository;
         $this->role = $role;
+        $this->fractal = $fractal->setSerializer(new JsonApiSerializer(self::BASE_URL));
     }
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Collection
      */
     public function index()
     {
-        $allStaff = $this->staffRepository->getAllStaffs();
-        $allRolesWithStaff = $this->role->with('staff')->get();
-        return response()->json(['roles'=>$allRolesWithStaff, 'staff'=>$allStaff]);
+        $staffs = $this->staffRepository->getAllStaffs();
+        $data =  $this->fractal->createData(
+            new Collection($staffs, new StaffTransformer, self::RESOURCE_KEY))
+            ->toArray();
+        return response()->json($data);
+    }
+
+    /**
+     * @param $id
+     * @return Item
+     */
+    public function show($id)
+    {
+        $staff = $this->staffRepository->getStaffByUuid($id);
+        $data =  $this->fractal->createData(
+            new Item($staff, new StaffTransformer, self::RESOURCE_KEY))
+            ->toArray();
+        return response()->json($data);
     }
 
     /**
@@ -43,7 +80,11 @@ class StaffController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->staffRepository->addStaff($request->all());
+        $staff =  $this->staffRepository->addStaff($request->all());
+        $data = $this->fractal->createData(
+            new Item($staff, new StaffTransformer, self::RESOURCE_KEY))
+            ->toArray();
+        return response()->json($data);
     }
 
     /**
@@ -55,7 +96,11 @@ class StaffController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return $this->staffRepository->editStaff($request->all(), $id);
+        $staff = $this->staffRepository->editStaff($request->all(), $id);
+        $data = $this->fractal->createData(
+            new Item($staff, new StaffTransformer, self::RESOURCE_KEY))
+            ->toArray();
+        return response()->json($data);
     }
 
     /**
@@ -66,6 +111,10 @@ class StaffController extends Controller
      */
     public function destroy($id)
     {
-        return $this->staffRepository->deleteStaff($id);
+        $staff = $this->staffRepository->deleteStaff($id);
+        $data = $this->fractal->createData(
+            new Item($staff, new StaffTransformer, self::RESOURCE_KEY))
+            ->toArray();
+        return response()->json($data);
     }
 }

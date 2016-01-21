@@ -14,6 +14,7 @@ class CreateAdsTable extends Migration
     {
         Schema::create('ads', function (Blueprint $table) {
             $table->increments('id');
+            $table->uuid('uuid');
             $table->string('title');
             $table->timestamp('start_date');
             $table->timestamp('end_date');

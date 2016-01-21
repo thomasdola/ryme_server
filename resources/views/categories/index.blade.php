@@ -26,22 +26,30 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <form role="form">
+                    <form role="form" @submit.prevent="saveCategory">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="name">Category Name</label>
-                                <input type="text" class="form-control" id="name" placeholder="Category Name">
+                                <input v-model="newCategory.name"
+                                       type="text"
+                                       class="form-control"
+                                       id="name"
+                                       placeholder="Category Name">
                             </div>
+
                         </div><!-- /.box-body -->
 
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary btn-block">
                                 <span class="fa fa-plus"></span>
                                 Create
                             </button>
                         </div>
                     </form>
                 </div><!-- /.box-body -->
+                <div class="overlay" v-show="newCategory.saving">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
             </div><!-- /.box -->
 
             <div class="box">
@@ -52,73 +60,21 @@
                     </div>
                 </div>
                 <div class="box-body no-padding">
-                    <ul class="nav nav-pills nav-stacked">
-                        <li class="active">
-                            <a href="#">
-                                <i class="fa fa-box"></i>
-                                Dancehall
-                                <span class="label label-danger pull-right">12 k</span>
-                            </a>
-                        </li>
-                    </ul>
+                    <category-list :categories="categories" :active="active"></category-list>
                 </div><!-- /.box-body -->
             </div><!-- /. box -->
 
         </div><!-- /.col -->
         <div class="col-md-9">
 
-            <div class="nav-tabs-custom">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#trending_tracks" data-toggle="tab">Trending Tracks</a></li>
-                    <li><a href="#trending_artists" data-toggle="tab">Trending Artists</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="trending_tracks">
-                        <div class="table-responsive mailbox-messages">
-                            <table class="table table-hover table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Artist(s)</th>
-                                        <th>Stream(s)</th>
-                                        <th>Download(s)</th>
-                                        <th>Favorite(s)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
-                                    <td class="mailbox-subject"><b>AdminLTE 2.0 Issue</b> - Trying to find a solution to this problem...</td>
-                                    <td class="mailbox-attachment"></td>
-                                </tr>
-                                </tbody>
-                            </table><!-- /.table -->
-                        </div>
-                    </div><!-- /.tab-pane -->
-                    <div class="tab-pane" id="trending_artists">
-                        <div class="table-responsive mailbox-messages">
-                            <table class="table table-hover table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>followers</th>
-                                        <th>tracks</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
-                                    <td class="mailbox-subject">AdminLTE 2.0 Issue</td>
-                                    <td class="mailbox-attachment"></td>
-                                </tr>
-                                </tbody>
-                            </table><!-- /.table -->
-                        </div>
-                    </div><!-- /.tab-pane -->
-                </div><!-- /.tab-content -->
-            </div>
+            <category-detail :active.sync="active"></category-detail>
 
         </div><!-- /.col -->
     </div><!-- /.row -->
 </section><!-- /.content -->
+@endsection
+
+@section('scripts')
+
+    <script src="{{ asset('js/categories.js') }}"></script>
 @endsection

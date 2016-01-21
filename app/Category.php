@@ -14,7 +14,7 @@ class Category extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'uuid'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
@@ -29,7 +29,7 @@ class Category extends Model
      */
     public function channel()
     {
-        return $this->morphOne(NotificationChannel::class, 'channelable');
+        return $this->morphMany(NotificationChannel::class, 'channelable');
     }
 
     /**
@@ -37,6 +37,14 @@ class Category extends Model
      */
     public function artists()
     {
-        return $this->hasMany(User::class, 'user_id');
+        return $this->hasMany(User::class, 'category_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tracks()
+    {
+        return $this->hasMany(Track::class, 'category_id');
     }
 }

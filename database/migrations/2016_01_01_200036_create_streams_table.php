@@ -14,7 +14,6 @@ class CreateStreamsTable extends Migration
     {
         Schema::create('streams', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('track_id')->unsigned()->index();
             $table->integer('user_id')->unsigned()->index();
             $table->integer('streamable_id');
             $table->string('streamable_type');

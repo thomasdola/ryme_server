@@ -16,14 +16,14 @@ class Event extends Model
     /**
      * @var array
      */
-    protected $fillable = ['title', 'description', 'time', 'date', 'started_on', 'ending_on', 'is_active'];
+    protected $fillable = ['title', 'uuid', 'description', 'time', 'date', 'start_date', 'end_date', 'is_active'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */
-    public function photo()
+    public function photos()
     {
-        return $this->morphOne(Photo::class, 'imageable');
+        return $this->morphMany(Photo::class, 'imageable');
     }
 
     public function views()

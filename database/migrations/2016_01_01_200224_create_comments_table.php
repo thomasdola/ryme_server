@@ -16,8 +16,7 @@ class CreateCommentsTable extends Migration
             $table->increments('id');
             $table->text('body');
             $table->integer('user_id')->unsigned()->index();
-            $table->integer('commentable_id')->unsigned()->index();
-            $table->string('commentable_type');
+            $table->integer('track_id')->unsigned()->index();
             $table->timestamps();
         });
     }

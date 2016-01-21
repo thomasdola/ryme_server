@@ -6,7 +6,7 @@ use App\Http\Requests;
 use Eureka\Repositories\ArtistRepository;
 use Eureka\Repositories\CategoryRepository;
 use Eureka\Repositories\TrackRepository;
-use Illuminate\Http\Request;
+use League\Fractal\Manager;
 
 /**
  * Class CategoriesController
@@ -26,20 +26,28 @@ class CategoriesController extends Controller
      * @var CategoryRepository
      */
     private $categoryRepository;
+    /**
+     * @var Manager
+     */
+    private $fractal;
 
     /**
      * @param CategoryRepository $categoryRepository
      * @param ArtistRepository $artistRepository
+     * @param Manager $fractal
      * @param TrackRepository $trackRepository
      * @internal param Category $category
      */
     public function __construct(CategoryRepository $categoryRepository,
                                 ArtistRepository $artistRepository,
-                                TrackRepository $trackRepository){
+                                TrackRepository $trackRepository)
+    {
         $this->artistRepository = $artistRepository;
         $this->trackRepository = $trackRepository;
         $this->categoryRepository = $categoryRepository;
+
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -47,17 +55,9 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $categories = $this->categoryRepository->getAll();
-        return view('categories.index')->withCategories($categories);
+        return view('categories.index');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
-     */
-    public function getCategories()
-    {
-        return $this->categoryRepository->getAll();
-    }
 
     /**
      * @param $id
@@ -65,47 +65,12 @@ class CategoriesController extends Controller
     public function getCategory($id)
     {
         $category = $this->categoryRepository->getCategory($id);
-        $trendingArtists = $this->categoryRepository->getCategoryTrendingArtists($category->id);
+        $trendingArtists = $this->categoryRepository->getTrendingArtistsByCategory($category->id);
         $trendingTracks = $this->categoryRepository->getCategoryTrendingTracks($category->id);
         return response()->json([
-            'category'=>$category,
-            'trendingTracks'=>$trendingTracks,
-            'trendingArtists'=>$trendingArtists
+            'category' => $category,
+            'trendingTracks' => $trendingTracks,
+            'trendingArtists' => $trendingArtists
         ]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        return $this->categoryRepository->addCategory($request->all());
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        return $this->categoryRepository->updateCategory($id, $request->all());
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $deletedCategory = $this->categoryRepository->deleteCategory($id);
-        return response()->json($deletedCategory);
     }
 }

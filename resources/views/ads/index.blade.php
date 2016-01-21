@@ -63,11 +63,14 @@
                         </div>
                     </div>
                     <div class="box-body">
-                        <form role="form">
+                        <form role="form" @submit.prevent="saveCompany">
                             <div class="box-body">
                                 <div class="form-group">
                                     <label for="name">Company Name</label>
-                                    <input type="text" class="form-control" id="name" placeholder="Category Name">
+                                    <input
+                                            v-model="newCompany.name"
+                                            type="text" class="form-control"
+                                            id="name" placeholder="Category Name">
                                 </div>
                             </div><!-- /.box-body -->
 
@@ -79,6 +82,9 @@
                             </div>
                         </form>
                     </div><!-- /.box-body -->
+                    <div class="overlay" v-show="savingCompany">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
                 </div><!-- /.box -->
             </div>
             <div class="col-md-8">
@@ -86,44 +92,53 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">Create Ad</h3>
                         <div class="box-tools">
-                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            <button class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="box-body">
-                        <form role="form">
+                        <form role="form" @submit.prevent="saveAd">
                             <div class="box-body">
                                 <div class="form-group">
                                     <label for="adTitle">Title</label>
-                                    <input type="text" name="title" required class="form-control" id="adTitle" placeholder="Ad Title">
+                                    <input v-model="newAd.title" type="text"
+                                           name="title" required class="form-control"
+                                           id="adTitle" placeholder="Ad Title">
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="adStartDate">Starting On</label>
-                                            <input type="text" name="start_date" class="form-control" id="adStartDate"
-                                                   placeholder="Start Date">
+                                            <input required v-model="newAd.startDate" type="date"
+                                                   name="start_date" class="form-control"
+                                                   id="adStartDate" placeholder="Start Date">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="adEndDate">Ending On</label>
-                                            <input type="text" name="end_date" class="form-control" id="adEndDate"
-                                                   placeholder="End Date">
+                                            <input required v-model="newAd.endDate" type="date"
+                                                   name="end_date" class="form-control"
+                                                   id="adEndDate" placeholder="End Date">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="companyName">Name of Company</label>
-                                    <select type="text" name="company_name" data-placeholder="Select company..."
-                                            class="form-control select2" id="companyName"  style="width: 100%;">
-                                        <option>Alabama</option>
-                                        <option>Alaska</option>
-                                        <option>California</option>
-                                        <option>Delaware</option>
-                                        <option>Tennessee</option>
-                                        <option>Texas</option>
-                                        <option>Washington</option>
+                                    <select required v-model="newAd.company_id" name="company_name"
+                                            data-placeholder="Select company..."
+                                            class="form-control" id="companyName"  style="width: 100%;">
+                                        <option v-for="company in companies"
+                                                :value="company.id">
+                                            @{{ company.name | capitalize }}
+                                        </option>
                                     </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="audio">Ad Audio file</label>
+                                    <input required v-el:audio type="file"
+                                           name="audio" id="audio" class="form-control">
                                 </div>
                             </div><!-- /.box-body -->
 
@@ -135,6 +150,9 @@
                             </div>
                         </form>
                     </div><!-- /.box-body -->
+                    <div class="overlay" v-show="savingAd">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
                 </div><!-- /.box -->
             </div>
         </div>
@@ -169,4 +187,8 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('scripts')
+    <script src="{{ asset('js/companies.js') }}"></script>
 @endsection

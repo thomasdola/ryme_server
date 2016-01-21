@@ -19,9 +19,9 @@ class Vouch extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function vouch_responses()
+    public function responses()
     {
-        return $this->belongsToMany(VouchResponse::class, 'vouch_responses', 'vouch_id');
+        return $this->hasMany(VouchResponse::class, 'vouch_id');
     }
 
     /**
@@ -34,6 +34,6 @@ class Vouch extends Model
 
     public function channel()
     {
-        return $this->morphOne(NotificationChannel::class, 'channelable');
+        return $this->morphMany(NotificationChannel::class, 'channelable');
     }
 }

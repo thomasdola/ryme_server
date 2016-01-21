@@ -28,11 +28,11 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <form role="form">
+                    <form role="form" @submit.prevent="saveRole">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="name">Role Title</label>
-                                <input type="text" class="form-control" id="name" placeholder="Role Title">
+                                <input v-model="newRole.title" type="text" class="form-control" id="name" placeholder="Role Title">
                             </div>
                         </div><!-- /.box-body -->
 
@@ -57,11 +57,13 @@
                 </div>
                 <div class="box-body no-padding">
                     <ul class="nav nav-pills nav-stacked">
-                        <li class="active">
+                        <li class="active" v-for="role in roles">
                             <a href="#">
                                 <i class="fa fa-user"></i>
-                                Role Title
-                                <span class="label label-danger pull-right">12</span>
+                                @{{ role.title | capitalize }}
+                                <span class="label label-danger pull-right">
+                                    @{{ role.staff | abbreviate }}
+                                </span>
                             </a>
                         </li>
                     </ul>
@@ -78,23 +80,38 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <form role="form">
+                    <form role="form" @submit.prevent="saveStaff">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="name">Staff Name</label>
-                                <input type="text" name="name" class="form-control" id="staffName" placeholder="Name">
+                                <input v-model="newStaff.name"
+                                       required
+                                       type="text"
+                                       name="name"
+                                       class="form-control"
+                                       id="staffName"
+                                       placeholder="Name">
                             </div>
                             <div class="form-group">
                                 <label for="name">Staff Email</label>
-                                <input type="email" name="email" class="form-control" id="StaffEmail" placeholder="Email">
+                                <input v-model="newStaff.email"
+                                       required
+                                       type="email" name="email"
+                                       class="form-control"
+                                       id="StaffEmail"
+                                       placeholder="Email">
                             </div>
                             <div class="form-group">
                                 <label for="staffRole">Role</label>
-                                <select  name="role_id" class="form-control select2"
+                                <select v-model="newStaff.role_id"
+                                        required
+                                        name="role_id"
+                                        class="form-control"
                                         id="staffRole"  style="width: 100%;">
-                                    <option>Admin</option>
-                                    <option>Marketing</option>
-                                    <option>Manager</option>
+                                    <option v-for="role in roles"
+                                            :value="role.id">
+                                        @{{ role.title | capitalize }}
+                                    </option>
                                 </select>
                             </div>
                         </div><!-- /.box-body -->
@@ -117,37 +134,15 @@
                     <h3 class="box-title">Staff</h3>
                 </div><!-- /.box-header -->
                 <div class="box-body no-padding">
-                    <table class="table table-striped">
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Action</th>
-                        </tr>
-                        <tr>
-                            <td>Update software</td>
-                            <td>Update software</td>
-                            <td>Update software</td>
-                            <td>
-                                <div class="row">
-                                    <div class="col-xs-6">
-                                        <button type="button" class="btn btn-xs btn-default">
-                                            <i class="fa fa-pencil"></i>
-                                        </button>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <button type="button" class="btn btn-xs btn-danger">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
+                    <staff-table :staffs="staffs" :roles="roles"></staff-table>
                 </div><!-- /.box-body -->
             </div>
 
         </div><!-- /.col -->
     </div><!-- /.row -->
 </section><!-- /.content -->
+@endsection
+
+@section('scripts')
+    <script src="{{ asset('js/admin.js') }}"></script>
 @endsection

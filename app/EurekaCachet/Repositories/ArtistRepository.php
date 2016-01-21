@@ -38,12 +38,25 @@ class ArtistRepository
      */
     public function getTrendingArtists()
     {
-        $artists = $this->user ->has('tracks')->take(10)->get();
-        $artists = $artists->sortByDesc(function($artist)
-        {
-            return $artist->tracks->streams->count();
+        $artists = $this->user
+            ->with(['photos', 'tracks', 'followers'])
+            ->has('tracks')
+            ->get();
+//        $artists = $artists->sortByDesc(function($artist)
+//        {
+//            return $artist->followers->count();
+//        });
+        return $artists->take(50);
+    }
+
+    public function getTrendingArtistsByCategory($id)
+    {
+        $artists = $this->user->with('tracks', 'photos', 'category', 'followers')
+            ->has('tracks')->where('category_id', $id)->get();
+        $trendingOnes = $artists->sortByDesc(function($artist){
+            return $artist->followers->count();
         });
-        return $artists;
+        return $trendingOnes;
     }
 
     /**
@@ -82,9 +95,9 @@ class ArtistRepository
 
     private function getRecentJoinedArtists($startDate, $endDate)
     {
-        return $this->user->whereNotNull('is_artist_on')
-            ->whereBetween('is_artist_on', [$startDate, $endDate])
-            ->orderBy('is_artist_on', 'desc')
+        return $this->user->where('is_artist', true)
+            ->whereBetween('artist_on', [$startDate, $endDate])
+            ->orderBy('artist_on', 'desc')
             ->get();
     }
 
@@ -96,9 +109,9 @@ class ArtistRepository
             ->count();
     }
 
-    public function getArtistWithRelatedData($id)
+    public function getArtist($id)
     {
-        return $this->user->find($id)
-            ->load('photos', 'tracks', 'followers', 'category');
+        return $this->user->with('photos', 'tracks', 'followers', 'category')
+            ->where('uuid', $id)->first();
     }
 }

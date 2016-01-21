@@ -56,7 +56,7 @@ class UserRepository
     {
         return $this->user->whereBetween('created_at', [$startDate, $endDate])
             ->orderBy('created_at', 'desc')
-            ->take(50)->get();
+            ->get();
     }
 
     public function getUsersJoinedThisWeekCount()

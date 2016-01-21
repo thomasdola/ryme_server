@@ -11,10 +11,15 @@ class Comment extends Model
      */
     protected $table = 'comments';
 
-    protected $fillable = ['body', 'user_id', 'commentable_id', 'commentable_type'];
+    protected $fillable = ['body', 'user_id', 'track_id'];
 
-    public function commentable()
+    public function user()
     {
-        return $this->morphTo();
+        return $this->belongsTo(User::class);
+    }
+
+    public function track()
+    {
+        return $this->belongsTo(Track::class);
     }
 }

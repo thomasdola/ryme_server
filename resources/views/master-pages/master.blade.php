@@ -92,6 +92,7 @@
     <script src="{{ asset('plugins/select2/select2.full.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('js/app.min.js') }}"></script>
+    @yield('scripts')
 
     <script>
       $(function(){

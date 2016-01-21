@@ -24,11 +24,18 @@ class TrackRepository
      */
     private $user;
 
+    /**
+     * @param Track $track
+     * @param User $user
+     */
     public function __construct(Track $track, User $user){
         $this->track = $track;
         $this->user = $user;
     }
 
+    /**
+     * @return mixed
+     */
     public function getTrendingTracks()
     {
         $tracks = $this->track->has('streams')->take(50)->get();
@@ -36,19 +43,42 @@ class TrackRepository
         {
             return $track->streams->count();
         });
-        return $tracks;
+        return $tracks->load('streams', 'artist', 'category', 'download', 'favorites', 'comments');
     }
 
+    /**
+     * @return int
+     */
     public function getAllTracksCount()
     {
         return $this->track->all()->count();
     }
 
-    public function getArtistTrendingTracks($id)
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getTrendingTracksByArtist($id)
     {
-        $artist = $this->user->find($id);
-        return $artist->tracks->sortDescBy(function($track){
+        $tracks = $this->track->with('artist', 'favorites', 'streams', 'downloads', 'comments')
+            ->where('artist_id', $id)->get();
+        $tracks = $tracks->sortByDesc(function ($track) {
             return $track->streams->count();
         });
+        return $tracks;
+    }
+
+    /**
+     * @param $id
+     * @return static
+     */
+    public function getTrendingTracksByCategory($id)
+    {
+        $tracks = $this->track->with('artist', 'favorites', 'streams', 'downloads', 'comments')
+            ->where('category_id', $id)->get();
+        $trendingOnes = $tracks->sortByDesc(function($track){
+            return $track->streams->count();
+        });
+        return $trendingOnes;
     }
 }

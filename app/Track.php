@@ -14,7 +14,23 @@ class Track extends Model
     /**
      * @var array
      */
-    protected $fillable = ['uuid', 'title', 'duration', 'release_date', 'user_id', 'slug', 'category_id'];
+    protected $fillable = ['uuid', 'title', 'released_date', 'user_id', 'category_id'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function artist()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
@@ -41,35 +57,27 @@ class Track extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function downloads()
-    {
-        return $this->belongsToMany(User::class, 'downloads');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function artist()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function favorites()
-    {
-        return $this->belongsToMany(User::class, 'favorites');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function streams()
     {
         return $this->morphMany(Stream::class, 'streamable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function usersWhoDownloaded()
+    {
+        return $this->belongsToMany(User::class, 'downloads');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function usersWhoLiked()
+    {
+        return $this->belongsToMany(User::class, 'favorites');
     }
 
     /**
@@ -85,14 +93,6 @@ class Track extends Model
      */
     public function comments()
     {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function category()
-    {
-        return $this->belongsTo(Category::class, 'category_id');
+        return $this->hasMany(Comment::class);
     }
 }

@@ -14,6 +14,10 @@ class CreateNotificationChannelsTable extends Migration
     {
         Schema::create('notification_channels', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('channelable_id')->index();
+            $table->string('channelable_type');
+            $table->uuid('name');
+            $table->uuid('uuid');
             $table->timestamps();
         });
     }
