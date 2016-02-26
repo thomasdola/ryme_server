@@ -14,7 +14,7 @@ class Vouch extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'start_date', 'end_date', 'is_active'];
+    protected $fillable = ['user_id', 'start_date', 'end_date', 'is_active', 'uuid'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

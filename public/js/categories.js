@@ -11760,19 +11760,7 @@ new _vue2.default({
             name: '',
             saving: false
         },
-        categories: [{
-            name: 'dancehall',
-            followers: 10000000
-        }, {
-            name: 'highlife',
-            followers: 10000000
-        }, {
-            name: 'hip hop',
-            followers: 10000000
-        }, {
-            name: 'gospel',
-            followers: 10000000
-        }],
+        categories: [],
         active: {}
     },
     methods: {
@@ -11780,22 +11768,41 @@ new _vue2.default({
             var text = this.newCategory.name.trim();
             if (text) {
                 this.newCategory.saving = true;
+                this.$http.post("internal/categories", { name: text }).then(function (response) {
+                    console.log(response);
+                    this.getAllCategories();
+                    this.newCategory.saving = false;
+                }, function (response) {
+                    console.log(response);
+                    this.newCategory.saving = false;
+                });
                 console.log(text);
                 this.newCategory.name = '';
             }
         },
         setActiveCategory: function setActiveCategory(category) {
+            console.log("initial active => " + category.name);
             this.active = category;
+        },
+        getAllCategories: function getAllCategories() {
+            this.$http.get("internal/categories").then(function (response) {
+                this.categories = response.data.categories;
+                this.setActiveCategory(this.categories[0]);
+                this.$emit('initial-active-category', this.active);
+                console.log(response.data.categories);
+            }, function (response) {
+                console.log(response);
+            });
         }
     },
-    computed: {},
     created: function created() {
-        this.setActiveCategory(this.categories[0]);
-        this.$emit('initial-active-category', this.active);
-        console.log('main component created');
+        this.getAllCategories();
+        console.log('main category component is now created');
     },
+
+    computed: {},
     ready: function ready() {
-        console.log('main component is now ready');
+        console.log('main category component is now ready');
     },
 
     events: {
@@ -11841,7 +11848,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "C:\\Users\\GURU\\Documents\\projects\\ryme\\ryme\\resources\\assets\\js\\components\\category.vue"
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\category.vue"
   module.hot.dispose(function () {
     require("vueify-insert-css").cache["\n"] = false
     document.head.removeChild(__vueify_style__)
@@ -11856,37 +11863,46 @@ if (module.hot) {(function () {  module.hot.accept()
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+				value: true
 });
 exports.default = {
-    props: ['active'],
-    methods: {},
-    computed: {},
-    data: function data() {
-        return {};
-    },
-    ready: function ready() {
-        console.log(this.active.name + " from active detail");
-    },
+				props: ['active'],
+				methods: {
+								getCategory: function getCategory(category) {
+												this.$http.get("internal/categories/{id}", { id: category.id }).then(function (response) {
+																this.tracks = response.data.trendingTracks;
+																this.artists = response.data.trendingArtists;
+												}, function (response) {});
+								}
+				},
+				computed: {},
+				data: function data() {
+								return {
+												tracks: [],
+												artists: []
+								};
+				},
+				ready: function ready() {},
 
-    watch: {
-        'active': function active(category) {
-            this.$emit('category-changed', category);
-        }
-    },
-    events: {
-        'category-changed': function categoryChanged(category) {
-            console.log('got ' + category.name);
-        }
-    }
+				watch: {
+								'active': function active(category) {
+												this.$emit('category-changed', category);
+								}
+				},
+				events: {
+								'category-changed': function categoryChanged(category) {
+												console.log('got ' + category.name);
+												this.getCategory(category);
+								}
+				}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"nav-tabs-custom\">\n        <ul class=\"nav nav-tabs\">\n            <li class=\"active\"><a href=\"#trending_tracks\" data-toggle=\"tab\">Trending Tracks</a></li>\n            <li><a href=\"#trending_artists\" data-toggle=\"tab\">Trending Artists</a></li>\n        </ul>\n        <div class=\"tab-content\">\n            <div class=\"tab-pane active\" id=\"trending_tracks\">\n                <div class=\"table-responsive mailbox-messages\">\n                    <table class=\"table table-hover table-striped\">\n                        <thead>\n                            <tr>\n                                <th>Title</th>\n                                <th>Artist(s)</th>\n                                <th>Stream(s)</th>\n                                <th>Download(s)</th>\n                                <th>Favorite(s)</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                        <tr>\n                            <td><a href=\"#\">thomas</a></td>\n                            <td>thomas</td>\n                            <td>20</td>\n                            <td>20</td>\n                            <td>20</td>\n                        </tr>\n                        </tbody>\n                    </table><!-- /.table -->\n                </div>\n            </div><!-- /.tab-pane -->\n            <div class=\"tab-pane\" id=\"trending_artists\">\n                <div class=\"table-responsive mailbox-messages\">\n                    <table class=\"table table-hover table-striped\">\n                        <thead>\n                            <tr>\n                                <th>Name</th>\n                                <th>followers</th>\n                                <th>tracks</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                        <tr>\n                            <td><a href=\"#\">thomas</a></td>\n                            <td>20</td>\n                            <td>20</td>\n                        </tr>\n                        </tbody>\n                    </table><!-- /.table -->\n                </div>\n            </div><!-- /.tab-pane -->\n        </div><!-- /.tab-content -->\n    </div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"nav-tabs-custom\">\n        <ul class=\"nav nav-tabs\">\n            <li class=\"active\"><a href=\"#trending_tracks\" data-toggle=\"tab\">Trending Tracks</a></li>\n            <li><a href=\"#trending_artists\" data-toggle=\"tab\">Trending Artists</a></li>\n        </ul>\n        <div class=\"tab-content\">\n            <div class=\"tab-pane active\" id=\"trending_tracks\">\n                <div class=\"table-responsive mailbox-messages\">\n                    <table class=\"table table-hover table-striped\">\n                        <thead>\n                            <tr>\n                                <th>Title</th>\n                                <th>Artist(s)</th>\n                                <th>Stream(s)</th>\n                                <th>Download(s)</th>\n                                <th>Favorite(s)</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                        <tr v-for=\"track in tracks\">\n                            <td><a href=\"#\">{{track.artist}}</a></td>\n                            <td>{{track.artist}}</td>\n                            <td>{{track.streams}}</td>\n                            <td>{{track.downloads}}</td>\n                            <td>{{track.likes}}</td>\n                        </tr>\n                        </tbody>\n                    </table><!-- /.table -->\n                </div>\n            </div><!-- /.tab-pane -->\n            <div class=\"tab-pane\" id=\"trending_artists\">\n                <div class=\"table-responsive mailbox-messages\">\n                    <table class=\"table table-hover table-striped\">\n                        <thead>\n                            <tr>\n                                <th>Name</th>\n                                <th>followers</th>\n                                <th>tracks</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                        <tr v-for=\"artist in artists\">\n                            <td><a href=\"#\">{{artist.name}}</a></td>\n                            <td>{{artist.followers}}</td>\n                            <td>{{artist.tracks}}</td>\n                        </tr>\n                        </tbody>\n                    </table><!-- /.table -->\n                </div>\n            </div><!-- /.tab-pane -->\n        </div><!-- /.tab-content -->\n    </div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "C:\\Users\\GURU\\Documents\\projects\\ryme\\ryme\\resources\\assets\\js\\components\\category_detail.vue"
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\category_detail.vue"
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {
@@ -11930,7 +11946,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "C:\\Users\\GURU\\Documents\\projects\\ryme\\ryme\\resources\\assets\\js\\components\\category_list.vue"
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\category_list.vue"
   module.hot.dispose(function () {
     require("vueify-insert-css").cache["\n\n"] = false
     document.head.removeChild(__vueify_style__)

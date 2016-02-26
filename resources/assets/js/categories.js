@@ -17,24 +17,7 @@ new Vue({
             name: '',
             saving: false
         },
-        categories: [
-            {
-                name: 'dancehall',
-                followers: 10000000
-            },
-            {
-                name: 'highlife',
-                followers: 10000000
-            },
-            {
-                name: 'hip hop',
-                followers: 10000000
-            },
-            {
-                name: 'gospel',
-                followers: 10000000
-            },
-        ],
+        categories: [],
         active: {}
     },
     methods: {
@@ -42,22 +25,42 @@ new Vue({
             var text = this.newCategory.name.trim();
             if(text){
                 this.newCategory.saving = true;
+                this.$http.post("internal/categories", {name: text})
+                    .then(function(response){
+                        console.log(response);
+                        this.getAllCategories();
+                        this.newCategory.saving = false;
+                }, function(response){
+                        console.log(response);
+                        this.newCategory.saving = false;
+                });
                 console.log(text);
                 this.newCategory.name = '';
             }
         },
         setActiveCategory(category){
+            console.log("initial active => " + category.name);
             this.active = category;
+        },
+        getAllCategories(){
+            this.$http.get("internal/categories")
+                .then(function(response){
+                    this.categories = response.data.categories;
+                    this.setActiveCategory(this.categories[0]);
+                    this.$emit('initial-active-category', this.active);
+                    console.log(response.data.categories);
+                }, function(response){
+                    console.log(response)
+                })
         }
     },
-    computed: {},
     created(){
-        this.setActiveCategory(this.categories[0]);
-        this.$emit('initial-active-category', this.active);
-        console.log('main component created');
+        this.getAllCategories();
+        console.log('main category component is now created');
     },
+    computed: {},
     ready(){
-        console.log('main component is now ready');
+        console.log('main category component is now ready');
     },
     events: {
         'category-changed': function(category){

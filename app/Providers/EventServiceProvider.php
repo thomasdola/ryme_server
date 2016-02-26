@@ -19,12 +19,18 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\VouchRequestSent' => [
             'App\Listeners\HandleRequest',
         ],
+        'App\Events\VouchWasAnswered' => [
+            'App\Listeners\NotifyRequestSender'
+        ],
         'App\Events\ArtistJoined' => [
             'App\Listeners\HandleArtist',
         ],
         'App\Events\TrackUploaded' => [
             'App\Listeners\HandleTrack',
         ],
+        'App\Events\UserCreated' => [
+            'App\Listeners\SendOtp'
+        ]
     ];
 
     /**

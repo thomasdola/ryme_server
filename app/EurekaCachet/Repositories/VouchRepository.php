@@ -12,6 +12,10 @@ namespace Eureka\Repositories;
 use App\Vouch;
 use App\VouchResponse;
 
+/**
+ * Class VouchRepository
+ * @package Eureka\Repositories
+ */
 class VouchRepository
 {
 
@@ -24,15 +28,31 @@ class VouchRepository
      */
     private $vouchResponse;
 
+    /**
+     * @param Vouch $vouch
+     * @param VouchResponse $vouchResponse
+     */
     public function __construct(Vouch $vouch, VouchResponse $vouchResponse){
         $this->vouch = $vouch;
         $this->vouchResponse = $vouchResponse;
     }
 
+    /**
+     * @return mixed
+     */
     public function getRecentRequests()
     {
         return $this->vouch->where('is_active', true)
             ->orderBy('created_at', 'desc')
             ->get();
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getVouch($id)
+    {
+        return $this->vouch->where('uuid', $id)->first();
     }
 }

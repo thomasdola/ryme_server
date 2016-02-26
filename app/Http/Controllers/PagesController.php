@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Jobs\UploadTrack;
 use Eureka\Repositories\AdRepository;
 use Eureka\Repositories\ArtistRepository;
 use Eureka\Repositories\TrackRepository;
 use Eureka\Repositories\UserRepository;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\JsonApiSerializer;
 
@@ -50,8 +53,32 @@ class PagesController extends Controller
         $this->trackRepository = $trackRepository;
         $this->manager = $manager->setSerializer(new JsonApiSerializer());
     }
-    public function dashboard()
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function dashboard(Request $request)
     {
+
+//        dd($request->all());
+        $data = [
+            'title'=>'Kai Kai',
+            'album'=>null,
+            'category_id'=>'2',
+            'cover'=>'cover.jpeg',
+            'released_date'=>'10/02/2016'
+        ];
+
+//        dd(mt_rand(1000, 9999));
+
+        $audioData = collect($data);
+//        $artist = Auth::user();
+
+//        ArtistActivitiesService::using($artist)->uploadTrack($audioData);
+//        $uploadTrack = new UploadTrack($audioData);
+//        $this->dispatch($uploadTrack);
+//        dd(Auth::user());
         return view('pages.welcome', ['tracks'=>[]]);
     }
 

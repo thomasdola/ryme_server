@@ -14,12 +14,12 @@ class Track extends Model
     /**
      * @var array
      */
-    protected $fillable = ['uuid', 'title', 'released_date', 'user_id', 'category_id'];
+    protected $fillable = ['uuid', 'title', 'released_date', 'user_id', 'category_id', 'album', 'length', 'downloadable'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function artist()
+    public function author()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -27,7 +27,7 @@ class Track extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function category()
+    public function genre()
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
@@ -35,7 +35,7 @@ class Track extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */
-    public function photo()
+    public function cover()
     {
         return $this->morphOne(Photo::class, 'imageable');
     }

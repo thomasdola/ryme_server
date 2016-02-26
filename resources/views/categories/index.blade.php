@@ -47,7 +47,7 @@
                         </div>
                     </form>
                 </div><!-- /.box-body -->
-                <div class="overlay" v-show="newCategory.saving">
+                <div class="overlay" v-if="newCategory.saving">
                     <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div><!-- /.box -->

@@ -39,7 +39,9 @@ class CategoryRepository
      */
     public function getAll()
     {
-        return $this->category->with('artists', 'followers', 'tracks')->get();
+        return $this->category
+//            ->with('artists', 'followers', 'tracks')
+            ->all();
     }
 
     /**

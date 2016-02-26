@@ -123,7 +123,7 @@ $factory->define(App\Stream::class, function(Faker\Generator $fake){
 
 $factory->define(App\Following::class, function(Faker\Generator $fake){
     return [
-        'user_id'=>collect(User::where('is_artist', true)->lists('id'))->random(),
+        'user_id'=>collect(User::where('is_artist', true)->lists('id'))->take(5)->random(),
         'followable_id'=>collect(Category::all()->lists('id'))
             ->merge(User::where('is_artist', true)->lists('id'))->random(),
         'followable_type'=>collect(['App\Category', 'App\User'])->random(),

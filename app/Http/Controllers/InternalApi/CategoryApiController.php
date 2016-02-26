@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Serializer\ArraySerializer;
 use League\Fractal\Serializer\JsonApiSerializer;
+use Webpatser\Uuid\Uuid;
 
 /**
  * Class CategoryApiController
@@ -64,7 +66,7 @@ class CategoryApiController extends InternalApiController
         $this->categoryRepository = $categoryRepository;
         $this->artistRepository = $artistRepository;
         $this->trackRepository = $trackRepository;
-        $this->fractal = $fractal->setSerializer(new JsonApiSerializer(self::BASE_URL));
+        $this->fractal = $fractal->setSerializer(new ArraySerializer());
         $this->trackApiController = $trackApiController;
         $this->artistApiController = $artistApiController;
     }
@@ -143,7 +145,9 @@ class CategoryApiController extends InternalApiController
      */
     public function store(Request $request)
     {
-        $category = $this->categoryRepository->addCategory($request->all());
+        $payload = $request->only("name");
+        $payload = array_add($payload, "uuid", Uuid::generate(4));
+        $category = $this->categoryRepository->addCategory($payload);
         $data = $this->fractal->createData(new Item($category,
             new CategoryCollectionTransformer, self::RESOURCE_KEY))->toArray();
         return response()->json($data);

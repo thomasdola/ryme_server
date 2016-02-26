@@ -18,12 +18,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td><a href="#">thomas</a></td>
-                            <td>thomas</td>
-                            <td>20</td>
-                            <td>20</td>
-                            <td>20</td>
+                        <tr v-for="track in tracks">
+                            <td><a href="#">{{track.artist}}</a></td>
+                            <td>{{track.artist}}</td>
+                            <td>{{track.streams}}</td>
+                            <td>{{track.downloads}}</td>
+                            <td>{{track.likes}}</td>
                         </tr>
                         </tbody>
                     </table><!-- /.table -->
@@ -40,10 +40,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td><a href="#">thomas</a></td>
-                            <td>20</td>
-                            <td>20</td>
+                        <tr v-for="artist in artists">
+                            <td><a href="#">{{artist.name}}</a></td>
+                            <td>{{artist.followers}}</td>
+                            <td>{{artist.tracks}}</td>
                         </tr>
                         </tbody>
                     </table><!-- /.table -->
@@ -56,13 +56,23 @@
 <script>
 	export default {
 		props: ['active'],
-		methods: {},
+		methods: {
+		    getCategory(category){
+		        this.$http.get("internal/categories/{id}", {id: category.id}).then(function(response){
+                    this.tracks = response.data.trendingTracks;
+                    this.artists = response.data.trendingArtists;
+		        }, function(response){});
+		    }
+		},
 		computed: {},
 		data(){
-			return {}
+			return {
+			    tracks: [],
+			    artists: []
+			}
 		},
         ready(){
-            console.log(this.active.name + " from active detail");
+
         },
         watch: {
             'active': function(category){
@@ -72,6 +82,7 @@
         events: {
             'category-changed': function(category){
                 console.log('got '+ category.name);
+                this.getCategory(category);
             }
         }
 	}

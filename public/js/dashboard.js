@@ -11726,7 +11726,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "C:\\Users\\GURU\\Documents\\projects\\ryme\\ryme\\resources\\assets\\js\\components\\artist.vue"
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\artist.vue"
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {
@@ -11777,7 +11777,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "C:\\Users\\GURU\\Documents\\projects\\ryme\\ryme\\resources\\assets\\js\\components\\infoBox.vue"
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\infoBox.vue"
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {
@@ -11812,7 +11812,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "C:\\Users\\GURU\\Documents\\projects\\ryme\\ryme\\resources\\assets\\js\\components\\trendingArtists.vue"
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\trendingArtists.vue"
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {
@@ -11839,7 +11839,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "C:\\Users\\GURU\\Documents\\projects\\ryme\\ryme\\resources\\assets\\js\\components\\trendingTracks.vue"
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\trendingTracks.vue"
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {
@@ -11925,7 +11925,7 @@ new _vue2.default({
     },
     components: { InfoBox: _infoBox2.default, TrendingTracks: _trendingTracks2.default, TrendingArtists: _trendingArtists2.default },
     ready: function ready() {
-        //this.data = JSON.parse(this.fetchDashboardData());
+        this.data = JSON.parse(this.fetchDashboardData());
         console.log(this.data);
     },
 

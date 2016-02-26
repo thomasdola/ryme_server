@@ -71,7 +71,7 @@ new Vue({
     },
     components:{InfoBox, TrendingTracks, TrendingArtists},
     ready(){
-        //this.data = JSON.parse(this.fetchDashboardData());
+        this.data = JSON.parse(this.fetchDashboardData());
         console.log(this.data);
     },
     methods:{

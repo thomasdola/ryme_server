@@ -109,9 +109,14 @@ class ArtistRepository
             ->count();
     }
 
+    public function getArtistWithRelations($id)
+    {
+        return $this->user->with('photos', 'uploadedTracks', 'followers', 'category', 'channel')
+            ->where('uuid', $id)->first();
+    }
+
     public function getArtist($id)
     {
-        return $this->user->with('photos', 'tracks', 'followers', 'category')
-            ->where('uuid', $id)->first();
+        return $this->user->where('uuid', $id)->first();
     }
 }

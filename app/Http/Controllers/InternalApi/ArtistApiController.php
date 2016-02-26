@@ -54,7 +54,7 @@ class ArtistApiController extends InternalApiController
      */
     public function single($id)
     {
-        $artist = $this->artistRepository->getArtist($id);
+        $artist = $this->artistRepository->getArtistWithRelations($id);
         if( ! $artist ){
             return response()->json(
                 [

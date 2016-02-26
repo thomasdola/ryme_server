@@ -154,6 +154,8 @@ return [
         Laravolt\Database\Eloquent\UuidServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider::class,
+        LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -162,6 +164,12 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+        Eureka\Services\ServiceProviders\TrackTagServiceProvider::class,
+        Eureka\Services\ServiceProviders\ArtistActivitiesServiceProvider::class,
+        Eureka\Services\ServiceProviders\UserActivitiesServiceProvider::class,
+        Eureka\Services\ServiceProviders\VouchServiceProvider::class,
+        Eureka\Services\ServiceProviders\SmsServiceProvider::class,
 
     ],
 
@@ -215,6 +223,8 @@ return [
         'Html'      => Collective\Html\HtmlFacade::class,
         'Excel'     => Maatwebsite\Excel\Facades\Excel::class,
         'Uuid'      => Webpatser\Uuid\Uuid::class,
+        'DingoRoute'=> Dingo\Api\Facade\Route::class,
+        'Authorizer' => LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
     ],
 
 ];

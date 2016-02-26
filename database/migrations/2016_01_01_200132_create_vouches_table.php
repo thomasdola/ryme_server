@@ -14,6 +14,7 @@ class CreateVouchesTable extends Migration
     {
         Schema::create('vouches', function (Blueprint $table) {
             $table->increments('id');
+            $table->uuid('uuid');
             $table->integer('user_id')->unsigned()->index();
             $table->boolean('is_active')->default(false);
             $table->timestamp('start_date');

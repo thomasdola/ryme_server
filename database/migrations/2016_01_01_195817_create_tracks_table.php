@@ -16,6 +16,10 @@ class CreateTracksTable extends Migration
             $table->increments('id');
             $table->uuid('uuid');
             $table->string('title')->unique();
+            $table->string('year')->nullable();
+            $table->boolean('downloadable')->default(false);
+            $table->string('album')->nullable();
+            $table->string('length')->nullable();
             $table->timestamp('released_date');
             $table->integer('user_id')->unsigned()->index();
             $table->integer('category_id')->unsigned()->index();

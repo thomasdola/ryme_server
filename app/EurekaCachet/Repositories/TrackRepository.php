@@ -12,6 +12,10 @@ namespace Eureka\Repositories;
 use App\Track;
 use App\User;
 
+/**
+ * Class TrackRepository
+ * @package Eureka\Repositories
+ */
 class TrackRepository
 {
 
@@ -23,14 +27,19 @@ class TrackRepository
      * @var User
      */
     private $user;
+    /**
+     * @var ArtistRepository
+     */
+    private $artistRepository;
 
     /**
      * @param Track $track
      * @param User $user
      */
-    public function __construct(Track $track, User $user){
+    public function __construct(Track $track, User $user, ArtistRepository $artistRepository){
         $this->track = $track;
         $this->user = $user;
+        $this->artistRepository = $artistRepository;
     }
 
     /**
@@ -60,8 +69,9 @@ class TrackRepository
      */
     public function getTrendingTracksByArtist($id)
     {
+        $artist = $this->artistRepository->getArtist($id);
         $tracks = $this->track->with('artist', 'favorites', 'streams', 'downloads', 'comments')
-            ->where('artist_id', $id)->get();
+            ->where('artist_id', $artist->id)->get();
         $tracks = $tracks->sortByDesc(function ($track) {
             return $track->streams->count();
         });
@@ -80,5 +90,37 @@ class TrackRepository
             return $track->streams->count();
         });
         return $trendingOnes;
+    }
+
+    /**
+     * @param $trackId
+     * @return \Illuminate\Database\Eloquent\Model|null|static
+     */
+    public function getTrackWithRelations($trackId)
+    {
+        return $this->track
+            ->with('author', 'usersWhoDownloaded', 'usersWhoLiked',
+                'comments', 'genre', 'streams', 'cover', 'file')
+            ->where('uuid', $trackId)
+            ->first();
+    }
+
+    /**
+     * @param $trackId
+     * @return mixed
+     */
+    public function getTrack($trackId)
+    {
+        return $this->track->where('uuid', $trackId)->first();
+    }
+
+    /**
+     * @param $artistId
+     * @return mixed
+     */
+    public function getAllTracksByArtist($artistId)
+    {
+        $artist = $this->user->where('uuid', $artistId)->first();
+        return $artist->uploadedTracks;
     }
 }

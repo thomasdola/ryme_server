@@ -16,6 +16,8 @@ class Category extends Model
      */
     protected $fillable = ['name', 'uuid'];
 
+    protected $hidden = ['id', 'created_at', 'updated_at'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */

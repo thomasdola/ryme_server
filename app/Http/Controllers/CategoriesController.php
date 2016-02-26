@@ -34,8 +34,8 @@ class CategoriesController extends Controller
     /**
      * @param CategoryRepository $categoryRepository
      * @param ArtistRepository $artistRepository
-     * @param Manager $fractal
      * @param TrackRepository $trackRepository
+     * @internal param Manager $fractal
      * @internal param Category $category
      */
     public function __construct(CategoryRepository $categoryRepository,
@@ -61,6 +61,7 @@ class CategoriesController extends Controller
 
     /**
      * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getCategory($id)
     {

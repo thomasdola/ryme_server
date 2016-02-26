@@ -11859,7 +11859,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "C:\\Users\\GURU\\Documents\\projects\\ryme\\ryme\\resources\\assets\\js\\components\\infoBox.vue"
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\infoBox.vue"
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {
@@ -11901,7 +11901,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "C:\\Users\\GURU\\Documents\\projects\\ryme\\ryme\\resources\\assets\\js\\components\\search.vue"
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\search.vue"
   module.hot.dispose(function () {
     require("vueify-insert-css").cache["\nul.result__vew{\n\tz-index: 9999;\n\tposition: absolute;\n\twidth: 90%;\n}\nul.result__vew li a{\n\ttext-decoration: none;\n}\n.search__btn:hover{\n\tcursor: pointer;\n}\n"] = false
     document.head.removeChild(__vueify_style__)
@@ -11927,7 +11927,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "C:\\Users\\GURU\\Documents\\projects\\ryme\\ryme\\resources\\assets\\js\\components\\trendingArtistTable.vue"
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\trendingArtistTable.vue"
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {
@@ -11954,7 +11954,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "C:\\Users\\GURU\\Documents\\projects\\ryme\\ryme\\resources\\assets\\js\\components\\vouchingRequestsTable.vue"
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\vouchingRequestsTable.vue"
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {

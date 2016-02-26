@@ -23,17 +23,17 @@ class DatabaseSeeder extends Seeder
         $this->call(TrackTableSeeder::class);
         $this->call(CompanyTableSeeder::class);
         $this->call(AdTableSeeder::class);
-        $this->call(DownloadTableSeeder::class);
-        $this->call(FavoriteTableSeeder::class);
+//        $this->call(DownloadTableSeeder::class);
+//        $this->call(FavoriteTableSeeder::class);
         $this->call(EventTableSeeder::class);
-        $this->call(VouchTableSeeder::class);
-        $this->call(VouchResponseTableSeeder::class);
-        $this->call(CommentTableSeeder::class);
-        $this->call(StreamTableSeeder::class);
+//        $this->call(VouchTableSeeder::class);
+//        $this->call(VouchResponseTableSeeder::class);
+//        $this->call(CommentTableSeeder::class);
+//        $this->call(StreamTableSeeder::class);
         $this->call(FollowingTableSeeder::class);
-        $this->call(PhotoTableSeeder::class);
-        $this->call(NotificationChannelTableSeeder::class);
-        $this->call(ViewTableSeeder::class);
-        $this->call(FileTableSeeder::class);
+//        $this->call(PhotoTableSeeder::class);
+//        $this->call(NotificationChannelTableSeeder::class);
+//        $this->call(ViewTableSeeder::class);
+//        $this->call(FileTableSeeder::class);
     }
 }

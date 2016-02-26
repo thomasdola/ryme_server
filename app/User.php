@@ -29,7 +29,8 @@ class User extends Authenticatable
         'is_request_active',
         'uuid',
         'country',
-        'phone'
+        'phone',
+        'status'
     ];
 
     /**
@@ -40,6 +41,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function verification_code()
+    {
+        return $this->hasOne(SmsVerificationCode::class, 'user_id');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -70,7 +79,7 @@ class User extends Authenticatable
      */
     public function downloadedTracks()
     {
-        return $this->belongsToMany(Track::class, 'downloads', 'user_id');
+        return $this->belongsToMany(Track::class, 'downloads', 'user_id')->withTimestamps();
     }
 
     /**
@@ -94,15 +103,23 @@ class User extends Authenticatable
      */
     public function likedTracks()
     {
-        return $this->belongsToMany(Track::class, 'favorites', 'user_id');
+        return $this->belongsToMany(Track::class, 'favorites', 'user_id')->withTimestamps();
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function vouchRequestsSent()
+    public function vouchRequests()
     {
         return $this->hasMany(Vouch::class, 'user_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function vouchResponses()
+    {
+        return $this->hasMany(VouchResponse::class, 'user_id');
     }
 
     /**
@@ -134,7 +151,7 @@ class User extends Authenticatable
      */
     public function followingCategories()
     {
-        return $this->morphMany(Following::class, 'followable');
+        return $this->hasMany(Following::class, "user_id");
     }
 
     /**
@@ -142,6 +159,6 @@ class User extends Authenticatable
      */
     public function followingArtists()
     {
-        return $this->morphMany(Following::class, 'followable');
+        return $this->hasMany(Following::class, "user_id");
     }
 }
