@@ -10,8 +10,11 @@ namespace App\Jobs;
 
 
 use Dingo\Api\Routing\Helpers;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class AppApiJobs extends Job
 {
-    use Helpers;
+    use Helpers, InteractsWithQueue, SerializesModels, DispatchesJobs;
 }

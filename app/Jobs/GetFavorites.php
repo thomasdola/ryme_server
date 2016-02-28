@@ -11,7 +11,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class GetFavorites extends AppApiJobs implements ShouldQueue
 {
     private $user;
-    use InteractsWithQueue, SerializesModels;
 
     /**
      * @var

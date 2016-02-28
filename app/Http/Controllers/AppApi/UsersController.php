@@ -9,8 +9,15 @@
 namespace App\Http\Controllers\AppApi;
 
 
+use App\File;
+use App\Jobs\UpdateBackPicture;
+use App\Jobs\UpdateProfileInfo;
+use App\Jobs\UpdateProfilePicture;
 use Dingo\Api\Http\Request;
 use Eureka\Repositories\UserRepository;
+use Eureka\Services\Interfaces\VouchServiceInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UsersController extends PublicApiController
 {
@@ -35,16 +42,42 @@ class UsersController extends PublicApiController
 
     public function update(Request $request)
     {
-        $updateUser = $this->repository->update($request->all(), $userId);
-        //Transform and return
+//        dd($request->all());
+        $job = new UpdateProfileInfo($request->all(), $this->auth->user());
+        try{
+            $this->dispatch($job);
+            return $this->respondForAction("success", 200, "information updated successfully.");
+        }catch (\Exception $e){
+            return $this->respondForAction("error", $e->getCode(), $e->getMessage());
+        }
     }
 
+    public function isAllowedToBeArtist(VouchServiceInterface $vouchService){
+
+        $isHe = $vouchService->isAllowed($this->auth->user());
+        if(!$isHe){
+            return $this->respondForAction("error", 401, "Not Allowed");
+        }
+        return $this->respondForAction("success", 200, "Allowed");
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws FileException
+     * @throws \Exception
+     */
     public function photo(Request $request){
-        $file = $request->get('file');
-        if($file){
-            return $this->respondForAction("success", 200, "file exists");
+        $user = $this->auth->user();
+        $file = $request->file;
+        if($file->isValid()){
+            if(strtolower($request->type) == "avatar"){
+                return $this->launchAvatarSaver($file, $user);
+            }elseif(strtolower($request->type) == "background"){
+                return $this->launchBackImageSaver($file, $user);
+            }
         }else{
-            return $this->respondForAction("error", 401, "file not found");
+            return $this->respondForAction("error", 404, "file not found");
         }
     }
 
@@ -71,5 +104,49 @@ class UsersController extends PublicApiController
             return $favorites;
         }
         return $favorites;
+    }
+
+    /**
+     * @param $file
+     * @param $user
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    private function launchAvatarSaver($file, $user)
+    {
+        $destinationPath = base_path().'/public/users/profile/images/';
+        $ext = $file->getClientOriginalExtension();
+        $fileName = $user->username . '_avatar_' . '.' . $ext;
+        $full_path = '/users/profile/images/' . $fileName;
+        try{
+            $newFile = $file->move($destinationPath, $fileName);
+//            dd($newFile);
+        }catch (FileException $e){
+            throw $e;
+        }
+        $job = new UpdateProfilePicture($full_path, $user);
+        try {
+            $this->dispatch($job);
+            return $this->respondForAction("error", 200, "image saved successfully.");
+        } catch (\Exception $e) {
+//            return $this->respondForAction("error", $e->getCode());
+            throw $e;
+        }
+    }
+
+    /**
+     * @param $file
+     * @param $user
+     * @return \Illuminate\Http\JsonResponse
+     */
+    private function launchBackImageSaver($file, $user)
+    {
+        $job = new UpdateBackPicture($file, $user);
+        try{
+            $this->dispatch($job);
+            return $this->respondForAction("error", 200, "image saved successfully.");
+        } catch (\Exception $e) {
+            return $this->respondForAction("error", $e->getCode(), $e->getMessage());
+        }
     }
 }

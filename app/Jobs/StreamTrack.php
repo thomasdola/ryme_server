@@ -11,7 +11,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class StreamTrack extends AppApiJobs implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
     /**
      * @var Track
      */

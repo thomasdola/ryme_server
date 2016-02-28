@@ -10,7 +10,6 @@ use Illuminate\Queue\SerializesModels;
 
 class UnfollowArtist extends AppApiJobs implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
     /**
      * @var User
      */

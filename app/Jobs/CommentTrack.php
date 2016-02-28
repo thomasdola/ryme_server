@@ -15,7 +15,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
  */
 class CommentTrack extends AppApiJobs implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
     /**
      * @var Track
      */

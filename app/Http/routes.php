@@ -12,6 +12,7 @@
 */
 
 use Illuminate\Support\Facades\Auth;
+use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 
 //Auth::loginUsingId(50);
 
@@ -94,7 +95,9 @@ $api->version('v1', function($api){
     $api->post('register', ['as'=>'api.auth.register', 'uses'=>'App\Http\Controllers\Auth\ApiAuthController@register']);
     $api->post('verify', ['as'=>'api.auth.verify-otp', 'uses'=>'App\Http\Controllers\Auth\ApiAuthController@verifyOtp']);
     $api->post('login', ['as'=>'api.auth.login', 'uses'=>'App\Http\Controllers\Auth\ApiAuthController@authenticate']);
-
+    $api->post('oauth/access_token', function() {
+        return Response::json(Authorizer::issueAccessToken());
+    });
     $api->group(['middleware'=>['api.auth']], function($api){
         $api->get('categories/lists', ['as'=>'api.categories.lists', 'uses'=>'App\Http\Controllers\AppApi\CategoriesController@lists']);
         $api->post('categories/follow', ['as'=>'api.categories.bulk_follow', 'uses'=>'App\Http\Controllers\AppApi\CategoriesController@bulkFollow']);
@@ -117,16 +120,17 @@ $api->version('v1', function($api){
         $api->get('/artists/{uuid}', ['as'=>'api.artist.show', 'uses'=>'App\Http\Controllers\AppApi\ArtistsController@show']);
         $api->post('/artists/{uuid}/follow', ['as'=>'api.artist.follow', 'uses'=>'App\Http\Controllers\AppApi\ArtistsController@follow']);
         $api->post('/artists/{uuid}/unFollow', ['as'=>'api.artist.unFollow', 'uses'=>'App\Http\Controllers\AppApi\ArtistsController@unFollow']);
-        $api->put('/artists/{uuid}/update', ['as'=>'api.artist.update', 'uses'=>'App\Http\Controllers\AppApi\ArtistsController@update']);
+        $api->post('/artists/{uuid}/update', ['as'=>'api.artist.update', 'uses'=>'App\Http\Controllers\AppApi\ArtistsController@update']);
         $api->get('/artists/{uuid}/tracks', ['as'=>'api.artist.tracks', 'uses'=>'App\Http\Controllers\AppApi\TracksController@artistTracks']);
 
         $api->get('/user/categories', ['as'=>'api.user.categories', 'uses'=>'App\Http\Controllers\AppApi\UsersController@followedCategories']);
         $api->get('/user/favorites', ['as'=>'api.users.favorites', 'uses'=>'App\Http\Controllers\AppApi\UsersController@favorites']);
-        $api->put('/user/update', ['as'=>'api.users.update', 'uses'=>'App\Http\Controllers\AppApi\UsersController@update']);
-        $api->put('/user/photo', ['as'=>'api.users.photo', 'uses'=>'App\Http\Controllers\AppApi\UsersController@photo']);
-        $api->put('/user/upload', ['as'=>'api.artist.upload', 'uses'=>'App\Http\Controllers\AppApi\ArtistsController@upload']);
+        $api->post('/user/update', ['as'=>'api.users.update', 'uses'=>'App\Http\Controllers\AppApi\UsersController@update']);
+        $api->post('/user/photo', ['as'=>'api.users.photo', 'uses'=>'App\Http\Controllers\AppApi\UsersController@photo']);
+        $api->post('/user/upload', ['as'=>'api.artist.upload', 'uses'=>'App\Http\Controllers\AppApi\ArtistsController@upload']);
+        $api->get('/user/allowed', ['as'=>'api.request.allowed', 'uses'=>'App\Http\Controllers\AppApi\UsersController@isAllowedToBeArtist']);
 
-        $api->post('/vouch', ['as'=>'api.request.make', 'uses'=>'App\Http\Controllers\AppApi\VouchesController@makeRequest']);
-        $api->post('/vouch/{uuid}', ['as'=>'api.vouch.answer', 'uses'=>'App\Http\Controllers\AppApi\VouchesController@answer']);
+        $api->post('/request/make', ['as'=>'api.request.make', 'uses'=>'App\Http\Controllers\AppApi\VouchesController@makeRequest']);
+        $api->post('/vouch/{uuid}/answer', ['as'=>'api.vouch.answer', 'uses'=>'App\Http\Controllers\AppApi\VouchesController@answer']);
     });
 });

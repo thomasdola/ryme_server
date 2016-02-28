@@ -192,4 +192,14 @@ class UserRepository
     {
         return $this->user->where('uuid', $id)->first();
     }
+
+    public function isAllowed($uuid)
+    {
+        $user = $this->user->where("uuid", $uuid)->first();
+        $date_joined = Carbon::parse($user->created_at);
+        if($date_joined->addWeek()->lt(Carbon::today())){
+            return false;
+        }
+        return true;
+    }
 }

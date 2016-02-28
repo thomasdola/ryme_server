@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 
 class UploadTrack extends AppApiJobs implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
     /**
      * @var Collection
      */

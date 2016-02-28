@@ -10,7 +10,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class followManyGenres extends Job implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
     /**
      * @var array
      */

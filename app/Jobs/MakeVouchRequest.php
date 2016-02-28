@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Events\VouchRequestSent;
 use App\Jobs\Job;
+use App\User;
 use Eureka\Services\Interfaces\VouchServiceInterface;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -12,7 +13,6 @@ use Mockery\Exception;
 
 class MakeVouchRequest extends AppApiJobs implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
     /**
      * @var array
      */
@@ -22,34 +22,43 @@ class MakeVouchRequest extends AppApiJobs implements ShouldQueue
      * Create a new job instance.
      *
      * @param array $data
+     * @param User $user
      */
-    public function __construct(array $data)
+    public function __construct(array $data, User $user)
     {
-        $this->data = collect($data);
+        $this->data = $data;
+        $this->user = $user;
     }
 
     /**
      * Execute the job.
      *
      * @param VouchServiceInterface $vouchService
+     * @throws \Exception
      */
     public function handle(VouchServiceInterface $vouchService)
     {
         try{
-            $vouch = $vouchService->makeRequest();
+            $vouch = $vouchService->makeRequest($this->user);
+            $this->updateUser();
+            //Emit the Event
+            event()->fire(new VouchRequestSent($vouch));
         }catch (\Exception $e){
-            throw new Exception('User Not Allowed to Make a new Request');
+            throw $e;
         }
-        $this->updateUser();
-        //Emit the Event
-        event()->fire(new VouchRequestSent($vouch));
     }
 
+    /**
+     * @throws \Exception
+     */
     private function updateUser()
     {
-        $this->auth->user()->update([
-            'stage_name' => $this->data->get('stage_name'),
-            'is_request_active' => true
-        ]);
+        $data = array_add($this->data, "is_request_active", true);
+        $job = new UpdateProfileInfo($data, $this->user);
+        try{
+            $this->dispatch($job);
+        }catch (\Exception $e){
+            throw $e;
+        }
     }
 }

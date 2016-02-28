@@ -11,7 +11,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ViewTrack extends AppApiJobs implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
     /**
      * @var Track
      */

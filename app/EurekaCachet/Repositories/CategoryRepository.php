@@ -113,4 +113,9 @@ class CategoryRepository
                $track->streams->count();
            });
     }
+
+    public function getCategoryIdByName($category_name)
+    {
+        return $this->category->where("name", $category_name)->first()->id;
+    }
 }

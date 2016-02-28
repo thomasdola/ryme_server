@@ -121,11 +121,11 @@ interface UserContract
     public function viewEvent(Event $event, User $user);
 
     /**
-     * @param UploadedFile $photo
+     * @param  $photo
      * @param User $user
      * @return mixed
      */
-    public function updateProfilePicture(UploadedFile $photo, User $user);
+    public function updateProfilePicture($photo, User $user);
 
     /**
      * @param array $data

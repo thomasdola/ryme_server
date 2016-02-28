@@ -12,7 +12,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class FollowGenre extends AppApiJobs implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
     /**
      * @var Category
      */

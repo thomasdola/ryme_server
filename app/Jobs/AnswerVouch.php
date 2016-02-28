@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Events\VouchWasAnswered;
 use App\Jobs\Job;
+use App\User;
 use App\Vouch;
 use Eureka\Services\Interfaces\UserContract;
 use Illuminate\Queue\SerializesModels;
@@ -12,7 +13,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class AnswerVouch extends AppApiJobs implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
     /**
      * @var Vouch
      */
@@ -26,23 +26,31 @@ class AnswerVouch extends AppApiJobs implements ShouldQueue
      * Create a new job instance.
      *
      * @param Vouch $vouchRequest
-     * @param boolean $answer
+     * @param $answer
+     * @param User $user
      */
-    public function __construct(Vouch $vouchRequest, boolean $answer)
+    public function __construct(Vouch $vouchRequest, $answer, User $user)
     {
         $this->vouchRequest = $vouchRequest;
         $this->answer = $answer;
+        $this->user = $user;
     }
 
     /**
      * Execute the job.
      *
      * @param UserContract $userActivity
+     * @throws \Exception
      */
     public function handle(UserContract $userActivity)
     {
-        $vouchAnswer = $userActivity->answerVouch($this->vouchRequest, $this->answer);
-        //fire an event
-        event()->fire(new VouchWasAnswered($vouchAnswer));
+        try{
+            $vouchAnswer = $userActivity->answerVouch($this->vouchRequest,
+                $this->answer, $this->user);
+            //fire an event
+            event()->fire(new VouchWasAnswered($vouchAnswer));
+        }catch (\Exception $e){
+            throw $e;
+        }
     }
 }

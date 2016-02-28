@@ -7,6 +7,7 @@ use App\NotificationChannel;
 use App\User;
 use App\Vouch;
 use Carbon\Carbon;
+use DB;
 use Eureka\Services\Interfaces\VouchServiceInterface;
 use Webpatser\Uuid\Uuid;
 
@@ -17,38 +18,34 @@ use Webpatser\Uuid\Uuid;
 class VouchService implements VouchServiceInterface
 {
     /**
-     * @var User
-     */
-    private $user;
-
-    public function __construct(User $user){
-        $this->user = $user;
-    }
-    /**
+     * @param User $user
      * @return mixed|void
      * @throws \Exception
      */
-    public function makeRequest()
+    public function makeRequest(User $user)
     {
         //Throw an exception if the user is not allowed to make a new request
-        if( ! $this->isAllowed() ){
-            throw new \Exception('Not Allowed to make a new Vouch Request');
+        if( ! $this->isAllowed($user) ){
+            throw new \Exception('Not Allowed to make a new Vouch Request', 401);
         }
-        $vouchRequest = $this->activateRequest($this->user);
-        $channel = $this->createChannel($vouchRequest);
+        DB::beginTransaction();
+        $vouchRequest = $this->activateRequest($user);
+        $channel = $this->createChannel($vouchRequest, $user);
         $this->subscribeUserToChannel($channel);
+        DB::commit();
         return $vouchRequest;
     }
 
     /**
+     * @param User $user
      * @return bool
      */
-    private function isAllowed()
+    public function isAllowed(User $user)
     {
-        $numberOfRequest = $this->user->vouchRequests->count();
+        $numberOfRequest = $user->vouchRequests->count();
 
         if( $numberOfRequest !== 0 ){
-            $request = $this->user->vouchRequests->last();
+            $request = $user->vouchRequests->last();
             $monthsElapsed = $this->getMonthsElapsed($request);
 
             if( $monthsElapsed < 3 ){
@@ -79,13 +76,14 @@ class VouchService implements VouchServiceInterface
 
     /**
      * @param Vouch $vouchRequest
+     * @param User $user
      * @return \Illuminate\Database\Eloquent\Model
      * @throws \Exception
      */
-    private function createChannel(Vouch $vouchRequest)
+    private function createChannel(Vouch $vouchRequest, User $user)
     {
         return $vouchRequest->channel()->create([
-            'name'=>$this->user->stage_name.'VouchRequest',
+            'name'=>$user->stage_name.'VouchRequest',
             'uuid'=>Uuid::generate()
         ]);
     }

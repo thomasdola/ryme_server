@@ -14,7 +14,16 @@ class Track extends Model
     /**
      * @var array
      */
-    protected $fillable = ['uuid', 'title', 'released_date', 'user_id', 'category_id', 'album', 'length', 'downloadable'];
+    protected $fillable = [
+        'uuid',
+        'title',
+        'released_date',
+        'user_id',
+        'category_id',
+        'album',
+        'length',
+        'downloadable'
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

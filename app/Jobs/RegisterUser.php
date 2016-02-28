@@ -12,9 +12,8 @@ use Illuminate\Support\Collection;
 use Mockery\Exception;
 use Webpatser\Uuid\Uuid;
 
-class RegisterUser extends Job implements ShouldQueue
+class RegisterUser extends AppApiJobs implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
     /**
      * @var Collection
      */

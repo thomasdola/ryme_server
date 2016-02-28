@@ -13,7 +13,14 @@ interface VouchServiceInterface
     /**
      * Make a vouch request
      *
+     * @param User $user
      * @return mixed
      */
-    public function makeRequest();
+    public function makeRequest(User $user);
+
+    /**
+     * @param User $user
+     * @return mixed
+     */
+    public function isAllowed(User $user);
 }

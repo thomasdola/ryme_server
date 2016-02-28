@@ -12,6 +12,7 @@ namespace App\Http\Controllers\AppApi;
 use App\Jobs\AnswerVouch;
 use App\Jobs\MakeVouchRequest;
 use Dingo\Api\Http\Request;
+use Eureka\Repositories\CategoryRepository;
 use Eureka\Repositories\VouchRepository;
 
 /**
@@ -24,12 +25,18 @@ class VouchesController extends PublicApiController
      * @var VouchRepository
      */
     private $repository;
+    /**
+     * @var CategoryRepository
+     */
+    private $categoryRepository;
 
     /**
      * @param VouchRepository $repository
+     * @param CategoryRepository $categoryRepository
      */
-    public function __construct(VouchRepository $repository){
+    public function __construct(VouchRepository $repository, CategoryRepository $categoryRepository){
         $this->repository = $repository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -38,10 +45,16 @@ class VouchesController extends PublicApiController
      */
     public function makeRequest(Request $request)
     {
+//        dd($request->all());
+        $payload = $request->only('stage_name');
+        $category_id = $this->categoryRepository->getCategoryIdByName($request->category);
+        $payload = array_add($payload, "category_id", $category_id);
+//        dd($payload);
         try{
-            $this->dispatch(new MakeVouchRequest($request->all()));
+            $this->dispatch(new MakeVouchRequest($payload, $this->auth->user()));
+            return $this->respondForAction("success", 200, "Request was made successfully.");
         }catch (\Exception $e){
-            return response()->json(['error'=>'not allowed'], 401);
+            return $this->respondForAction("error", $e->getCode(), $e->getMessage());
         }
     }
 
@@ -49,6 +62,6 @@ class VouchesController extends PublicApiController
     {
         $vouch = $this->repository->getVouch($vouchId);
         $answer = $request->get('answer');
-        $this->dispatch(new AnswerVouch($vouch, $answer));
+        $this->dispatch(new AnswerVouch($vouch, $answer, $this->auth->user()));
     }
 }

@@ -17,7 +17,10 @@ use App\Track;
 use App\User;
 use App\Vouch;
 use Eureka\Services\Interfaces\UserContract;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Webpatser\Uuid\Uuid;
 
 /**
  * Class UserActivitiesService
@@ -136,7 +139,7 @@ class UserActivitiesService implements UserContract
             'user_id'=>$user->id
         ]);
         if($category == null){
-            $this->throwIExcp();
+            $this->throwIExcp("Could not follow category", 404);
         }
     }
 
@@ -168,7 +171,7 @@ class UserActivitiesService implements UserContract
             'followable_id'=>$category->id,
             'followable_type'=>'App\Category'])->delete();
         if(!$deleted){
-            $this->throwIExcp();
+            $this->throwIExcp("Could Not unfollow Category", 404);
         }
     }
 
@@ -210,36 +213,49 @@ class UserActivitiesService implements UserContract
      */
     public function answerVouch(Vouch $vouch, $answer, User $user)
     {
-        return $vouch->responses()->create([
+        $vouch =  $vouch->responses()->create([
             'answer'=>$answer,
             'user_id'=>$user->id
         ]);
+        if(!$vouch){
+            $this->throwIExcp("Could not answer the vouch", 404);
+        }
+        return $vouch;
     }
 
     /**
-     * @param UploadedFile $photo
+     * @param $path
      * @param User $user
      * @return mixed
+     * @throws \Exception
      */
-    public function updateProfilePicture(UploadedFile $photo, User $user)
+    public function updateProfilePicture($path, User $user)
     {
-        //Probably let an ImageWorker generate a thumbnail from the original the photo
-        //Save both thumbnail and original photo to the cloud
-        //Save the path to the local database
-        $user->photos()->saveMany([
-            new Photo(['path'=>'thumbnailPath', 'type'=>'thumbnail']),
-            new Photo(['path'=>'originalPath', 'type'=>'original'])
-        ]);
+        $result = null;
+        $photo = $user->photos->where('type', 'avatar')->first();
+        if($photo){
+            $result = $photo->update(['path'=>$path]);
+        }else{
+            $result = $user->photos()->save(
+                new Photo(['path'=>$path, 'type'=>'avatar', 'uuid'=>Uuid::generate(4)])
+            );
+        }
+        if(!$result){
+            $this->throwIExcp("Could not save image", 404);
+        }
     }
 
     /**
      * @param array $data
      * @param User $user
      * @return mixed
+     * @throws \Exception
      */
     public function updateProfileInfo(array $data, User $user)
     {
-        $user->update($data);
+        if(!$user->update($data)){
+            throw new \Exception();
+        }
     }
 
     /**
@@ -255,8 +271,8 @@ class UserActivitiesService implements UserContract
         return $payload;
     }
 
-    private function throwIExcp()
+    private function throwIExcp($message, $code)
     {
-        throw new \HttpRequestException();
+        throw new \Exception($message, $code);
     }
 }
