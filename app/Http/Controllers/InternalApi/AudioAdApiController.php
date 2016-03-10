@@ -66,8 +66,8 @@ class AudioAdApiController extends InternalApiController
     {
         $file = $request->file;
         $file_name = $request->title.Carbon::now()->timestamp;
-        $start_date = Carbon::parse($request->start_date);
-        $end_date = Carbon::parse($request->end_date);
+        $start_date = Carbon::parse($request->start_date)->startOfDay();
+        $end_date = Carbon::parse($request->end_date)->endOfDay();
         $local_file = $this->moveToLocal($request->file, $file_name, self::ADS_UPLOADS_PATH);
         $full_path = $this->getFullPath($local_file, self::ADS_UPLOADS_PATH);
         $payload = array_add($request->only(['company_id', 'title']), 'uuid', Uuid::generate(4));

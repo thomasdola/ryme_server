@@ -32,6 +32,9 @@ class Vouch extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function channel()
     {
         return $this->morphMany(NotificationChannel::class, 'channelable');

@@ -9,6 +9,7 @@
 namespace Eureka\Helpers\Transformers\Mobile;
 
 
+use App\AdSection;
 use App\Track;
 use App\User;
 use Carbon\Carbon;
@@ -27,6 +28,11 @@ class MobileTrackCollectionTransformer extends TransformerAbstract
     public function __construct(User $user){
         $this->user = $user;
     }
+
+    /**
+     * @param Track $track
+     * @return array
+     */
     public function transform(Track $track){
         return [
             "title" => $track->title,
@@ -47,7 +53,7 @@ class MobileTrackCollectionTransformer extends TransformerAbstract
             "downloaded" => $this->downloaded($track),
             "amTheOwner" => $this->amITheOwner($track),
             "liked" => $this->liked($track),
-            "firstAd" => null,
+            "firstAd" => $this->getAudioAd($track),
             "secondAd" => null,
         ];
     }
@@ -88,4 +94,21 @@ class MobileTrackCollectionTransformer extends TransformerAbstract
         }
         return false;
     }
+
+    /**
+     * @param $track
+     */
+    private function getAudioAd(Track $track)
+    {
+        $now = Carbon::now();
+        $section = AdSection::with('audio_ads')
+            ->where('start_time', '<=', $now)
+            ->where('end_time', '>', $now)
+            ->first();
+        $ad = collect($track->audio_ads->all())
+            ->where('is_section_active', '1')
+            ->random();
+    }
+
+
 }

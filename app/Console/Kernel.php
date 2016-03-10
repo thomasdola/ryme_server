@@ -13,7 +13,16 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        // Commands\Inspire::class,
+        Commands\UpdateAdSectionTime::class,
+        Commands\ArtistRequestManager::class,
+        Commands\AudioAdMainActivation::class,
+        Commands\AudioAdMainDeactivation::class,
+        Commands\AudioAdSectionActivation::class,
+        Commands\AudioAdSectionDeactivation::class,
+        Commands\EventAdMainActivation::class,
+        Commands\EventAdMainDeactivation::class,
+        Commands\EventAdSectionActivation::class,
+        Commands\EventAdSectionDeactivation::class,
     ];
 
     /**

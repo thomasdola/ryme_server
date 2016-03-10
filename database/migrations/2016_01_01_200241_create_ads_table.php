@@ -19,6 +19,7 @@ class CreateAdsTable extends Migration
             $table->timestamp('start_date');
             $table->timestamp('end_date');
             $table->boolean('is_active')->default(false);
+            $table->boolean('is_section_active')->default(false);
             $table->integer('company_id')->usigned()->index();
             $table->timestamps();
         });

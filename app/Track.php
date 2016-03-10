@@ -103,4 +103,20 @@ class Track extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class, "category_id");
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function audio_ads()
+    {
+        return $this->hasManyThrough(Ad::class, Category::class, 'track_id', 'category_id');
+    }
 }

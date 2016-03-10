@@ -10,6 +10,8 @@ class AdSection extends Model
 
     protected $fillable = ["start_time", "end_time", "name"];
 
+    protected $hidden = ['created_at', 'updated_at', 'id'];
+
     public function audio_ads()
     {
         return $this->morphedByMany(Ad::class, "sectionable");
