@@ -2,6 +2,64 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9b93dbf3-4a75-4fda-a5e3-e0fc5caabe0f" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/Am the One.mp3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/Am the One_cover.PNG" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/ads/uploads/One Ghana For Your Pocket1457547620.mp3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/am-the-one-new.mp3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/am-the-one-new_cover.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/am-the-one-seond-edition.mp3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/am-the-one-seond-edition_cover.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/am-the-one.mp3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/am-the-one_cover.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/amen.mp3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/amen_cover.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/laughing-loud-remix.mp3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/laughing-loud-remix_cover.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/laughing-loud.mp3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/laughing-loud_cover.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/the-lord.mp3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/uploads/the-lord_cover.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/users/profile/images/thomasdolar.paul_avatar_.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/ads/uploads/title1457548258.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/ads/uploads/title1457548372.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/ads/uploads/title1457548425.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/vue-select2/.bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/database/migrations/2016_03_02_154815_create_commercials_table.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/database/migrations/2016_03_02_155603_create_scopables_table.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/database/migrations/2016_03_09_084951_create_ad_sessions_table.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/database/migrations/2016_03_09_122750_create_sessionables_table.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/database/migrations/2016_03_09_171912_create_sectionables_table.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/database/migrations/2016_03_09_172102_create_ad_sections_table.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/AdSection.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/AdSession.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/AdSessionCollectionTransformer.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/Http/Controllers/InternalApi/AdSessionsController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Mobile/ArtistRequestTransformer.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/AudioAdItemTransformer.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Mobile/CommentCollectionTransformer.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/Commercial.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/CompanyCollectionTransformer.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/Console/Commands/DaiylyAdActivation.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Mobile/EventAdCollectionTransformer.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/EventAdItemTransformer.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Mobile/MobileArtistItemTransformer.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Mobile/MobileTrackCollectionTransformer.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Mobile/MobileTrackItemTransformer.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Utils/Mp3File.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/NoDataArraySerializer.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/Listeners/NotifyCommenter.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/Scopable.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/Console/Commands/SectionAdActivation.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/Sectionable.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/Sessionable.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/Events/TrackCommented.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/Jobs/UpdateTrackInfo.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Utils/UploadFile.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/views/box.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/views/general.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bower_components/vue-select2/index" />
+      <change type="DELETED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\EurekaCachet\Helpers\Transformers\Internal\AudioAdItemTransformer.php" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\EurekaCachet\Helpers\Transformers\Internal\EventAdItemTransformer.php" afterPath="" />
       <change type="DELETED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\database\migrations\2014_04_24_110151_create_oauth_scopes_table.php" afterPath="" />
       <change type="DELETED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\database\migrations\2014_04_24_110304_create_oauth_grants_table.php" afterPath="" />
       <change type="DELETED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\database\migrations\2014_04_24_110403_create_oauth_grant_scopes_table.php" afterPath="" />
@@ -19,10 +77,8 @@
       <change type="MOVED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\EurekaCachet\Helpers\Transformers\Internal\ArtistCollectionTransformer.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/ArtistCollectionTransformer.php" />
       <change type="MOVED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\EurekaCachet\Helpers\Transformers\Internal\ArtistItemTransformer.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/ArtistItemTransformer.php" />
       <change type="MOVED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\EurekaCachet\Helpers\Transformers\Internal\AudioAdCollectionTransformer.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/AudioAdCollectionTransformer.php" />
-      <change type="MOVED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\EurekaCachet\Helpers\Transformers\Internal\AudioAdItemTransformer.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/AudioAdItemTransformer.php" />
       <change type="MOVED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\EurekaCachet\Helpers\Transformers\Internal\CategoryCollectionTransformer.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/CategoryCollectionTransformer.php" />
       <change type="MOVED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\EurekaCachet\Helpers\Transformers\Internal\CategoryItemTransformer.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/CategoryItemTransformer.php" />
-      <change type="MOVED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\EurekaCachet\Helpers\Transformers\Internal\EventAdItemTransformer.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/EventAdItemTransformer.php" />
       <change type="MOVED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\EurekaCachet\Helpers\Transformers\Internal\PhotoTransformer.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/PhotoTransformer.php" />
       <change type="MOVED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\EurekaCachet\Helpers\Transformers\Internal\RoleCollectionTransformer.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/RoleCollectionTransformer.php" />
       <change type="MOVED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\EurekaCachet\Helpers\Transformers\Internal\StaffTransformer.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/StaffTransformer.php" />
