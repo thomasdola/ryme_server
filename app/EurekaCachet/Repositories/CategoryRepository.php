@@ -27,14 +27,6 @@ class CategoryRepository
     }
 
     /**
-     *
-     */
-    public function getTrendingCategories()
-    {
-
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
     public function getAll()
@@ -106,16 +98,25 @@ class CategoryRepository
      */
     public function getCategoryTrendingTracks($id)
     {
-       return $this->category->with('tracks')
-           ->where('uuid', $id)
-           ->tracks
-           ->sortDescBy(function($track){
-               $track->streams->count();
-           });
+        $tracks = $this->category->with("tracks", "tracks.streams")
+            ->find($id)->tracks->sortByDesc(function($track){
+                $track->streams->count();
+            })->take(50);
+        return $tracks;
     }
 
     public function getCategoryIdByName($category_name)
     {
         return $this->category->where("name", $category_name)->first()->id;
+    }
+
+    /**
+     * @param $id
+     * @return static
+     */
+    public function getCategoryNewTracks($id)
+    {
+        $tracks = $this->category->find($id)->tracks->all();
+        return collect($tracks)->sortByDesc("created_at");
     }
 }

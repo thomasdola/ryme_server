@@ -9,12 +9,14 @@
 namespace Eureka\Services\App;
 
 
+use App\Photo;
+use App\Track;
 use App\User;
+use DB;
 use Eureka\Services\Interfaces\ArtistContract;
 use Eureka\Services\Interfaces\string;
-use Illuminate\Support\Collection;
+use Exception;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Webpatser\Uuid\Uuid;
 
 class ArtistActivitiesService implements ArtistContract
@@ -30,53 +32,102 @@ class ArtistActivitiesService implements ArtistContract
     }
 
     /**
-     * @param Collection $TaggedTrackData
+     * @param array $audioData
      * @param User $artist
      * @return mixed
+     * @throws Exception
      */
-    public function uploadTrack(Collection $TaggedTrackData, User $artist)
+    public function uploadTrack(array $audioData, User $artist)
     {
-        $data = $this->constructDataToBeSaved($this->getDataFromSession(), $TaggedTrackData);
         //save track info to our local database
-//        $track = $this->artist->uploadedTracks()->create($data);
-        //upload the track to the cloud
-//        $track_path = aws.upload($trackFile);
-//        $cover_path = aws.upload($trackCover);
-//        $track->file()->create(['path'=>$track_path]);
-//        $track->photo()->create(['path'=>$cover_path]);
-        return $data;
+        DB::beginTransaction();
+        $track = $artist->uploadedTracks()->create($audioData);
+        if(!$track){
+            DB::rollBack();
+            $this->throwIExcp("Unable to store track", 404);
+        }
+        $file = $track->file()->create([
+            'uuid' => Uuid::generate(4),
+            'path' => collect($audioData)->get('track_full_path'),
+            'extension' => collect($audioData)->get("track_ext")
+        ]);
+        if(!$file){
+            DB::rollBack();
+            $this->throwIExcp("Unable to store track file", 404);
+        }
+        $cover = $track->cover()->create([
+            'path' => collect($audioData)->get("cover_full_path"),
+            'type' => 'cover',
+            'uuid' => Uuid::generate(4),
+            'extension' => collect($audioData)->get("cover_ext")
+        ]);
+        if(!$cover){
+            DB::rollBack();
+            $this->throwIExcp("Unable to store track cover", 404);
+        }
+        DB::commit();
+        return $track;
     }
 
     /**
-     * @param UploadedFile $photo
+     * @param $data
      * @param User $artist
      * @return mixed
+     * @throws Exception
      */
-    public function updateBackgroundPhoto(UploadedFile $photo, User $artist)
+    public function updateBackgroundPhoto($data, User $artist)
     {
-        // TODO: Implement updateBackgroundPhoto() method.
+        $result = null;
+        $photo = $artist->photos->where('type', 'background')->first();
+        if($photo){
+            $result = $photo->update(['path'=>collect($data)->get('path')]);
+        }else{
+            $result = $artist->photos()->save(
+                new Photo(['path'=>collect($data)->get('path'),
+                    'type'=>'avatar', 'uuid'=>Uuid::generate(4),
+                    'extension' => collect($data)->get('extension')])
+            );
+        }
+        if(!$result){
+            $this->throwIExcp("Could not save image", 404);
+        }
     }
+
 
     /**
      * @param string $name
      * @param User $artist
-     * @return mixed
+     * @return bool
+     * @throws Exception
      */
     public function updateStageName($name, User $artist)
     {
-        // TODO: Implement updateStageName() method.
+        if(!$artist->update(["stage_name"=>$name])){
+            $this->throwIExcp("Could not save artist stage name.", 404);
+        }
+        return true;
     }
 
-    private function getDataFromSession()
+    /**
+     * @param $message
+     * @param $code
+     * @throws Exception
+     */
+    private function throwIExcp($message, $code)
     {
-        return session()->pull('audioData');
+        throw new Exception($message, $code);
     }
 
-    private function constructDataToBeSaved($data, $taggedTrackData)
+    /**
+     * @param Track $track
+     * @param $downloadable
+     * @return mixed
+     */
+    public function updateTrackDownloadable(Track $track, $downloadable)
     {
-        $uuid = Uuid::generate(4);
-        $data = array_add($data, 'uuid', $uuid);
-        $data = $taggedTrackData->merge($data);
-        return $data;
+        if(!$track->update(["downloadable"=>$downloadable])){
+            $this->throwIExcp("Could not update track.", 404);
+        }
+        return true;
     }
 }

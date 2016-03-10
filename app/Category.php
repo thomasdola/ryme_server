@@ -49,4 +49,17 @@ class Category extends Model
     {
         return $this->hasMany(Track::class, 'category_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function audio_ads()
+    {
+        return $this->morphedByMany(Ad::class, "scopable");
+    }
+
+    public function event_ads()
+    {
+        return $this->morphedByMany(Event::class, "scopable");
+    }
 }

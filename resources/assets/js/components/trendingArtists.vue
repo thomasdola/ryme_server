@@ -24,7 +24,7 @@
         </div><!-- /.col -->
 </template>
 
-<script type="text/javascript">
+<script type="text/babel">
 	import Artist from "./artist.vue";
 	export default{
 		components: {Artist},

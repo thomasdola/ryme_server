@@ -9,6 +9,7 @@
 namespace Eureka\Services\Interfaces;
 
 
+use App\Track;
 use App\User;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -16,18 +17,18 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 interface ArtistContract
 {
     /**
-     * @param Collection $TaggedTrackData
+     * @param array $audioData
      * @param User $artist
      * @return mixed
      */
-    public function uploadTrack(Collection $TaggedTrackData, User $artist);
+    public function uploadTrack(array $audioData, User $artist);
 
     /**
-     * @param UploadedFile $photo
+     * @param $photoData
      * @param User $artist
      * @return mixed
      */
-    public function updateBackgroundPhoto(UploadedFile $photo, User $artist);
+    public function updateBackgroundPhoto($photoData, User $artist);
 
     /**
      * @param string $name
@@ -35,4 +36,11 @@ interface ArtistContract
      * @return mixed
      */
     public function updateStageName($name, User $artist);
+
+    /**
+     * @param Track $track
+     * @param $downloadable
+     * @return mixed
+     */
+    public function updateTrackDownloadable(Track $track, $downloadable);
 }

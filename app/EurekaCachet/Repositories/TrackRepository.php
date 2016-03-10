@@ -11,6 +11,7 @@ namespace Eureka\Repositories;
 
 use App\Track;
 use App\User;
+use Carbon\Carbon;
 
 /**
  * Class TrackRepository
@@ -35,6 +36,7 @@ class TrackRepository
     /**
      * @param Track $track
      * @param User $user
+     * @param ArtistRepository $artistRepository
      */
     public function __construct(Track $track, User $user, ArtistRepository $artistRepository){
         $this->track = $track;
@@ -70,12 +72,6 @@ class TrackRepository
     public function getTrendingTracksByArtist($id)
     {
         $artist = $this->artistRepository->getArtist($id);
-        $tracks = $this->track->with('artist', 'favorites', 'streams', 'downloads', 'comments')
-            ->where('artist_id', $artist->id)->get();
-        $tracks = $tracks->sortByDesc(function ($track) {
-            return $track->streams->count();
-        });
-        return $tracks;
     }
 
     /**
@@ -111,7 +107,8 @@ class TrackRepository
      */
     public function getTrack($trackId)
     {
-        return $this->track->where('uuid', $trackId)->first();
+        $track = $this->track->where('uuid', $trackId)->first();
+        return $track;
     }
 
     /**
@@ -122,5 +119,29 @@ class TrackRepository
     {
         $artist = $this->user->where('uuid', $artistId)->first();
         return $artist->uploadedTracks;
+    }
+
+    /**
+     * @param $uuid
+     * @return mixed
+     */
+    public function getArtistNewTracks($uuid)
+    {
+        $start = Carbon::now()->startOfMonth();
+        $end = Carbon::now()->endOfMonth();
+        return $this->getTracksBetweenForThisArtist($uuid, $start, $end);
+    }
+
+    /**
+     * @param $uuid
+     * @param $start
+     * @param $end
+     * @return mixed
+     */
+    private function getTracksBetweenForThisArtist($uuid, $start, $end)
+    {
+        $artist = $this->artistRepository->getArtist($uuid);
+        return $this->track->where("user_id", $artist->id)
+            ->whereBetween("released_date", [$start, $end])->get();
     }
 }

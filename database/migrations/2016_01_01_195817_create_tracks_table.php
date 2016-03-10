@@ -15,10 +15,8 @@ class CreateTracksTable extends Migration
         Schema::create('tracks', function (Blueprint $table) {
             $table->increments('id');
             $table->uuid('uuid');
-            $table->string('title')->unique();
-            $table->string('year')->nullable();
+            $table->string('title');
             $table->boolean('downloadable')->default(false);
-            $table->string('album')->nullable();
             $table->string('length')->nullable();
             $table->timestamp('released_date');
             $table->integer('user_id')->unsigned()->index();

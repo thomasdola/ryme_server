@@ -16,18 +16,41 @@ class Event extends Model
     /**
      * @var array
      */
-    protected $fillable = ['title', 'uuid', 'description', 'time', 'date', 'start_date', 'end_date', 'is_active'];
+    protected $fillable = ['title', 'uuid', 'venue',
+        'description', 'date_time', 'start_date',
+        'end_date', 'is_active', 'company_id', 'is_section_active'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */
-    public function photos()
+    public function photo()
     {
-        return $this->morphMany(Photo::class, 'imageable');
+        return $this->morphOne(Photo::class, 'imageable');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function views()
     {
         return $this->morphMany(View::class, 'viewable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function categories()
+    {
+        return $this->morphToMany(Category::class, "scopable")->withTimestamps();
+    }
+
+    public function sessions()
+    {
+        return $this->morphToMany(AdSession::class, "sessionable")->withTimestamps();
+    }
+
+    public function sections()
+    {
+        return $this->morphToMany(AdSection::class, "sectionable")->withTimestamps();
     }
 }

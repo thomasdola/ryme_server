@@ -119,4 +119,18 @@ class ArtistRepository
     {
         return $this->user->where('uuid', $id)->first();
     }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function search($query)
+    {
+        return $this->user->where('stage_name', 'like', "%{$query}%")
+            ->where(function($query){
+                $query->where('is_artist', '1')
+                    ->orwhere('is_request_active', '1');
+            })
+            ->get();
+    }
 }

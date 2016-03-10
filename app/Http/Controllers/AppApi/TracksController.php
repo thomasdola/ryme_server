@@ -9,13 +9,22 @@
 namespace App\Http\Controllers\AppApi;
 
 
-use App\Jobs\CommentTrack;
 use App\Jobs\DislikeTrack;
 use App\Jobs\DownloadTrack;
 use App\Jobs\LikeTrack;
 use App\Jobs\StreamTrack;
+use App\Jobs\UpdateTrackInfo;
+use App\User;
 use Dingo\Api\Http\Request;
+use Eureka\Helpers\Transformers\Mobile\MobileTrackCollectionTransformer;
+use Eureka\Helpers\Transformers\Mobile\MobileTrackItemTransformer;
+use Eureka\Repositories\ArtistRepository;
+use Eureka\Repositories\CategoryRepository;
 use Eureka\Repositories\TrackRepository;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
+use Mockery\CountValidator\Exception;
 
 class TracksController extends PublicApiController
 {
@@ -23,25 +32,80 @@ class TracksController extends PublicApiController
      * @var TrackRepository
      */
     private $repository;
+    /**
+     * @var CategoryRepository
+     */
+    private $categoryRepository;
+    /**
+     * @var Manager
+     */
+    private $fractal;
+    /**
+     * @var ArtistRepository
+     */
+    private $artistRepository;
 
-    public function __construct(TrackRepository $repository){
+    /**
+     * @param TrackRepository $repository
+     * @param CategoryRepository $categoryRepository
+     * @param Manager $fractal
+     * @param ArtistRepository $artistRepository
+     */
+    public function __construct(TrackRepository $repository,
+                                CategoryRepository $categoryRepository,
+                                Manager $fractal, ArtistRepository $artistRepository){
         $this->repository = $repository;
+        $this->categoryRepository = $categoryRepository;
+        $this->fractal = $fractal;
+        $this->artistRepository = $artistRepository;
     }
 
     public function lists(Request $request)
     {
-        //['new', 'trending']
-        $filter = $request->get('filter');
-        if( ! $request->has('scope') ){
-            //return tracks within the user followed categories
+        //['new', 'trending', 'all']
+        $type = $request->get('type');
+        if( ! $request->has("type")){
+            return $this->respondForAction("error", 400, "Missing Parameter");
         }
-        //return filtered tracks regardless of the categories the user is following
+        $tracks = [];
+        if($type == "trending"){
+            $tracks = $this->getTrendingTrackFor($this->auth->user());
+        }elseif($type == "new"){
+            $tracks = $this->getNewTracksFor($this->auth->user());
+        }elseif($type == "all"){
+            $tracks = $this->getAllTracksFor($this->auth->user());
+        }
+        $tracks = $this->fractal->createData(new Collection($tracks,
+            new MobileTrackCollectionTransformer($this->auth->user())))
+            ->toArray();
+        return $tracks;
+    }
+
+    public function artistTracks($uuid, Request $request)
+    {
+        if(!$request->has('type')){
+            return $this->respondForAction("error", 400, "missing parameter");
+        }
+        $tracks = [];
+        $type = $request->get('type');
+        if($type == "all"){
+            $tracks = $this->getArtistAllTracks($uuid);
+        }elseif($type == "new"){
+            $tracks = $this->getArtistNewTracks($uuid);
+        }
+        $tracks = $this->fractal->createData(new Collection($tracks,
+            new MobileTrackCollectionTransformer($this->auth->user())))
+            ->toArray();
+        return $this->response->array($tracks)->setStatusCode(200);
     }
 
     public function show($trackId)
     {
         $track = $this->repository->getTrackWithRelations($trackId);
-        //Transform and return
+        if(!$track) return $this->respondForData("error", 404, "No track found");
+        $track = $this->fractal->createData(new Item($track,
+            new MobileTrackCollectionTransformer($this->auth->user())))->toArray();
+        return $this->respondForDataMerge("success", 200, "succeeded", $track);
     }
 
     public function stream($trackId)
@@ -53,12 +117,23 @@ class TracksController extends PublicApiController
     public function like($trackId)
     {
         $track = $this->repository->getTrack($trackId);
-        $this->dispatch(new LikeTrack($track));
+        try{
+            $this->dispatch(new LikeTrack($track, $this->auth->user()));
+            return $this->respondForAction("success");
+        }catch (Exception $e){
+            return $this->respondForAction("error", $e->getCode(), $e->getMessage());
+        }
     }
+
     public function dislike($trackId)
     {
         $track = $this->repository->getTrack($trackId);
-        $this->dispatch(new DislikeTrack($track));
+        try{
+            $this->dispatch(new DislikeTrack($track, $this->auth->user()));
+            return $this->respondForAction("success");
+        }catch (Exception $e){
+            return $this->respondForAction("error", $e->getCode(), $e->getMessage());
+        }
     }
 
     public function download($trackId)
@@ -67,23 +142,85 @@ class TracksController extends PublicApiController
         $this->dispatch(new DownloadTrack($track));
     }
 
-    public function comment($trackId, Request $request)
-    {
-        $track = $this->repository->getTrack($trackId);
-        $commentBody = $request->get('body');
-        $this->dispatch(new CommentTrack($track, $commentBody));
+    public function updateInfo(Request $request, $uuid){
+        if(!$request->has("downloadable")) return $this
+            ->respondForAction("error", 400, "missing argument -> downloadable");
+        try{
+            $this->dispatch(new UpdateTrackInfo($uuid, $request->get("downloadable")));
+            return $this->respondForAction("success", 200);
+        }catch (Exception $e){
+            return $this->respondForAction("error", $e->getCode(), $e->getMessage());
+        }
     }
 
-    public function artistTracks($artistId, Request $request)
+    /**
+     * @param User $user
+     * @return array
+     */
+    private function getTrendingTrackFor(User $user)
     {
-        $type = $request->get('type');
-        $tracks = [];
-        //Could be either trending or all
-        if( $type == 'all' ){
-            $tracks = $this->repository->getAllTracksByArtist($artistId);
+        $tracks = collect([]);
+        $categories = $this->getUserCategories($user);
+        foreach($categories as $category){
+            $items = $this->categoryRepository->getCategoryTrendingTracks($category->followable_id);
+            $tracks->push($items);
         }
-        $tracks = $this->repository->getTrendingTracksByArtist($artistId);
-        //Transform and return
-        return $tracks;
+        return $tracks->unique()
+            ->flatten()
+            ->sortByDesc(function($track){
+                $track->streams->count();
+            })
+            ->take(50)
+            ->all();
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     */
+    private function getNewTracksFor(User $user)
+    {
+        $tracks = collect([]);
+        $categories = $this->getUserCategories($user);
+        foreach($categories as $category){
+            $items = $this->categoryRepository->getCategoryNewTracks($category->followable_id);
+            $tracks->push($items);
+        }
+        return $tracks->flatten()->unique()->all();
+    }
+
+    /**
+     * @param User $user
+     * @return static
+     */
+    private function getUserCategories(User $user)
+    {
+        return $user->followings->where("followable_type", 'App\Category')->all();
+    }
+
+    private function getAllTracksFor($user)
+    {
+        return $this->getNewTracksFor($user);
+    }
+
+    /**
+     * @param $uuid
+     * @return mixed
+     */
+    private function getArtistAllTracks($uuid)
+    {
+        $artist = $this->artistRepository->getArtist($uuid);
+        return $artist->uploadedTracks->sortByDesc("created_at")->all();
+    }
+
+    private function getArtistTrendingTracks($uuid)
+    {
+        $artist = $this->artistRepository->getArtist($uuid);
+        $this->repository->getTrendingTracksByArtist($uuid);
+    }
+
+    private function getArtistNewTracks($uuid)
+    {
+        return $this->repository->getArtistNewTracks($uuid);
     }
 }

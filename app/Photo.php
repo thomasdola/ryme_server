@@ -14,7 +14,7 @@ class Photo extends Model
     /**
      * @var array
      */
-    protected $fillable = ['path', 'type', 'imageable_id', 'imageable_type', "uuid"];
+    protected $fillable = ['path', 'type', 'imageable_id', 'imageable_type', "uuid", "extension"];
 
     public function imageable()
     {

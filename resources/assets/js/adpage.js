@@ -22,6 +22,14 @@ new Vue({
             startDate: "",
             endDate: "",
             company_id: null
+        },
+        newEventAd:{
+            title: "",
+            description: "",
+            time: "",
+            startDate: "",
+            endDate: "",
+            company_id: null
         }
     },
     created(){},

@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="text/babel">
 	// import _ from "lodash";
 	var numberUtils = require('mout/number');
 	export default {

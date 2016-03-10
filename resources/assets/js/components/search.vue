@@ -40,7 +40,7 @@
     </div>
 </template>
 
-<script type="text/javascript">
+<script type="text/babel">
 	export default {
 		data(){
 			return {

@@ -16,6 +16,7 @@ class CreatePhotosTable extends Migration
             $table->increments('id');
             $table->uuid('uuid');
             $table->string('path');
+            $table->string('extension');
             $table->string('type')->nullable();
             $table->integer('imageable_id');
             $table->string('imageable_type');

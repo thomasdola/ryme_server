@@ -11,7 +11,6 @@
     "bootstrap-sass": "^3.0.0",
     "moment": "^2.11.1",
     "mout": "^0.11.1",
-    "number-abbreviate": "^1.0.0",
-    "vue-strap": "^1.0.3"
+    "number-abbreviate": "^1.0.0"
   }
 }

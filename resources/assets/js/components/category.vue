@@ -14,7 +14,7 @@
 	</li>
 </template>
 
-<script type="text/javascript">
+<script type="text/babel">
 	var numberUtils = require('mout/number');
 	export default {
 		methods: {

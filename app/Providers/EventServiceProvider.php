@@ -30,7 +30,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\UserCreated' => [
             'App\Listeners\SendOtp'
-        ]
+        ],
+        'App\Events\TrackCommented' => [
+            'App\Listeners\NotifyCommenter'
+        ],
     ];
 
     /**

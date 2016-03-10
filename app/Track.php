@@ -20,7 +20,6 @@ class Track extends Model
         'released_date',
         'user_id',
         'category_id',
-        'album',
         'length',
         'downloadable'
     ];

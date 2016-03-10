@@ -17,6 +17,7 @@ use App\Track;
 use App\User;
 use App\Vouch;
 use Eureka\Services\Interfaces\UserContract;
+use Exception;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -75,10 +76,14 @@ class UserActivitiesService implements UserContract
      */
     public function commentTrack(Track $track, $commentBody, User $user)
     {
-        $track->comments()->create([
+        $comment = $track->comments()->create([
             'user_id'=>$user->id,
             'body'=>$commentBody
         ]);
+        if(! $comment){
+            $this->throwIExcp("Unable to comment on track.", 404);
+        }
+        return $comment;
     }
 
     /**
@@ -102,11 +107,13 @@ class UserActivitiesService implements UserContract
      */
     public function followArtist(User $artist, User $user)
     {
-        //We first need to update the GCM store
-
-        $artist->followers()->create([
+        $following = $artist->followers()->create([
             'user_id'=>$user->id
         ]);
+        if(!$following){
+            $this->throwIExcp("could not follow artist", 404);
+        }
+        return $following;
     }
 
     /**
@@ -114,16 +121,21 @@ class UserActivitiesService implements UserContract
      *
      * @param User $artist
      * @param User $user
-     * @return mixed|void
+     * @return mixed
      */
     public function unFollowArtist(User $artist, User $user)
     {
         //We first need to update the GCM store
 
-        Following::where([
+        $deleted = Following::where([
             'user_id'=>$user->id,
             'followable_id'=>$artist->id,
             'followable_type'=>'App\User'])->delete();
+
+        if(!$deleted){
+            $this->throwIExcp("could not unfollow artist", 404);
+        }
+        return $deleted;
     }
 
     /**
@@ -153,7 +165,7 @@ class UserActivitiesService implements UserContract
     public function followManyCategories(array $categoryIds, User $user)
     {
         $payload = $this->getPayload($categoryIds);
-        $user->followingCategories()->createMany($payload->all());
+        $user->followings()->createMany($payload->all());
     }
 
     /**
@@ -214,7 +226,7 @@ class UserActivitiesService implements UserContract
     public function answerVouch(Vouch $vouch, $answer, User $user)
     {
         $vouch =  $vouch->responses()->create([
-            'answer'=>$answer,
+            'answer'=>(boolean)$answer,
             'user_id'=>$user->id
         ]);
         if(!$vouch){
@@ -224,20 +236,22 @@ class UserActivitiesService implements UserContract
     }
 
     /**
-     * @param $path
+     * @param $data
      * @param User $user
-     * @return mixed
-     * @throws \Exception
+     * @return mixed|void
+     * @throws Exception
      */
-    public function updateProfilePicture($path, User $user)
+    public function updateProfilePicture($data, User $user)
     {
         $result = null;
         $photo = $user->photos->where('type', 'avatar')->first();
         if($photo){
-            $result = $photo->update(['path'=>$path]);
+            $result = $photo->update(['path'=>collect($data)->get('path')]);
         }else{
             $result = $user->photos()->save(
-                new Photo(['path'=>$path, 'type'=>'avatar', 'uuid'=>Uuid::generate(4)])
+                new Photo(['path'=>collect($data)->get('path'),
+                    'type'=>'avatar', 'uuid'=>Uuid::generate(4),
+                    'extension' => collect($data)->get('extension')])
             );
         }
         if(!$result){
@@ -249,13 +263,14 @@ class UserActivitiesService implements UserContract
      * @param array $data
      * @param User $user
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function updateProfileInfo(array $data, User $user)
     {
         if(!$user->update($data)){
-            throw new \Exception();
+            $this->throwIExcp("Could not update user information.", 404);
         }
+        return true;
     }
 
     /**
@@ -271,8 +286,13 @@ class UserActivitiesService implements UserContract
         return $payload;
     }
 
+    /**
+     * @param $message
+     * @param $code
+     * @throws Exception
+     */
     private function throwIExcp($message, $code)
     {
-        throw new \Exception($message, $code);
+        throw new Exception($message, $code);
     }
 }

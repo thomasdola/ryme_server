@@ -39,7 +39,7 @@
    <edit-modal :staff="editedStaff" :roles="roles"></edit-modal>
 </template>
 
-<script>
+<script type="text/babel">
 	import EditModal from './edit-staff-form.vue';
 	export default {
 		props: ['staffs', 'roles'],

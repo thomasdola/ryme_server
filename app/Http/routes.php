@@ -57,16 +57,18 @@ Route::group(['prefix'=>'admin/internal', 'middleware' => ['api']], function(){
         Route::delete('/users/{id}', ['as'=>'users.delete', 'uses'=>'UsersApiController@delete']);
 
         //Ad page Internal Api ==> all hack (:)
+        Route::resource('/ad-sections', 'AdSessionsController', ['except'=>['show', 'edit', 'create']]);
+
         Route::get('/audio-ads', ['as'=>'audio.ads.all', 'uses'=>'AudioAdApiController@all']);
         Route::get('/audio-ads/data', ['as'=>'ad.page.data', 'uses'=>'AudioAdApiController@getIndexPageData']);
         Route::get('/audio-ads/{id}', ['as'=>'audio.ads.single', 'uses'=>'AudioAdApiController@single']);
         Route::post('/audio-ads', ['as'=>'audio.ads.create', 'uses'=>'AudioAdApiController@store']);
         Route::put('/audio-ads/{id}', ['as'=>'audio.ads.update', 'uses'=>'AudioAdApiController@update']);
 
-        Route::get('/event-ads', ['as'=>'audio.ads.all', 'uses'=>'EventAdApiController@all']);
-        Route::get('/event-ads/{id}', ['as'=>'audio.ads.single', 'uses'=>'EventAdApiController@single']);
-        Route::put('/event-ads/{id}', ['as'=>'audio.ads.update', 'uses'=>'EventAdApiController@update']);
-        Route::post('/event-ads', ['as'=>'audio.ads.create', 'uses'=>'EventAdApiController@store']);
+        Route::get('/event-ads', ['as'=>'event.ads.all', 'uses'=>'EventAdApiController@all']);
+        Route::get('/event-ads/{id}', ['as'=>'event.ads.single', 'uses'=>'EventAdApiController@single']);
+        Route::put('/event-ads/{id}', ['as'=>'event.ads.update', 'uses'=>'EventAdApiController@update']);
+        Route::post('/event-ads', ['as'=>'event.ads.create', 'uses'=>'EventAdApiController@store']);
 
         Route::get('/companies', ['as'=>'companies.all', 'uses'=>'CompanyApiController@all']);
         Route::post('/companies', ['as'=>'companies.create', 'uses'=>'CompanyApiController@store']);
@@ -95,9 +97,6 @@ $api->version('v1', function($api){
     $api->post('register', ['as'=>'api.auth.register', 'uses'=>'App\Http\Controllers\Auth\ApiAuthController@register']);
     $api->post('verify', ['as'=>'api.auth.verify-otp', 'uses'=>'App\Http\Controllers\Auth\ApiAuthController@verifyOtp']);
     $api->post('login', ['as'=>'api.auth.login', 'uses'=>'App\Http\Controllers\Auth\ApiAuthController@authenticate']);
-    $api->post('oauth/access_token', function() {
-        return Response::json(Authorizer::issueAccessToken());
-    });
     $api->group(['middleware'=>['api.auth']], function($api){
         $api->get('categories/lists', ['as'=>'api.categories.lists', 'uses'=>'App\Http\Controllers\AppApi\CategoriesController@lists']);
         $api->post('categories/follow', ['as'=>'api.categories.bulk_follow', 'uses'=>'App\Http\Controllers\AppApi\CategoriesController@bulkFollow']);
@@ -112,14 +111,16 @@ $api->version('v1', function($api){
         $api->post('/tracks/{uuid}/like', ['as'=>'api.track.like', 'uses'=>'App\Http\Controllers\AppApi\TracksController@like']);
         $api->post('/tracks/{uuid}/dislike', ['as'=>'api.track.dislike', 'uses'=>'App\Http\Controllers\AppApi\TracksController@dislike']);
         $api->post('/tracks/{uuid}/download', ['as'=>'api.track.download', 'uses'=>'App\Http\Controllers\AppApi\TracksController@download']);
+        $api->post('/tracks/{uuid}/update', ['as'=>'api.track.update', 'uses'=>'App\Http\Controllers\AppApi\TracksController@updateInfo']);
         $api->post('/tracks/{uuid}/comment', ['as'=>'api.track.comment', 'uses'=>'App\Http\Controllers\AppApi\CommentsController@comment']);
+        $api->get('/tracks/{uuid}/comments', ['as'=>'api.track.comments', 'uses'=>'App\Http\Controllers\AppApi\CommentsController@comments']);
 
         $api->get('/events/lists', ['as'=>'api.events.lists', 'uses'=>'App\Http\Controllers\AppApi\EventsController@lists']);
         $api->post('/events/{uuid}/view', ['as'=>'api.events.view', 'uses'=>'App\Http\Controllers\AppApi\EventsController@view']);
 
         $api->get('/artists/{uuid}', ['as'=>'api.artist.show', 'uses'=>'App\Http\Controllers\AppApi\ArtistsController@show']);
         $api->post('/artists/{uuid}/follow', ['as'=>'api.artist.follow', 'uses'=>'App\Http\Controllers\AppApi\ArtistsController@follow']);
-        $api->post('/artists/{uuid}/unFollow', ['as'=>'api.artist.unFollow', 'uses'=>'App\Http\Controllers\AppApi\ArtistsController@unFollow']);
+        $api->post('/artists/{uuid}/unfollow', ['as'=>'api.artist.unFollow', 'uses'=>'App\Http\Controllers\AppApi\ArtistsController@unFollow']);
         $api->post('/artists/{uuid}/update', ['as'=>'api.artist.update', 'uses'=>'App\Http\Controllers\AppApi\ArtistsController@update']);
         $api->get('/artists/{uuid}/tracks', ['as'=>'api.artist.tracks', 'uses'=>'App\Http\Controllers\AppApi\TracksController@artistTracks']);
 
@@ -127,7 +128,7 @@ $api->version('v1', function($api){
         $api->get('/user/favorites', ['as'=>'api.users.favorites', 'uses'=>'App\Http\Controllers\AppApi\UsersController@favorites']);
         $api->post('/user/update', ['as'=>'api.users.update', 'uses'=>'App\Http\Controllers\AppApi\UsersController@update']);
         $api->post('/user/photo', ['as'=>'api.users.photo', 'uses'=>'App\Http\Controllers\AppApi\UsersController@photo']);
-        $api->post('/user/upload', ['as'=>'api.artist.upload', 'uses'=>'App\Http\Controllers\AppApi\ArtistsController@upload']);
+        $api->post('/artist/upload', ['as'=>'api.artist.upload', 'uses'=>'App\Http\Controllers\AppApi\ArtistsController@upload']);
         $api->get('/user/allowed', ['as'=>'api.request.allowed', 'uses'=>'App\Http\Controllers\AppApi\UsersController@isAllowedToBeArtist']);
 
         $api->post('/request/make', ['as'=>'api.request.make', 'uses'=>'App\Http\Controllers\AppApi\VouchesController@makeRequest']);

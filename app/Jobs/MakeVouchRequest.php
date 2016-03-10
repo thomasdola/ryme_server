@@ -42,7 +42,7 @@ class MakeVouchRequest extends AppApiJobs implements ShouldQueue
             $vouch = $vouchService->makeRequest($this->user);
             $this->updateUser();
             //Emit the Event
-            event()->fire(new VouchRequestSent($vouch));
+//            event()->fire(new VouchRequestSent($vouch));
         }catch (\Exception $e){
             throw $e;
         }

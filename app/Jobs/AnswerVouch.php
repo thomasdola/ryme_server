@@ -47,8 +47,7 @@ class AnswerVouch extends AppApiJobs implements ShouldQueue
         try{
             $vouchAnswer = $userActivity->answerVouch($this->vouchRequest,
                 $this->answer, $this->user);
-            //fire an event
-            event()->fire(new VouchWasAnswered($vouchAnswer));
+//            event()->fire(new VouchWasAnswered($vouchAnswer));
         }catch (\Exception $e){
             throw $e;
         }

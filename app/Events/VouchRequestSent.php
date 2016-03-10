@@ -21,7 +21,6 @@ class VouchRequestSent extends Event implements ShouldBroadcast
      */
     public function __construct(Vouch $vouch)
     {
-
         $this->vouch = $vouch;
     }
 

@@ -14,7 +14,7 @@ class Ad extends Model
     /**
      * @var array
      */
-    protected $fillable = ['title', 'uuid', 'start_date', 'end_date', 'is_active', 'company_id'];
+    protected $fillable = ['title', 'uuid', 'start_date', 'end_date', 'is_active', 'company_id', 'is_section_active'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
@@ -35,8 +35,28 @@ class Ad extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */
-    public function files()
+    public function file()
     {
-       return $this->morphMany(File::class, 'filable');
+       return $this->morphOne(File::class, 'filable');
+    }
+
+    public function artists()
+    {
+        return $this->belongsToMany(User::class, "commercials", "ad_id", "user_id");
+    }
+
+    public function categories()
+    {
+        return $this->morphToMany(Category::class, "scopable")->withTimestamps();
+    }
+
+    public function sessions()
+    {
+        return $this->morphToMany(AdSession::class, "sessionable")->withTimestamps();
+    }
+
+    public function sections()
+    {
+        return $this->morphToMany(AdSection::class, "sectionable")->withTimestamps();
     }
 }

@@ -456,16 +456,72 @@ module.exports = {
 
 },{"../util":49}],27:[function(require,module,exports){
 /**
- * Default client.
+ * Base client.
  */
 
+var _ = require('../../util');
+var Promise = require('../../promise');
 var xhrClient = require('./xhr');
 
 module.exports = function (request) {
-    return (request.client || xhrClient)(request);
+
+    var response = (request.client || xhrClient)(request);
+
+    return Promise.resolve(response).then(function (response) {
+
+        if (response.headers) {
+
+            var headers = parseHeaders(response.headers);
+
+            response.headers = function (name) {
+
+                if (name) {
+                    return headers[_.toLower(name)];
+                }
+
+                return headers;
+            };
+
+        }
+
+        response.ok = response.status >= 200 && response.status < 300;
+
+        return response;
+    });
+
 };
 
-},{"./xhr":30}],28:[function(require,module,exports){
+function parseHeaders(str) {
+
+    var headers = {}, value, name, i;
+
+    if (_.isString(str)) {
+        _.each(str.split('\n'), function (row) {
+
+            i = row.indexOf(':');
+            name = _.trim(_.toLower(row.slice(0, i)));
+            value = _.trim(row.slice(i + 1));
+
+            if (headers[name]) {
+
+                if (_.isArray(headers[name])) {
+                    headers[name].push(value);
+                } else {
+                    headers[name] = [headers[name], value];
+                }
+
+            } else {
+
+                headers[name] = value;
+            }
+
+        });
+    }
+
+    return headers;
+}
+
+},{"../../promise":42,"../../util":49,"./xhr":30}],28:[function(require,module,exports){
 /**
  * JSONP client.
  */
@@ -573,79 +629,38 @@ module.exports = function (request) {
 
         xhr.open(request.method, _.url(request), true);
 
+        handler = function (event) {
+
+            response.data = xhr.responseText;
+            response.status = xhr.status;
+            response.statusText = xhr.statusText;
+            response.headers = xhr.getAllResponseHeaders();
+
+            resolve(response);
+        };
+
+        xhr.timeout = 0;
+        xhr.onload = handler;
+        xhr.onabort = handler;
+        xhr.onerror = handler;
+        xhr.ontimeout = function () {};
+        xhr.onprogress = function () {};
+
         if (_.isPlainObject(request.xhr)) {
             _.extend(xhr, request.xhr);
+        }
+
+        if (_.isPlainObject(request.upload)) {
+            _.extend(xhr.upload, request.upload);
         }
 
         _.each(request.headers || {}, function (value, header) {
             xhr.setRequestHeader(header, value);
         });
 
-        handler = function (event) {
-
-            response.data = xhr.responseText;
-            response.status = xhr.status;
-            response.statusText = xhr.statusText;
-            response.headers = getHeaders(xhr);
-
-            resolve(response);
-        };
-
-        xhr.onload = handler;
-        xhr.onabort = handler;
-        xhr.onerror = handler;
-
         xhr.send(request.data);
     });
 };
-
-function getHeaders(xhr) {
-
-    var headers;
-
-    if (!headers) {
-        headers = parseHeaders(xhr.getAllResponseHeaders());
-    }
-
-    return function (name) {
-
-        if (name) {
-            return headers[_.toLower(name)];
-        }
-
-        return headers;
-    };
-}
-
-function parseHeaders(str) {
-
-    var headers = {}, value, name, i;
-
-    if (_.isString(str)) {
-        _.each(str.split('\n'), function (row) {
-
-            i = row.indexOf(':');
-            name = _.trim(_.toLower(row.slice(0, i)));
-            value = _.trim(row.slice(i + 1));
-
-            if (headers[name]) {
-
-                if (_.isArray(headers[name])) {
-                    headers[name].push(value);
-                } else {
-                    headers[name] = [headers[name], value];
-                }
-
-            } else {
-
-                headers[name] = value;
-            }
-
-        });
-    }
-
-    return headers;
-}
 
 },{"../../promise":42,"../../util":49}],31:[function(require,module,exports){
 /**
@@ -720,14 +735,14 @@ module.exports = {
  */
 
 var _ = require('../util');
+var Client = require('./client');
 var Promise = require('../promise');
 var interceptor = require('./interceptor');
-var defaultClient = require('./client/default');
 var jsonType = {'Content-Type': 'application/json'};
 
 function Http(url, options) {
 
-    var client = defaultClient, request, promise;
+    var client = Client, request, promise;
 
     Http.interceptors.forEach(function (handler) {
         client = interceptor(handler, this.$vm)(client);
@@ -737,7 +752,6 @@ function Http(url, options) {
     request = _.merge({}, Http.options, this.$options, options);
     promise = client(request).bind(this.$vm).then(function (response) {
 
-        response.ok = response.status >= 200 && response.status < 300;
         return response.ok ? response : Promise.reject(response);
 
     }, function (response) {
@@ -766,6 +780,7 @@ Http.options = {
     params: {},
     headers: {},
     xhr: null,
+    upload: null,
     jsonp: 'callback',
     beforeSend: null,
     crossOrigin: null,
@@ -814,7 +829,7 @@ Http.headers = {
 
 module.exports = _.http = Http;
 
-},{"../promise":42,"../util":49,"./before":26,"./client/default":27,"./cors":31,"./header":32,"./interceptor":34,"./jsonp":35,"./method":36,"./mime":37,"./timeout":38}],34:[function(require,module,exports){
+},{"../promise":42,"../util":49,"./before":26,"./client":27,"./cors":31,"./header":32,"./interceptor":34,"./jsonp":35,"./method":36,"./mime":37,"./timeout":38}],34:[function(require,module,exports){
 /**
  * Interceptor factory.
  */

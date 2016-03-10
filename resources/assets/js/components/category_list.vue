@@ -8,7 +8,7 @@
     </ul>
 </template>
 
-<script>
+<script type="text/babel">
 	import Category from "./category.vue";
 	export default {
 		components: {Category},

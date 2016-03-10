@@ -13,7 +13,7 @@ use App\Http\Controllers\AppApi\PublicApiController;
 use App\Jobs\RegisterUser;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Dingo\Api\Http\Request;
-use Eureka\Helpers\Transformers\UserItemTransformer;
+use Eureka\Helpers\Transformers\Mobile\UserItemTransformer;
 use Eureka\Repositories\UserRepository;
 use Eureka\Repositories\VerificationCodeRepository;
 use League\Fractal\Manager;

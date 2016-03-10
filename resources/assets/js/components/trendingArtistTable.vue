@@ -26,7 +26,7 @@
         </div>
 </template>
 
-<script type="text/javascript">
+<script type="text/babel">
 	export default {
 		props: ['artists']
 	}

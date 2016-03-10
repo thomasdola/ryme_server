@@ -149,7 +149,7 @@ class User extends Authenticatable
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function followingCategories()
+    public function followings()
     {
         return $this->hasMany(Following::class, "user_id");
     }
@@ -157,8 +157,8 @@ class User extends Authenticatable
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function followingArtists()
+    public function commercials()
     {
-        return $this->hasMany(Following::class, "user_id");
+        return $this->belongsToMany(Ad::class, "commercials", "user_id", "ad_id");
     }
 }

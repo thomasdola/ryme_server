@@ -10,6 +10,7 @@ namespace Eureka\Repositories;
 
 
 use App\Event;
+use App\User;
 
 /**
  * Class EventAdRepository
@@ -21,12 +22,18 @@ class EventAdRepository
      * @var Event
      */
     private $event;
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
 
     /**
      * @param Event $event
+     * @param UserRepository $userRepository
      */
-    public function __construct(Event $event){
+    public function __construct(Event $event, UserRepository $userRepository){
         $this->event = $event;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -63,12 +70,11 @@ class EventAdRepository
 
     /**
      * @param $data
-     * @return $this
+     * @return static
      */
     public function addEvent($data)
     {
-        $event = $this->event->fill($data);
-        $event->save();
+        $event = $this->event->create($data);
         return $event;
     }
 
@@ -88,7 +94,12 @@ class EventAdRepository
      */
     public function getAds()
     {
-        $activeAds = $this->event->where('is_active', true)->get();
+        $activeAds = $this->event->where('is_active', '1')->get();
         return $activeAds;
+    }
+
+    public function getAdsScopedTo(User $user)
+    {
+        $categories = $this->userRepository->followedCategories($user);
     }
 }

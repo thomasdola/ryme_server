@@ -42,9 +42,9 @@ class GetFavorites extends AppApiJobs implements ShouldQueue
         $data = [];
         $this->user = $this->auth->user();
         if ( $this->type == 'tracks'){
-            $data = $this->userRepository->getFavoriteTracksFor($this->user);
+
         }elseif( $this->type == 'artists'){
-            $data = $this->userRepository->getFavoriteArtistsFor($this->user);
+
         }
         return $data;
     }

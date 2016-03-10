@@ -36,6 +36,10 @@ class UserRepository
         return $this->user->where('username', $username)->first();
     }
 
+    /**
+     * @param User $user
+     * @return array
+     */
     public function followedCategories(User $user){
         $categories = collect([]);
         $ids =  $user->followingCategories->where('followable_type', 'App\Category')->all();
@@ -145,7 +149,7 @@ class UserRepository
      */
     public function getFavoriteTracksFor(User $user)
     {
-        return $user->likedTracks;
+        return $user->likedTracks->unique();
     }
 
     /**
@@ -154,7 +158,10 @@ class UserRepository
      */
     public function getFavoriteArtistsFor(User $user)
     {
-        return $user->followingArtists;
+        return $user->followings->where("followable_type", 'App\User')
+            ->map(function($following){
+                return $this->user->find($following->followable_id);
+            })->unique()->all();
     }
 
     /**

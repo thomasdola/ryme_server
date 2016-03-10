@@ -62,6 +62,12 @@ class VouchesController extends PublicApiController
     {
         $vouch = $this->repository->getVouch($vouchId);
         $answer = $request->get('answer');
-        $this->dispatch(new AnswerVouch($vouch, $answer, $this->auth->user()));
+//        dd($vouch, $answer);
+        try{
+            $this->dispatch(new AnswerVouch($vouch, $answer, $this->auth->user()));
+            $this->respondForAction("success", 200, "Answer was successful.");
+        }catch (\Exception $e){
+            $this->respondForAction("error", $e->getCode(), $e->getMessage());
+        }
     }
 }

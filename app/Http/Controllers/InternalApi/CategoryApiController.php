@@ -1,9 +1,8 @@
 <?php
 namespace App\Http\Controllers\InternalApi;
 
-use Eureka\Helpers\Transformers\CategoryCollectionTransformer;
-use Eureka\Helpers\Transformers\CategoryItemTransformer;
-use Eureka\Helpers\Transformers\CategoryTransformer;
+use Eureka\Helpers\Transformers\Server\CategoryCollectionTransformer;
+use Eureka\Helpers\Transformers\Server\CategoryItemTransformer;
 use Eureka\Repositories\ArtistRepository;
 use Eureka\Repositories\CategoryRepository;
 use Eureka\Repositories\TrackRepository;

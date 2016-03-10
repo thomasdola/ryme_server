@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\InternalApi;
 
 
+use Eureka\Helpers\Transformers\Server\CompanyCollectionTransformer;
 use Eureka\Repositories\CompaniesRepository;
 use Illuminate\Http\Request;
 use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
+use Webpatser\Uuid\Uuid;
 
 class CompanyApiController extends InternalApiController
 {
@@ -26,6 +30,8 @@ class CompanyApiController extends InternalApiController
     public function all()
     {
         $companies = $this->companiesRepository->getAll();
+        $data = $this->fractal->createData(new Collection($companies, new CompanyCollectionTransformer))->toArray();
+        return response()->json($data);
     }
 
     public function single($id)
@@ -40,7 +46,10 @@ class CompanyApiController extends InternalApiController
 
     public function store(Request $request)
     {
-        $company = $this->companiesRepository->addCompany($request->all());
+        $payload = array_add($request->only('name'), 'uuid', Uuid::generate(4));
+        $company = $this->companiesRepository->addCompany($payload);
+        $data = $this->fractal->createData(new Item($company, new CompanyCollectionTransformer))->toArray();
+        return response()->json($data);
     }
 
     public function delete($id)

@@ -18,11 +18,37 @@ class PublicApiController extends Controller
         ]);
     }
 
-    protected function respondForAction($status, $code, $message="unable to perform action"){
+    protected function respondForDataMerge($status, $code, $message, $data=null){
+        return response()->json(collect([
+            'status' => $status,
+            'code' => $code,
+            'message' => $message
+        ])->merge($data));
+    }
+
+    public function respondForData($status, $code, $message, $data=null){
+        return response()->json([
+            'status' => $status,
+            'code' => $code,
+            'message' => $message,
+            'data' => $data
+        ]);
+    }
+    protected function respondForAction($status, $code = 200, $message="success"){
         return response()->json([
             'status' => $status,
             'code' => $code,
             'message' => $message
+        ]);
+    }
+
+    protected function respondForSearch($status, $code, $message, $requests=null, $artist=null){
+        return response()->json([
+            'status' => $status,
+            'code' => $code,
+            'message' => $message,
+            'requests' => $requests,
+            'artists' => $artist
         ]);
     }
 }

@@ -2,48 +2,52 @@
 
 namespace App\Jobs;
 
+use App\User;
 use Eureka\Services\Interfaces\ArtistContract;
-use Eureka\Services\Interfaces\TrackTagServiceInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Collection;
+use Webpatser\Uuid\Uuid;
 
 class UploadTrack extends AppApiJobs implements ShouldQueue
 {
     /**
-     * @var Collection
+     * @var
      */
     private $audioData;
+    /**
+     * @var User
+     */
+    private $artist;
 
     /**
      * Create a new job instance.
      *
-     * @param Collection $audioData
+     * @param $audioData
+     * @param User $artist
      */
-    public function __construct(Collection $audioData)
+    public function __construct($audioData, User $artist)
     {
         $this->audioData = $audioData;
+        $this->artist = $artist;
     }
 
     /**
      * Execute the job.
      *
-     * @param TrackTagServiceInterface $trackTagger
      * @param ArtistContract $artistActivity
+     * @throws \Exception
      */
-    public function handle(TrackTagServiceInterface $trackTagger, ArtistContract $artistActivity)
+    public function handle(ArtistContract $artistActivity)
     {
+        $audioData = $this->prepareAudioData($this->audioData);
 
-        //save some of the data to session
-        $this->saveDataToSession();
-        //Set the appropriate tags on the track
-        $trackData = $trackTagger->using($this->audioData);
-        //Now , let's upload the track
-        $track = $artistActivity->uploadTrack($trackData);
-        dd($track);
+        try{
+            $track = $artistActivity->uploadTrack($audioData, $this->artist);
+        }catch (\Exception $e){
+            throw $e;
+        }
         //fire an event
 //        event()->fire(new TrackUploaded($track));
+//        dd($track);
     }
 
     protected function saveDataToSession()
@@ -53,5 +57,12 @@ class UploadTrack extends AppApiJobs implements ShouldQueue
             'title' => $this->audioData->get('title'),
             'category_id' => $this->audioData->get('category_id')
         ]);
+    }
+
+    private function prepareAudioData($audioData)
+    {
+        $uuid = Uuid::generate(4);
+        $audioData = array_add($audioData, "uuid", $uuid);
+        return $audioData;
     }
 }

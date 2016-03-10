@@ -9,15 +9,17 @@
 namespace App\Http\Controllers\AppApi;
 
 
-use App\File;
 use App\Jobs\UpdateBackPicture;
 use App\Jobs\UpdateProfileInfo;
 use App\Jobs\UpdateProfilePicture;
 use Dingo\Api\Http\Request;
+use Eureka\Helpers\Transformers\Mobile\MobileTrackCollectionTransformer;
+use Eureka\Helpers\Transformers\Mobile\UserItemTransformer;
 use Eureka\Repositories\UserRepository;
 use Eureka\Services\Interfaces\VouchServiceInterface;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UsersController extends PublicApiController
 {
@@ -25,24 +27,32 @@ class UsersController extends PublicApiController
      * @var UserRepository
      */
     private $repository;
+    /**
+     * @var Manager
+     */
+    private $fractal;
 
     /**
      * @param UserRepository $repository
+     * @param Manager $fractal
      */
-    public function __construct(UserRepository $repository){
+    public function __construct(UserRepository $repository, Manager $fractal){
         $this->repository = $repository;
+        $this->fractal = $fractal;
     }
 
     public function favorites(Request $request)
     {
+        if(!$request->has('type')){
+            return $this->respondForDataMerge("error", 400, "missing type of favorites");
+        }
         $type = $request->get('type');
         $favorites = $this->getFavorites($type);
-        return $favorites;
+        return $this->respondForDataMerge("success", 200, "here are your data", $favorites);
     }
 
     public function update(Request $request)
     {
-//        dd($request->all());
         $job = new UpdateProfileInfo($request->all(), $this->auth->user());
         try{
             $this->dispatch($job);
@@ -71,10 +81,11 @@ class UsersController extends PublicApiController
         $user = $this->auth->user();
         $file = $request->file;
         if($file->isValid()){
-            if(strtolower($request->type) == "avatar"){
-                return $this->launchAvatarSaver($file, $user);
+            $type = $request->type;
+            if(strtolower($type) == "avatar"){
+                return $this->launchAvatarSaver($file, $user, $type);
             }elseif(strtolower($request->type) == "background"){
-                return $this->launchBackImageSaver($file, $user);
+                return $this->launchBackImageSaver($file, $user, $type);
             }
         }else{
             return $this->respondForAction("error", 404, "file not found");
@@ -95,36 +106,32 @@ class UsersController extends PublicApiController
     private function getFavorites($type)
     {
         $user = $this->auth->user();
-        $favorites = [];
         if ($type == 'tracks') {
             $favorites = $this->repository->getFavoriteTracksFor($user);
+            $favorites = $this->fractal->createData(new
+            Collection($favorites, new MobileTrackCollectionTransformer($this->auth->user())))
+                ->toArray();
             return $favorites;
         } elseif ($type == 'artists') {
             $favorites = $this->repository->getFavoriteArtistsFor($user);
+            $favorites = $this->fractal->createData(new Collection($favorites, new UserItemTransformer()))
+                ->toArray();
             return $favorites;
         }
-        return $favorites;
+        return null;
     }
 
     /**
      * @param $file
      * @param $user
+     * @param $type
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    private function launchAvatarSaver($file, $user)
+    private function launchAvatarSaver($file, $user, $type)
     {
-        $destinationPath = base_path().'/public/users/profile/images/';
-        $ext = $file->getClientOriginalExtension();
-        $fileName = $user->username . '_avatar_' . '.' . $ext;
-        $full_path = '/users/profile/images/' . $fileName;
-        try{
-            $newFile = $file->move($destinationPath, $fileName);
-//            dd($newFile);
-        }catch (FileException $e){
-            throw $e;
-        }
-        $job = new UpdateProfilePicture($full_path, $user);
+        $data = $this->moveFile($file, $user, $type);
+        $job = new UpdateProfilePicture($data, $user);
         try {
             $this->dispatch($job);
             return $this->respondForAction("error", 200, "image saved successfully.");
@@ -137,16 +144,41 @@ class UsersController extends PublicApiController
     /**
      * @param $file
      * @param $user
+     * @param $type
      * @return \Illuminate\Http\JsonResponse
      */
-    private function launchBackImageSaver($file, $user)
+    private function launchBackImageSaver($file, $user, $type)
     {
-        $job = new UpdateBackPicture($file, $user);
+        $data = $this->moveFile($file, $user, $type);
+        $job = new UpdateBackPicture($data, $user);
         try{
             $this->dispatch($job);
             return $this->respondForAction("error", 200, "image saved successfully.");
         } catch (\Exception $e) {
             return $this->respondForAction("error", $e->getCode(), $e->getMessage());
         }
+    }
+
+    /**
+     * @param $file
+     * @param $user
+     * @param $type
+     * @return array
+     */
+    private function moveFile($file, $user, $type)
+    {
+        $data = [];
+        $destinationPath = base_path() . '/public/users/profile/images/';
+        $ext = $file->getClientOriginalExtension();
+        $fileName = $user->username . '_' . $type . '_' . '.' . $ext;
+        $full_path = '/users/profile/images/' . $fileName;
+        $data = array_add(array_add($data, "path", $full_path), "extension", $ext);
+        try {
+            $file->move($destinationPath, $fileName);
+            return $data;
+        } catch (FileException $e) {
+            throw $e;
+        }
+        return $data;
     }
 }

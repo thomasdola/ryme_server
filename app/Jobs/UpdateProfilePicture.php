@@ -15,18 +15,18 @@ class UpdateProfilePicture extends AppApiJobs implements ShouldQueue
     /**
      * @var
      */
-    private $photo_full_path;
+    private $photoData;
 
     /**
      * Create a new job instance.
      *
-     * @param $photo_full_path
+     * @param $photoData
      * @param User $user
      */
-    public function __construct($photo_full_path, User $user)
+    public function __construct($photoData, User $user)
     {
         $this->user = $user;
-        $this->photo_full_path = $photo_full_path;
+        $this->photoData = $photoData;
     }
 
     /**
@@ -38,7 +38,7 @@ class UpdateProfilePicture extends AppApiJobs implements ShouldQueue
     public function handle(UserContract $userActivity)
     {
         try{
-            $userActivity->updateProfilePicture($this->photo_full_path, $this->user);
+            $userActivity->updateProfilePicture($this->photoData, $this->user);
         }catch (\Exception $e){
             throw $e;
         }

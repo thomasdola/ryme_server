@@ -45,6 +45,10 @@ class AudioAdRepository
         return $ad;
     }
 
+    /**
+     * @param $data
+     * @return static
+     */
     public function createAd($data)
     {
         return $this->ad->create($data);

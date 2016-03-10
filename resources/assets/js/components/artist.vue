@@ -4,7 +4,7 @@
 	<!-- <span class="users-list-date">Today</span> -->
 </template>
 
-<script type="text/javascript">
+<script type="text/babel">
 	export default{
 		props:['artist'],
 		computed:{
