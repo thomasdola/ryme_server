@@ -14,6 +14,7 @@ use App\Jobs\DownloadTrack;
 use App\Jobs\LikeTrack;
 use App\Jobs\StreamTrack;
 use App\Jobs\UpdateTrackInfo;
+use App\Track;
 use App\User;
 use Dingo\Api\Http\Request;
 use Eureka\Helpers\Transformers\Mobile\MobileTrackCollectionTransformer;
@@ -73,11 +74,13 @@ class TracksController extends PublicApiController
         }elseif($type == "new"){
             $tracks = $this->getNewTracksFor($this->auth->user());
         }elseif($type == "all"){
-            $tracks = $this->getAllTracksFor($this->auth->user());
+//            $tracks = $this->getAllTracksFor($this->auth->user());
+            $tracks = Track::all();
         }
         $tracks = $this->fractal->createData(new Collection($tracks,
             new MobileTrackCollectionTransformer($this->auth->user())))
             ->toArray();
+//        dd($tracks);
         return $tracks;
     }
 
@@ -167,10 +170,13 @@ class TracksController extends PublicApiController
         }
         return $tracks->unique()
             ->flatten()
+            ->filter(function(Track $track){
+                return $track->streams->count() >= 100;
+            })
             ->sortByDesc(function($track){
                 $track->streams->count();
             })
-            ->take(50)
+            ->take(100)
             ->all();
     }
 

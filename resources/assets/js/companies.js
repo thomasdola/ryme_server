@@ -97,6 +97,7 @@ new Vue({
         saveEventAd(){
             let title = this.newEventAd.title.trim();
             let venue = this.newEventAd.venue.trim();
+            let fare = this.newEventAd.fare.trim();
             let description = this.newEventAd.description.trim();
             let dateTime = this.newEventAd.dateTime;
             let startDate = this.newEventAd.startDate;
@@ -104,12 +105,13 @@ new Vue({
             let companyId = this.newEventAd.company_id;
             let sessionIds = this.newEventAd.session_id;
             let categoryIds = this.newEventAd.category_id;
-            if( title && companyId && endDate
+            if( title && companyId && endDate && fare
                 && startDate && description && venue && dateTime){
                 this.savingAd = true;
                 let payload = new FormData();
                 payload.append("title", title);
                 payload.append("venue", venue);
+                payload.append("fare", fare);
                 payload.append("date_time", dateTime);
                 payload.append("description", description);
                 payload.append("start_date", startDate);
@@ -203,6 +205,7 @@ new Vue({
         newEventAd:{
             title: "",
             venue: "",
+            fare: "",
             description: "",
             session_id: [],
             category_id: [],

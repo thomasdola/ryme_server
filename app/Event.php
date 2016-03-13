@@ -16,7 +16,7 @@ class Event extends Model
     /**
      * @var array
      */
-    protected $fillable = ['title', 'uuid', 'venue',
+    protected $fillable = ['title', 'uuid', 'venue', 'fare',
         'description', 'date_time', 'start_date',
         'end_date', 'is_active', 'company_id', 'is_section_active'];
 

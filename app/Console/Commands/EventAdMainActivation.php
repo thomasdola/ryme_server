@@ -41,8 +41,11 @@ class EventAdMainActivation extends Command
     public function handle()
     {
         $ads = collect(Event::where('is_active', '0')->get());
+
         if($ads->isEmpty()) return;
+
         $early_today = Carbon::today()->startOfDay();
+
         $ads->each(function(Event $ad) use($early_today){
             $ad_start_day = Carbon::parse($ad->start_date)->startOfDay();
             if($ad_start_day->eq($early_today)){

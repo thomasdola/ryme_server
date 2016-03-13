@@ -17,6 +17,7 @@ class CreateEventsTable extends Migration
             $table->uuid('uuid');
             $table->string('title');
             $table->string('venue');
+            $table->float('fare');
             $table->text('description');
             $table->timestamp('date_time');
             $table->timestamp('start_date');

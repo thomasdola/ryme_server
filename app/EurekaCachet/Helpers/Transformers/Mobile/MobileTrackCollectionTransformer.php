@@ -9,7 +9,9 @@
 namespace Eureka\Helpers\Transformers\Mobile;
 
 
+use App\Ad;
 use App\AdSection;
+use App\Stream;
 use App\Track;
 use App\User;
 use Carbon\Carbon;
@@ -97,17 +99,32 @@ class MobileTrackCollectionTransformer extends TransformerAbstract
 
     /**
      * @param $track
+     * @return array|null
      */
     private function getAudioAd(Track $track)
     {
         $now = Carbon::now();
-        $section = AdSection::with('audio_ads')
-            ->where('start_time', '<=', $now)
-            ->where('end_time', '>', $now)
+        $track_category_id = $track->category->id;
+                //The current section based on the current time
+        $section = AdSection::with('audio_ads', 'audio_ads.streams', 'audio_ads.categories')
+            ->where('start_time', '<=', $now)->where('end_time', '>', $now)
             ->first();
-        $ad = collect($track->audio_ads->all())
-            ->where('is_section_active', '1')
-            ->random();
+        if(!$section) return null;
+        $ad = collect($section->audio_ads)->where('is_section_active', '1')
+                //Only the audio ads attached to the track category
+            ->filter(function(Ad $ad) use($track_category_id){
+            return !collect($ad->categories)->where('id', $track_category_id)->isEmpty();
+                //Sort des based on the section attached audio ads streams
+        })->sortByDesc(function(Ad $ad) use($section){
+                //Only Streams that are happening currently
+            return $ad->streams->filter(function(Stream $stream) use($section){
+                return $section->start_time <= $stream->created_ad
+                && $section->end_time > $stream->created_at;
+            })->count();
+                //Select the last audio ad because she has the least streams
+        })->last();
+        if(!$ad) return null;
+        return ['uuid'=>$ad->uuid, 'path'=>$ad->file->path];
     }
 
 

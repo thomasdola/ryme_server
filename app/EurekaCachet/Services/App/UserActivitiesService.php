@@ -210,9 +210,10 @@ class UserActivitiesService implements UserContract
      */
     public function viewEvent(Event $event, User $user)
     {
-        $event->views()->create([
+        $view = $event->views()->create([
             'user_id'=>$user->id
         ]);
+        if(! $view) $this->throwIExcp("could not lod view", 404);
     }
 
     /**

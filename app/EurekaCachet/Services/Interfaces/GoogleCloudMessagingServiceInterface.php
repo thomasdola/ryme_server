@@ -11,5 +11,5 @@ namespace Eureka\Services\Interfaces;
 
 interface GoogleCloudMessagingServiceInterface
 {
-
+    public function publish();
 }

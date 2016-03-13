@@ -170,7 +170,7 @@ return [
         Eureka\Services\ServiceProviders\UserActivitiesServiceProvider::class,
         Eureka\Services\ServiceProviders\VouchServiceProvider::class,
         Eureka\Services\ServiceProviders\SmsServiceProvider::class,
-//        Eureka\Oauth\OAuthServiceProvider::class,
+        Eureka\Services\ServiceProviders\NotificationServiceProvider::class,
 
     ],
 

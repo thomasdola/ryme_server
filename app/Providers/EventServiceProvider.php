@@ -14,25 +14,30 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         'App\Events\UserJoined' => [
-            'App\Listeners\HandleUser',
+            'App\Listeners\UpdateUserGraph',
         ],
         'App\Events\VouchRequestSent' => [
-            'App\Listeners\HandleRequest',
+            'App\Listeners\NotifyServer',
         ],
         'App\Events\VouchWasAnswered' => [
             'App\Listeners\NotifyRequestSender'
         ],
+        'App\Events\VouchRequestReachedHalfTime' => [
+            'App\Listeners\NotifyRequestSenderForSoFarReport'
+        ],
+        'App\Events\VouchRequestWasDue' => [
+            'App\Listeners\ConductFinalVerdict'
+        ],
         'App\Events\ArtistJoined' => [
-            'App\Listeners\HandleArtist',
+            'App\Listeners\UpdateArtistGraph',
+            'App\Listeners\NotifyToBeArtist',
+            'App\Listeners\NotifyToBeArtistEndorsers',
         ],
         'App\Events\TrackUploaded' => [
-            'App\Listeners\HandleTrack',
+            'App\Listeners\NotifyArtistFollowers',
         ],
         'App\Events\UserCreated' => [
             'App\Listeners\SendOtp'
-        ],
-        'App\Events\TrackCommented' => [
-            'App\Listeners\NotifyCommenter'
         ],
     ];
 

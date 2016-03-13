@@ -131,7 +131,7 @@ $api->version('v1', function($api){
         $api->post('/artist/upload', ['as'=>'api.artist.upload', 'uses'=>'App\Http\Controllers\AppApi\ArtistsController@upload']);
         $api->get('/user/allowed', ['as'=>'api.request.allowed', 'uses'=>'App\Http\Controllers\AppApi\UsersController@isAllowedToBeArtist']);
 
-        $api->post('/request/make', ['as'=>'api.request.make', 'uses'=>'App\Http\Controllers\AppApi\VouchesController@makeRequest']);
+        $api->post('/request/make', ['as'=>'api.request.make', 'uses'=>'App\Http\Controllers\AppApi\VouchesController@makeSendRequest']);
         $api->post('/vouch/{uuid}/answer', ['as'=>'api.vouch.answer', 'uses'=>'App\Http\Controllers\AppApi\VouchesController@answer']);
     });
 });

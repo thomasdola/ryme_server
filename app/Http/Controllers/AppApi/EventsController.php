@@ -13,6 +13,7 @@ use App\Event;
 use App\Jobs\ViewEvent;
 use Eureka\Helpers\Transformers\Mobile\EventAdCollectionTransformer;
 use Eureka\Repositories\EventAdRepository;
+use Exception;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 
@@ -38,8 +39,7 @@ class EventsController extends PublicApiController
 
     public function lists()
     {
-        $events = Event::all();
-//        dd($events);
+        $events = $this->repository->getRelevantEventAdsFor($this->auth->user());
         $data = $this->fractal->createData(new Collection($events,
             new EventAdCollectionTransformer($this->auth->user())))->toArray();
         return $this->respondForDataMerge("success", 200, "success", $data);
@@ -48,6 +48,11 @@ class EventsController extends PublicApiController
     public function view($eventId)
     {
         $event = $this->repository->getSingle($eventId);
-        $this->dispatch(new ViewEvent($event, $this->auth->user()));
+        try{
+            $this->dispatch(new ViewEvent($event, $this->auth->user()));
+            return $this->respondForAction("success");
+        }catch (Exception $e){
+            return $this->respondForAction("error", $e->getCode(), $e->getMessage());
+        }
     }
 }

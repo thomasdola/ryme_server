@@ -40,9 +40,15 @@ class AudioAdMainActivation extends Command
      */
     public function handle()
     {
-        $ads = collect(Ad::where('is_active', '0')->get());
+        $headers = ['title', 'is_active', 'is_section_active'];
+        $ads = collect(Ad::where('is_active', '0')->lists('title', 'is_active', 'is_section_active'));
+
         if($ads->isEmpty()) return;
+
+        $this->table($headers, $ads);
+
         $early_today = Carbon::today()->startOfDay();
+
         $ads->each(function(Ad $ad) use($early_today){
             $ad_start_day = Carbon::parse($ad->start_date)->startOfDay();
             if($ad_start_day->eq($early_today)){

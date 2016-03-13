@@ -164,11 +164,23 @@
                                                        name="venue" required class="form-control"
                                                        id="adVenue" placeholder="Ad Venue">
                                             </div>
-                                            <div class="form-group">
-                                                <label for="adDateTime">Date & Time</label>
-                                                <input v-model="newEventAd.dateTime" type="datetime-local"
-                                                       name="date_time" required class="form-control"
-                                                       id="adDateTime" placeholder="Ad Date and Time">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="adFare">Fare (GHC)</label>
+                                                        <input v-model="newEventAd.fare" type="text"
+                                                               name="fare" required class="form-control"
+                                                               id="adFare" placeholder="Event Fare">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="adDateTime">Date & Time</label>
+                                                        <input v-model="newEventAd.dateTime" type="datetime-local"
+                                                               name="date_time" required class="form-control"
+                                                               id="adDateTime" placeholder="Ad Date and Time">
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="adDescription">Description</label>
@@ -209,7 +221,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="adSession">Ad sessions</label>
+                                                        <label for="adSession">Ad sections</label>
                                                         <select multiple required v-model="newEventAd.session_id" name="session_id"
                                                                 data-placeholder="Select session..."
                                                                 class="form-control" id="adSession"  style="width: 100%;">
@@ -250,6 +262,7 @@
 
                                 <div class="tab-pane" id="audio_ad_tab">
                                     <form role="form" @submit.prevent="saveAd">
+
                                         <div class="box-body">
                                             <div class="form-group">
                                                 <label for="adTitle">Title</label>
@@ -290,7 +303,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="adSession">Ad sessions</label>
+                                                        <label for="adSession">Ad sections</label>
                                                         <select multiple required v-model="newAd.session_id" name="session_id"
                                                                 data-placeholder="Select session..."
                                                                 class="form-control" id="adSession"  style="width: 100%;">
@@ -318,7 +331,7 @@
                                                 <input accept="audio/*" required @change="onAudioChange" type="file"
                                                        name="audio" id="audio" class="form-control">
                                             </div>
-                                        </div><!-- /.box-body -->
+                                        </div>
 
                                         <div class="box-footer">
                                             <button type="submit" class="btn btn-primary btn-block">
@@ -329,9 +342,9 @@
                                     </form>
                                 </div>
 
-                            </div><!-- /.tab-content -->
+                            </div>
                         </div>
-                    </div><!-- /.box-body -->
+                    </div>
                     <div class="overlay" v-show="savingAd">
                         <i class="fa fa-refresh fa-spin"></i>
                     </div>

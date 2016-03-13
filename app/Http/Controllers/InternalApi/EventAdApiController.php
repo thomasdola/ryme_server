@@ -67,7 +67,8 @@ class EventAdApiController extends InternalApiController
         $date_time = Carbon::parse($request->date_time);
         $local_file = $this->moveToLocal($file, $file_name, self::ADS_UPLOADS_PATH);
         $full_path = $this->getFullPath($local_file, self::ADS_UPLOADS_PATH);
-        $payload = array_add($request->only(['title', 'venue', 'description']), 'uuid', Uuid::generate(4));
+        $payload = array_add($request->only(['title', 'venue', 'description', 'fare']),
+            'uuid', Uuid::generate(4));
         $payload = array_add(array_add($payload, 'end_date', $end_date), 'start_date', $start_date);
         $payload = array_add($payload, 'date_time', $date_time);
 

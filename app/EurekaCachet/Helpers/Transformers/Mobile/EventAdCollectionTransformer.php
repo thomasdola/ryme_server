@@ -32,10 +32,9 @@ class EventAdCollectionTransformer extends TransformerAbstract
     {
         return [
             'title'=>$event->title,
-            'date'=>Carbon::parse($event->date_time)->timestamp * 1000,
-            'time'=>Carbon::parse($event->date_time)->timestamp * 1000,
+            'date'=>Carbon::parse($event->date_time)->format('jS \o\f F'),
+            'time'=>Carbon::parse($event->date_time)->format('g:i A'),
             'description' => $event->description,
-            'fare'=>$event->fare,
             'views'=>$event->views->count(),
             'uuid'=>$event->uuid,
             'venue'=>$event->venue,

@@ -42,13 +42,15 @@ class EventAdSectionActivation extends Command
     public function handle()
     {
         $current = Carbon::now();
+
         $current_section = AdSection::with('event_ads')
             ->where('start_time', '<=', $current)
             ->where('end_time', '>', $current)->first();
+
         collect($current_section->event_ads->all())
             ->where('is_active', '1')->where('is_section_active', '0')
             ->each(function(Event $ad){
-                $ad->update(['is_section_active', true]);
+                $ad->update(['is_section_active' => true]);
             });
     }
 }

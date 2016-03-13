@@ -26663,6 +26663,7 @@ new _vue2.default({
         saveEventAd: function saveEventAd() {
             var title = this.newEventAd.title.trim();
             var venue = this.newEventAd.venue.trim();
+            var fare = this.newEventAd.fare.trim();
             var description = this.newEventAd.description.trim();
             var dateTime = this.newEventAd.dateTime;
             var startDate = this.newEventAd.startDate;
@@ -26670,11 +26671,12 @@ new _vue2.default({
             var companyId = this.newEventAd.company_id;
             var sessionIds = this.newEventAd.session_id;
             var categoryIds = this.newEventAd.category_id;
-            if (title && companyId && endDate && startDate && description && venue && dateTime) {
+            if (title && companyId && endDate && fare && startDate && description && venue && dateTime) {
                 this.savingAd = true;
                 var payload = new FormData();
                 payload.append("title", title);
                 payload.append("venue", venue);
+                payload.append("fare", fare);
                 payload.append("date_time", dateTime);
                 payload.append("description", description);
                 payload.append("start_date", startDate);
@@ -26768,6 +26770,7 @@ new _vue2.default({
         newEventAd: {
             title: "",
             venue: "",
+            fare: "",
             description: "",
             session_id: [],
             category_id: [],
