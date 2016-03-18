@@ -63,13 +63,15 @@ class ArtistsController extends PublicApiController
 
     /**
      * @param $artistId
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function follow($artistId)
+    public function follow($artistId, Request $request)
     {
+        $user_gcm_reg_token = $request->get('token');
         $artist = $this->repository->getArtist($artistId);
         try {
-            $this->dispatch(new FollowArtist($artist, $this->auth->user()));
+            $this->dispatch(new FollowArtist($artist, $this->auth->user(), $user_gcm_reg_token));
             return $this->respondForAction("success");
         }catch (Exception $e){
             return $this->respondForAction("error", $e->getCode(), $e->getMessage());
@@ -78,13 +80,15 @@ class ArtistsController extends PublicApiController
 
     /**
      * @param $artistId
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function unFollow($artistId)
+    public function unFollow($artistId, Request $request)
     {
+        $user_gcm_reg_token = $request->get('token');
         $artist = $this->repository->getArtist($artistId);
         try{
-            $this->dispatch(new UnfollowArtist($artist, $this->auth->user()));
+            $this->dispatch(new UnfollowArtist($artist, $this->auth->user(), $user_gcm_reg_token));
             return $this->respondForAction("success");
         }catch (Exception $e){
             return $this->respondForAction("error", $e->getCode(), $e->getMessage());
@@ -97,14 +101,18 @@ class ArtistsController extends PublicApiController
      */
     public function upload(Request $request)
     {
-        $audioData = $this->prepareAudioData($request);
-        $job = new UploadTrack($audioData, $this->auth->user());
-        try{
-            $this->dispatch($job);
+        if($request->track != null){
             return $this->respondForAction("success", 200, "Track Uploaded Successfully.");
-        }catch (Exception $e){
-            return $this->respondForAction("error", $e->getCode(), $e->getMessage());
         }
+        return $this->respondForAction("error", 401, "Track file not found");
+//        $audioData = $this->prepareAudioData($request);
+//        $job = new UploadTrack($audioData, $this->auth->user());
+//        try{
+//            $this->dispatch($job);
+//            return $this->respondForAction("success", 200, "Track Uploaded Successfully.");
+//        }catch (Exception $e){
+//            return $this->respondForAction("error", $e->getCode(), $e->getMessage());
+//        }
     }
 
     /**

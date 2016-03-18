@@ -45,13 +45,12 @@ class VouchesController extends PublicApiController
      */
     public function makeRequest(Request $request)
     {
-//        dd($request->all());
         $payload = $request->only('stage_name');
+        $user_gcm_reg_token = $request->get('token');
         $category_id = $this->categoryRepository->getCategoryIdByName($request->category);
         $payload = array_add($payload, "category_id", $category_id);
-//        dd($payload);
         try{
-            $this->dispatch(new MakeVouchRequest($payload, $this->auth->user()));
+            $this->dispatch(new MakeVouchRequest($payload, $this->auth->user(), $user_gcm_reg_token));
             return $this->respondForAction("success", 200, "Request was made successfully.");
         }catch (\Exception $e){
             return $this->respondForAction("error", $e->getCode(), $e->getMessage());
@@ -61,10 +60,10 @@ class VouchesController extends PublicApiController
     public function answer($vouchId, Request $request)
     {
         $vouch = $this->repository->getVouch($vouchId);
+        $user_gcm_reg_token = $request->get('token');
         $answer = $request->get('answer');
-//        dd($vouch, $answer);
         try{
-            $this->dispatch(new AnswerVouch($vouch, $answer, $this->auth->user()));
+            $this->dispatch(new AnswerVouch($vouch, $answer, $this->auth->user(), $user_gcm_reg_token));
             $this->respondForAction("success", 200, "Answer was successful.");
         }catch (\Exception $e){
             $this->respondForAction("error", $e->getCode(), $e->getMessage());

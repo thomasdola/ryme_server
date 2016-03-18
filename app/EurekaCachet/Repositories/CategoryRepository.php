@@ -42,7 +42,9 @@ class CategoryRepository
      */
     public function getCategory($id)
     {
-        return $this->category->with('artists', 'tracks', 'followers')->where('uuid', $id)->first();
+        return $this->category
+            ->with('artists', 'tracks', 'followers')
+            ->where('uuid', $id)->first();
     }
 
     /**

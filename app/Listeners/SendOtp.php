@@ -20,7 +20,6 @@ class SendOtp
      */
     public function __construct(SmsApiInterface $smsApi)
     {
-        //
         $this->smsApi = $smsApi;
     }
 

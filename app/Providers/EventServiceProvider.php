@@ -28,6 +28,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\VouchRequestWasDue' => [
             'App\Listeners\ConductFinalVerdict'
         ],
+        'App\Events\UserCouldNotMakeId' => [
+            'App\Listeners\NotifyLooserUser'
+        ],
         'App\Events\ArtistJoined' => [
             'App\Listeners\UpdateArtistGraph',
             'App\Listeners\NotifyToBeArtist',
@@ -35,6 +38,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\TrackUploaded' => [
             'App\Listeners\NotifyArtistFollowers',
+            'App\Listeners\NotifyArtistFollowersOfNewTrack',
         ],
         'App\Events\UserCreated' => [
             'App\Listeners\SendOtp'

@@ -37,6 +37,6 @@ class Vouch extends Model
      */
     public function channel()
     {
-        return $this->morphMany(NotificationChannel::class, 'channelable');
+        return $this->morphOne(NotificationChannel::class, 'channelable');
     }
 }

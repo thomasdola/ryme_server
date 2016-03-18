@@ -2,12 +2,13 @@
 
 namespace App\Events;
 
+use App\Events\Event;
 use App\User;
 use App\Vouch;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class ArtistJoined extends Event implements ShouldBroadcast
+class UserCouldNotMakeId extends Event
 {
     use SerializesModels;
     /**

@@ -156,6 +156,7 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider::class,
         LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class,
+        TomLingham\Searchy\SearchyServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -225,7 +226,8 @@ return [
         'Excel'     => Maatwebsite\Excel\Facades\Excel::class,
         'Uuid'      => Webpatser\Uuid\Uuid::class,
         'DingoRoute'=> Dingo\Api\Facade\Route::class,
-        'Authorizer' => LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
+        'Authorizer'=> LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
+        'Searchy'   => TomLingham\Searchy\Facades\Searchy::class
     ],
 
 ];

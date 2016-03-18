@@ -16,6 +16,7 @@ use App\User;
 use Dingo\Api\Http\Request;
 use Eureka\Helpers\Transformers\CategoriesTransformer;
 use Eureka\Repositories\CategoryRepository;
+use Eureka\Services\Interfaces\NotificationServiceInterface;
 use Illuminate\Support\Facades\Auth;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
@@ -44,6 +45,10 @@ class CategoriesController extends PublicApiController
         $this->categoryRepository = $categoryRepository;
         $this->fractal = $fractal->setSerializer(new ArraySerializer());
     }
+
+    /**
+     * @return mixed
+     */
     public function lists()
     {
         $categories = $this->categoryRepository->getAll()->toArray();
@@ -52,30 +57,48 @@ class CategoriesController extends PublicApiController
         return $this->response->array($categories)->setStatusCode(200);
     }
 
-    public function follow($genreId)
+    /**
+     * @param $genreId
+     * @param Request $request
+     * @param NotificationServiceInterface $interface
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function follow($genreId, Request $request, NotificationServiceInterface $interface)
     {
+        $user_gcm_reg_token = $request->get('token');
         $genre = $this->categoryRepository->getCategory($genreId);
         try{
-            $this->dispatch(new FollowGenre($genre, $this->user));
+            $this->dispatch(new FollowGenre($genre, $this->user, $user_gcm_reg_token));
+            $res = $interface->ptest($user_gcm_reg_token, ['title'=>'test one', 'body'=>'no body', 'event'=>'no-event']);
+//            dd($res);
+            return $this->respondForAction("success", 200, "category followed successfully");
         }catch (\Exception $e){
             throw $e;
 //            return $this->respondForAction("error", $e->getCode());
         }
-        return $this->respondForAction("success", 200, "category followed successfully");
     }
 
+    /**
+     * @param $genreId
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function unFollow($genreId, Request $request)
     {
+        $user_gcm_reg_token = $request->get('token');
         $genre = $this->categoryRepository->getCategory($genreId);
         try{
-            $this->dispatch(new UnfollowGenre($genre, $this->user));
+            $this->dispatch(new UnfollowGenre($genre, $this->user, $user_gcm_reg_token));
+            return $this->respondForAction("success", 200, "category unfollowed successfully");
         }catch (\Exception $e){
-            throw $e;
-//            return $this->respondForAction("error", $e->getCode());
+            return $this->respondForAction("error", $e->getCode());
         }
-        return $this->respondForAction("success", 200, "category unfollowed successfully");
     }
 
+    /**
+     * @param Request $request
+     */
     public function bulkFollow(Request $request)
     {
         $this->dispatch(new followManyGenres($request->get('categoryIds')));

@@ -32,4 +32,12 @@ interface NotificationServiceInterface
      * @return mixed
      */
     public function unsubscribe($user_id, $channel);
+
+
+    /**
+     * @param $to
+     * @param array $data
+     * @return mixed
+     */
+    public function ptest($to, array $data);
 }

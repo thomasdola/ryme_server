@@ -42,8 +42,8 @@ class VouchService implements VouchServiceInterface
      */
     public function isAllowed(User $user)
     {
+        if($user->is_artist) return false;
         $numberOfRequest = $user->vouchRequests->count();
-
         if( $numberOfRequest !== 0 ){
             $request = $user->vouchRequests->last();
             $monthsElapsed = $this->getMonthsElapsed($request);

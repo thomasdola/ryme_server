@@ -71,21 +71,17 @@ class GoogleCloudMessagingService implements NotificationServiceInterface
      * @param $channel
      * @param $message
      * @param $event
+     * @return ResponseInterface
+     * @throws Exception
      */
     private function makeSendRequest($channel, $message, $event)
     {
         $client = new Client($this->getOptions("send"));
-        $promise = $client->postAsync('send', $this->getData($channel, $message,$event));
-        $promise->then(
-            function(ResponseInterface $res){
-                if($res->getStatusCode() != 200){
-                    throw new Exception("Unable to make request", $res->getStatusCode());
-                }
-            },
-            function(RequestException $res){
-                throw new Exception($res->getMessage(), $res->getCode());
-            }
-        );
+        $res = $client->post('send', $this->getData($channel, $message,$event));
+        if($res->getStatusCode() != 200){
+            throw new Exception("Unable to make request", $res->getStatusCode());
+        }
+        return $res;
     }
 
     /**
@@ -112,7 +108,7 @@ class GoogleCloudMessagingService implements NotificationServiceInterface
      * @param $channel
      * @param $message
      * @param $event
-     * @return string
+     * @return array
      */
     private function getData($channel, $message, $event)
     {
@@ -123,21 +119,21 @@ class GoogleCloudMessagingService implements NotificationServiceInterface
      * @param $channel
      * @param $message
      * @param $event
-     * @return string
+     * @return array
      */
     private function prepareNotification($channel, $message, $event)
     {
         $to = '/topics/'.$channel;
         $collapse_key = $event;
-//        $options = $this->prepareOptionsField($event);
-        $notification = $this->prepareNotificationField($message);
         $data = $this->prepareDataField($message, $event);
-        return collect([
-            'to'=>$to,
-            'collapse_key'=>$collapse_key,
-            'notification'=>$notification,
-            'data'=>$data
-        ])->toJson();
+        return [
+            'verify' => false,
+            'json' => [
+                'to'=>$to,
+                'collapse_key'=>$collapse_key,
+                'data'=>$data
+            ]
+        ];
     }
 
     /**
@@ -149,6 +145,8 @@ class GoogleCloudMessagingService implements NotificationServiceInterface
     {
         $data = [
             'event'=>$event,
+            'title'=>collect($message)->get('title'),
+            'body'=>collect($message)->get('body')
         ];
         if(strtolower($event) == "track_uploaded"){
             $data = array_add($data, 'track_id', collect($message)->get('track_id'));
@@ -182,55 +180,81 @@ class GoogleCloudMessagingService implements NotificationServiceInterface
     /**
      * @param $user_id
      * @param $channel
-     * @return string
+     * @return array
      */
     private function getBatchUnsubData($user_id, $channel)
     {
-        return collect([
-            'to' => '/topics/'.$channel,
-            'registration_tokens' => [$user_id],
-        ])->toJson();
+        return [
+            'verify' => false,
+            'json' => [
+                'to' => '/topics/'.$channel,
+                'registration_tokens' => [$user_id],
+            ]
+        ];
     }
 
     /**
      * @param $user_id
      * @param $channel
+     * @return ResponseInterface
+     * @throws Exception
      */
     private function makeUnSubRequest($user_id, $channel)
     {
         $client = new Client($this->getOptions('unsub'));
-        $promise = $client->postAsync(self::BATCH_UNSUB_BASE_URI, $this->getBatchUnsubData($user_id, $channel));
-        $promise->then(
-            function(ResponseInterface $res){
-                if($res->getStatusCode() != 200){
-                    throw new Exception("Unable to make request", $res->getStatusCode());
-                }
-            },
-            function(RequestException $res){
-                throw new Exception($res->getMessage(), $res->getCode());
-            }
-        );
+        $res = $client->post(self::BATCH_UNSUB_BASE_URI, $this->getBatchUnsubData($user_id, $channel));
+        if($res->getStatusCode() != 200){
+            throw new Exception("Unable to make request", $res->getStatusCode());
+        }
+        return $res;
     }
 
     /**
      * @param $user_id
      * @param $channel
+     * @return ResponseInterface
+     * @throws Exception
      */
     private function makeSubRequest($user_id, $channel)
     {
         $client = new Client($this->getOptions("sub"));
         $topic_name = $channel;
         $iid_token = $user_id;
-        $promise = $client->postAsync("https://iid.googleapis.com/iid/v1/{$iid_token}/rel/topics/{$topic_name}");
-        $promise->then(
-            function(ResponseInterface $res){
-                if($res->getStatusCode() != 200){
-                    throw new Exception("Unable to make request", $res->getStatusCode());
-                }
-            },
-            function(RequestException $res){
-                throw new Exception($res->getMessage(), $res->getCode());
-            }
-        );
+        $res = $client->post("https://iid.googleapis.com/iid/v1/{$iid_token}/rel/topics/{$topic_name}");
+        if($res->getStatusCode() != 200){
+            throw new Exception("Unable to make request", $res->getStatusCode());
+        }
+        return $res;
+    }
+
+    /**
+     * @param $to
+     * @param array $data
+     * @return mixed|void
+     * @throws Exception
+     */
+    public function ptest($to, array $data)
+    {
+        $client = new Client($this->getOptions("send"));
+        $res = $client->post('send', $this->simpleNotify($to, $data));
+        if($res->getStatusCode() != 200){
+            throw new Exception("Unable to make request", $res->getStatusCode());
+        }
+        return $res;
+    }
+
+    /**
+     * @param $to
+     * @param array $data
+     * @return array
+     */
+    private function simpleNotify($to, array $data)
+    {
+        return [
+            'json'=>[
+                'data'=>$data,
+                'to'=>$to
+            ]
+        ];
     }
 }

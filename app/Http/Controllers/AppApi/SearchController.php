@@ -15,6 +15,7 @@ use Eureka\Helpers\Transformers\Mobile\MobileArtistItemTransformer;
 use Eureka\Repositories\ArtistRepository;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
+use TomLingham\Searchy\Facades\Searchy;
 
 class SearchController extends PublicApiController
 {
@@ -36,6 +37,10 @@ class SearchController extends PublicApiController
         $this->fractal = $fractal;
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function search(Request $request)
     {
         if(!$request->has('q')){

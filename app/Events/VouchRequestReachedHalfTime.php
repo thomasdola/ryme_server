@@ -2,16 +2,16 @@
 
 namespace App\Events;
 
-use App\User;
+use App\Events\Event;
 use App\Vouch;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class ArtistJoined extends Event implements ShouldBroadcast
+class VouchRequestReachedHalfTime extends Event
 {
     use SerializesModels;
     /**
-     * @var User
+     * @var Vouch
      */
     public $vouch;
 
@@ -22,6 +22,7 @@ class ArtistJoined extends Event implements ShouldBroadcast
      */
     public function __construct(Vouch $vouch)
     {
+        //
         $this->vouch = $vouch;
     }
 

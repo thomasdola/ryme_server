@@ -2,37 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9b93dbf3-4a75-4fda-a5e3-e0fc5caabe0f" name="Default" comment="">
-      <change type="DELETED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\Events\TrackCommented.php" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\Listeners\HandleArtist.php" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\Listeners\HandleRequest.php" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\Listeners\HandleTrack.php" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\Listeners\HandleUser.php" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\Listeners\NotifyCommenter.php" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\GURU\Documents\Projects\ryme\ryme\app\Listeners\NotifyRequestSender.php" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/users/uploads/amen.mp3" afterPath="$PROJECT_DIR$/public/users/uploads/amen.mp3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/migrations/2016_01_01_200231_create_events_table.php" afterPath="$PROJECT_DIR$/database/migrations/2016_01_01_200231_create_events_table.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Console/Commands/AudioAdMainActivation.php" afterPath="$PROJECT_DIR$/app/Console/Commands/AudioAdMainActivation.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Console/Commands/AudioAdSectionActivation.php" afterPath="$PROJECT_DIR$/app/Console/Commands/AudioAdSectionActivation.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Event.php" afterPath="$PROJECT_DIR$/app/Event.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/InternalApi/EventAdApiController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/InternalApi/EventAdApiController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Mobile/EventAdCollectionTransformer.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Mobile/EventAdCollectionTransformer.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Console/Commands/EventAdMainActivation.php" afterPath="$PROJECT_DIR$/app/Console/Commands/EventAdMainActivation.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/EurekaCachet/Repositories/EventAdRepository.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Repositories/EventAdRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Console/Commands/EventAdSectionActivation.php" afterPath="$PROJECT_DIR$/app/Console/Commands/EventAdSectionActivation.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Jobs/AnswerVouch.php" afterPath="$PROJECT_DIR$/app/Jobs/AnswerVouch.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Events/ArtistJoined.php" afterPath="$PROJECT_DIR$/app/Events/ArtistJoined.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Console/Commands/ArtistRequestManager.php" afterPath="$PROJECT_DIR$/app/Console/Commands/ArtistRequestManager.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/AppApi/ArtistsController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/AppApi/ArtistsController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/AppApi/CategoriesController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/AppApi/CategoriesController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Category.php" afterPath="$PROJECT_DIR$/app/Category.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/InternalApi/CategoryApiController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/InternalApi/CategoryApiController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/EurekaCachet/Repositories/CategoryRepository.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Repositories/CategoryRepository.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Listeners/ConductFinalVerdict.php" afterPath="$PROJECT_DIR$/app/Listeners/ConductFinalVerdict.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Providers/EventServiceProvider.php" afterPath="$PROJECT_DIR$/app/Providers/EventServiceProvider.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/AppApi/EventsController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/AppApi/EventsController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Jobs/FollowArtist.php" afterPath="$PROJECT_DIR$/app/Jobs/FollowArtist.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Jobs/FollowGenre.php" afterPath="$PROJECT_DIR$/app/Jobs/FollowGenre.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/EurekaCachet/Services/Internal/GoogleCloudMessagingService.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Services/Internal/GoogleCloudMessagingService.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/EurekaCachet/Services/Interfaces/GoogleCloudMessagingServiceInterface.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Services/Interfaces/GoogleCloudMessagingServiceInterface.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Mobile/MobileTrackCollectionTransformer.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Mobile/MobileTrackCollectionTransformer.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/AppApi/TracksController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/AppApi/TracksController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Jobs/MakeVouchRequest.php" afterPath="$PROJECT_DIR$/app/Jobs/MakeVouchRequest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/EurekaCachet/Services/Interfaces/NotificationServiceInterface.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Services/Interfaces/NotificationServiceInterface.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/AppApi/SearchController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/AppApi/SearchController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Listeners/SendOtp.php" afterPath="$PROJECT_DIR$/app/Listeners/SendOtp.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Jobs/UnfollowArtist.php" afterPath="$PROJECT_DIR$/app/Jobs/UnfollowArtist.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Jobs/UnfollowGenre.php" afterPath="$PROJECT_DIR$/app/Jobs/UnfollowGenre.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/EurekaCachet/Services/App/UserActivitiesService.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Services/App/UserActivitiesService.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Jobs/ViewEvent.php" afterPath="$PROJECT_DIR$/app/Jobs/ViewEvent.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Vouch.php" afterPath="$PROJECT_DIR$/app/Vouch.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Events/VouchRequestWasDue.php" afterPath="$PROJECT_DIR$/app/Events/VouchRequestWasDue.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/EurekaCachet/Services/App/VouchService.php" afterPath="$PROJECT_DIR$/app/EurekaCachet/Services/App/VouchService.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Events/VouchWasAnswered.php" afterPath="$PROJECT_DIR$/app/Events/VouchWasAnswered.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/AppApi/VouchesController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/AppApi/VouchesController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/app.php" afterPath="$PROJECT_DIR$/config/app.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/companies.js.map" afterPath="$PROJECT_DIR$/public/js/companies.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/companies.js" afterPath="$PROJECT_DIR$/public/js/companies.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/assets/js/companies.js" afterPath="$PROJECT_DIR$/resources/assets/js/companies.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/ads/index.blade.php" afterPath="$PROJECT_DIR$/resources/views/ads/index.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/routes.php" afterPath="$PROJECT_DIR$/app/Http/routes.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ryme.iws" />
@@ -55,28 +50,27 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TracksController.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/AppApi/TracksController.php">
+      <file leaf-file-name="routes.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.731441">
-              <caret line="179" column="20" selection-start-line="179" selection-start-column="20" selection-end-line="179" selection-end-column="20" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="41" column="34" selection-start-line="41" selection-start-column="34" selection-end-line="41" selection-end-column="34" />
               <folding>
-                <element signature="e#1675#2516#0#PHP" expanded="true" />
-                <element signature="e#5646#5739#2#PHP" expanded="true" />
-                <element signature="e#5766#5839#2#PHP" expanded="true" />
-                <element signature="e#6406#6547#0#PHP" expanded="true" />
+                <element signature="e#5665#10064#1#PHP" expanded="true" />
+                <element signature="e#6089#10060#1#PHP" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="EventServiceProvider.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Providers/EventServiceProvider.php">
+      <file leaf-file-name="UploadFile.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Helpers/Utils/UploadFile.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="33" column="52" selection-start-line="33" selection-start-column="52" selection-end-line="33" selection-end-column="52" />
+            <state vertical-scroll-proportion="0.48799127">
+              <caret line="24" column="5" selection-start-line="17" selection-start-column="4" selection-end-line="24" selection-end-column="5" />
               <folding>
-                <element signature="e#1442#1545#0#PHP" expanded="true" />
+                <element signature="e#123#170#0#PHP" expanded="true" />
+                <element signature="e#252#567#0#PHP" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -167,57 +161,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/database/migrations/2016_03_02_155603_create_scopables_table.php" />
-        <option value="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/CategoryCollectionTransformer.php" />
-        <option value="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/CompanyCollectionTransformer.php" />
-        <option value="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/CategoryItemTransformer.php" />
-        <option value="$PROJECT_DIR$/app/EurekaCachet/Helpers/Utils/UploadFile.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/InternalApi/InternalApiController.php" />
-        <option value="$PROJECT_DIR$/app/Sectionable.php" />
-        <option value="$PROJECT_DIR$/database/migrations/2016_03_09_171912_create_sectionables_table.php" />
-        <option value="$PROJECT_DIR$/database/migrations/2016_03_09_172102_create_ad_sections_table.php" />
-        <option value="$PROJECT_DIR$/database/database.sqlite" />
-        <option value="$PROJECT_DIR$/config/database.php" />
-        <option value="$PROJECT_DIR$/app/Ad.php" />
-        <option value="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/EventAdItemTransformer.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/InternalApi/AdSessionsController.php" />
-        <option value="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/AdSessionCollectionTransformer.php" />
-        <option value="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Server/AudioAdItemTransformer.php" />
-        <option value="$PROJECT_DIR$/app/Http/routes.php" />
-        <option value="$PROJECT_DIR$/app/Console/Commands/DaiylyAdActivation.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/InternalApi/AudioAdApiController.php" />
-        <option value="$PROJECT_DIR$/app/AdSection.php" />
-        <option value="$PROJECT_DIR$/app/Console/Commands/UpdateAdSectionTime.php" />
-        <option value="$PROJECT_DIR$/app/Console/Commands/AudioAdSectionDeactivation.php" />
-        <option value="$PROJECT_DIR$/app/Vouch.php" />
-        <option value="$PROJECT_DIR$/app/Console/Commands/ArtistRequestManager.php" />
-        <option value="$PROJECT_DIR$/app/Console/Commands/AudioAdMainDeactivation.php" />
-        <option value="$PROJECT_DIR$/app/Console/Commands/EventAdMainDeactivation.php" />
-        <option value="$PROJECT_DIR$/app/Console/Commands/EventAdSectionDeactivation.php" />
-        <option value="$PROJECT_DIR$/app/Console/Kernel.php" />
-        <option value="$PROJECT_DIR$/app/Track.php" />
-        <option value="$PROJECT_DIR$/database/migrations/2016_01_01_200241_create_ads_table.php" />
-        <option value="$PROJECT_DIR$/database/migrations/2016_01_01_200231_create_events_table.php" />
-        <option value="$PROJECT_DIR$/app/Event.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/InternalApi/EventAdApiController.php" />
         <option value="$PROJECT_DIR$/resources/views/ads/index.blade.php" />
         <option value="$PROJECT_DIR$/app/Console/Commands/AudioAdMainActivation.php" />
         <option value="$PROJECT_DIR$/app/Console/Commands/AudioAdSectionActivation.php" />
         <option value="$PROJECT_DIR$/app/Console/Commands/EventAdMainActivation.php" />
         <option value="$PROJECT_DIR$/app/Console/Commands/EventAdSectionActivation.php" />
         <option value="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Mobile/EventAdCollectionTransformer.php" />
-        <option value="$PROJECT_DIR$/app/EurekaCachet/Services/App/UserActivitiesService.php" />
         <option value="$PROJECT_DIR$/app/Jobs/ViewEvent.php" />
         <option value="$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Mobile/MobileTrackCollectionTransformer.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/AppApi/EventsController.php" />
         <option value="$PROJECT_DIR$/app/EurekaCachet/Repositories/EventAdRepository.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/AppApi/TracksController.php" />
         <option value="$PROJECT_DIR$/app/EurekaCachet/Services/Interfaces/GoogleCloudMessagingServiceInterface.php" />
-        <option value="$PROJECT_DIR$/app/EurekaCachet/Services/Interfaces/NotificationServiceInterface.php" />
-        <option value="$PROJECT_DIR$/app/Providers/EventServiceProvider.php" />
-        <option value="$PROJECT_DIR$/app/EurekaCachet/Services/Internal/GoogleCloudMessagingService.php" />
         <option value="$PROJECT_DIR$/app/EurekaCachet/Services/ServiceProviders/NotificationServiceProvider.php" />
+        <option value="$PROJECT_DIR$/app/Events/VouchRequestWasDue.php" />
+        <option value="$PROJECT_DIR$/app/Listeners/SendOtp.php" />
+        <option value="$PROJECT_DIR$/app/Events/ArtistCouldNotMakeId.php" />
+        <option value="$PROJECT_DIR$/app/Listeners/ConductFinalVerdict.php" />
+        <option value="$PROJECT_DIR$/app/Events/ArtistJoined.php" />
+        <option value="$PROJECT_DIR$/app/Events/UserCouldNotMakeId.php" />
+        <option value="$PROJECT_DIR$/app/Vouch.php" />
+        <option value="$PROJECT_DIR$/app/Listeners/NotifyToBeArtistEndorsers.php" />
+        <option value="$PROJECT_DIR$/app/Events/VouchRequestReachedHalfTime.php" />
+        <option value="$PROJECT_DIR$/app/Listeners/NotifyLooserUser.php" />
+        <option value="$PROJECT_DIR$/app/Listeners/NotifyRequestSenderForSoFarReport.php" />
+        <option value="$PROJECT_DIR$/app/Listeners/NotifyToBeArtist.php" />
+        <option value="$PROJECT_DIR$/app/Providers/EventServiceProvider.php" />
+        <option value="$PROJECT_DIR$/app/Listeners/NotifyArtistFollowersOfNewTrack.php" />
+        <option value="$PROJECT_DIR$/app/Jobs/FollowGenre.php" />
+        <option value="$PROJECT_DIR$/app/Jobs/UnfollowGenre.php" />
+        <option value="$PROJECT_DIR$/app/Jobs/FollowArtist.php" />
+        <option value="$PROJECT_DIR$/app/Jobs/UnfollowArtist.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/AppApi/VouchesController.php" />
+        <option value="$PROJECT_DIR$/app/Jobs/MakeVouchRequest.php" />
+        <option value="$PROJECT_DIR$/app/Events/VouchWasAnswered.php" />
+        <option value="$PROJECT_DIR$/app/EurekaCachet/Services/App/UserActivitiesService.php" />
+        <option value="$PROJECT_DIR$/app/Jobs/AnswerVouch.php" />
+        <option value="$PROJECT_DIR$/app/Console/Commands/ArtistRequestWeeklyReport.php" />
+        <option value="$PROJECT_DIR$/app/Console/Commands/ArtistRequestManager.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/AppApi/SearchController.php" />
         <option value="$PROJECT_DIR$/config/app.php" />
+        <option value="$PROJECT_DIR$/.env" />
+        <option value="$PROJECT_DIR$/app/EurekaCachet/Services/Internal/MessageBirdSmsApi.php" />
+        <option value="$PROJECT_DIR$/app/EurekaCachet/Services/App/VouchService.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/AppApi/UsersController.php" />
+        <option value="$PROJECT_DIR$/app/Category.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/InternalApi/CategoryApiController.php" />
+        <option value="$PROJECT_DIR$/app/EurekaCachet/Services/Interfaces/NotificationServiceInterface.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/AppApi/CategoriesController.php" />
+        <option value="$PROJECT_DIR$/app/EurekaCachet/Services/Internal/GoogleCloudMessagingService.php" />
+        <option value="$PROJECT_DIR$/app/EurekaCachet/Repositories/CategoryRepository.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/AppApi/TracksController.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/AppApi/ArtistsController.php" />
       </list>
     </option>
   </component>
@@ -282,7 +276,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -329,25 +323,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Providers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ryme" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ryme" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Listeners" />
+              <option name="myItemId" value="Jobs" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -384,6 +360,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="EurekaCachet" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ThirdPartyServices" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -486,6 +466,54 @@
               <option name="myItemId" value="Services" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="App" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ryme" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ryme" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EurekaCachet" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ryme" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ryme" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EurekaCachet" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Helpers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Utils" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -509,9 +537,27 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ryme" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ryme" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Console" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -581,7 +627,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2078125" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -589,7 +635,6 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27648306" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -600,6 +645,7 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27648306" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
     </layout>
@@ -622,465 +668,367 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/Vouch.php">
+    <entry file="file://$PROJECT_DIR$/app/Events/VouchRequestReachedHalfTime.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.1703057">
-          <caret line="32" column="5" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.43886462">
+          <caret line="15" column="10" selection-start-line="15" selection-start-column="10" selection-end-line="15" selection-end-column="10" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Console/Commands/ArtistRequestManager.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.2434497">
-          <caret line="44" column="53" selection-start-line="44" selection-start-column="53" selection-end-line="44" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Console/Commands/AudioAdMainDeactivation.php">
+    <entry file="file://$PROJECT_DIR$/app/Listeners/NotifyLooserUser.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="52" column="11" selection-start-line="52" selection-start-column="11" selection-end-line="52" selection-end-column="11" />
+          <caret line="56" column="64" selection-start-line="56" selection-start-column="64" selection-end-line="56" selection-end-column="64" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Console/Commands/EventAdMainDeactivation.php">
+    <entry file="file://$PROJECT_DIR$/app/Listeners/NotifyToBeArtistEndorsers.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="45" column="9" selection-start-line="45" selection-start-column="9" selection-end-line="45" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Listeners/NotifyToBeArtist.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="49" column="61" selection-start-line="49" selection-start-column="61" selection-end-line="49" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Listeners/NotifyRequestSenderForSoFarReport.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.121179">
+          <caret line="13" column="7" selection-start-line="13" selection-start-column="7" selection-end-line="13" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Events/TrackUploaded.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Listeners/NotifyArtistFollowers.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="33" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Listeners/NotifyArtistFollowersOfNewTrack.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.19541484">
-          <caret line="42" column="26" selection-start-line="42" selection-start-column="26" selection-end-line="42" selection-end-column="26" />
+          <caret line="34" column="5" selection-start-line="34" selection-start-column="5" selection-end-line="34" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Console/Commands/AudioAdSectionDeactivation.php">
+    <entry file="file://$PROJECT_DIR$/app/Providers/EventServiceProvider.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="50" column="15" selection-start-line="50" selection-start-column="15" selection-end-line="50" selection-end-column="15" />
+        <state vertical-scroll-proportion="2.4137554">
+          <caret line="44" column="10" selection-start-line="44" selection-start-column="10" selection-end-line="44" selection-end-column="10" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Console/Commands/UpdateAdSectionTime.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.70742357">
-          <caret line="43" column="40" selection-start-line="43" selection-start-column="40" selection-end-line="43" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Console/Kernel.php">
+    <entry file="file://$PROJECT_DIR$/app/Jobs/UnfollowGenre.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.56113535">
-          <caret line="24" column="51" selection-start-line="24" selection-start-column="51" selection-end-line="24" selection-end-column="51" />
+          <caret line="50" column="31" selection-start-line="50" selection-start-column="31" selection-end-line="50" selection-end-column="31" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Track.php">
+    <entry file="file://$PROJECT_DIR$/app/Jobs/FollowArtist.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="119" column="92" selection-start-line="119" selection-start-column="92" selection-end-line="119" selection-end-column="92" />
-          <folding>
-            <element signature="e#2315#2418#0#PHP" expanded="false" />
-          </folding>
+        <state vertical-scroll-proportion="0.07314411">
+          <caret line="45" column="66" selection-start-line="45" selection-start-column="66" selection-end-line="45" selection-end-column="66" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Category.php">
+    <entry file="file://$PROJECT_DIR$/app/Jobs/UnfollowArtist.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="11" column="36" selection-start-line="11" selection-start-column="36" selection-end-line="11" selection-end-column="36" />
-          <folding>
-            <element signature="e#962#1058#0#PHP" expanded="false" />
-          </folding>
+        <state vertical-scroll-proportion="0.07314411">
+          <caret line="44" column="65" selection-start-line="44" selection-start-column="65" selection-end-line="44" selection-end-column="65" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/database/migrations/2016_01_01_200241_create_ads_table.php">
+    <entry file="file://$PROJECT_DIR$/app/Events/VouchRequestSent.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="21" column="65" selection-start-line="21" selection-start-column="65" selection-end-line="21" selection-end-column="65" />
+        <state vertical-scroll-proportion="0.14628822">
+          <caret line="10" column="25" selection-start-line="10" selection-start-column="25" selection-end-line="10" selection-end-column="25" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php">
+    <entry file="file://$PROJECT_DIR$/app/Events/VouchWasAnswered.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.41484717">
-          <caret line="1033" column="20" selection-start-line="1033" selection-start-column="20" selection-end-line="1033" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Relations/BelongsToMany.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.40611354">
-          <caret line="1163" column="20" selection-start-line="1163" selection-start-column="20" selection-end-line="1163" selection-end-column="20" />
-          <folding>
-            <element signature="e#33606#33848#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/migrations/2016_01_01_200231_create_events_table.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="19" column="34" selection-start-line="19" selection-start-column="34" selection-end-line="19" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Event.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="18" column="60" selection-start-line="18" selection-start-column="60" selection-end-line="18" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/ads/index.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5120087">
-          <caret line="143" column="53" selection-start-line="143" selection-start-column="53" selection-end-line="143" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/InternalApi/EventAdApiController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="66" column="56" selection-start-line="66" selection-start-column="56" selection-end-line="66" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Ad.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="117" selection-start-line="16" selection-start-column="117" selection-end-line="16" selection-end-column="117" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/AdSection.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="61" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="61" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Console/Command.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="330" column="68" selection-start-line="330" selection-start-column="68" selection-end-line="330" selection-end-column="68" />
-          <folding>
-            <element signature="e#8727#9020#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Console/Commands/AudioAdMainActivation.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="47" column="37" selection-start-line="47" selection-start-column="37" selection-end-line="47" selection-end-column="37" />
-          <folding>
-            <element signature="e#1135#1369#2#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Console/Commands/AudioAdSectionActivation.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="43" column="55" selection-start-line="43" selection-start-column="55" selection-end-line="43" selection-end-column="55" />
-          <folding>
-            <element signature="e#1223#1314#2#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Console/Commands/EventAdMainActivation.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
-          <folding>
-            <element signature="e#995#1232#2#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Console/Commands/EventAdSectionActivation.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34170306">
-          <caret line="45" column="55" selection-start-line="45" selection-start-column="55" selection-end-line="45" selection-end-column="55" />
-          <folding>
-            <element signature="e#1217#1311#2#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/nesbot/carbon/src/Carbon/Carbon.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1042" column="36" selection-start-line="1042" selection-start-column="29" selection-end-line="1042" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Mobile/EventAdCollectionTransformer.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="35" column="70" selection-start-line="35" selection-start-column="70" selection-end-line="35" selection-end-column="70" />
+        <state vertical-scroll-proportion="0.65829694">
+          <caret line="15" column="10" selection-start-line="15" selection-start-column="10" selection-end-line="15" selection-end-column="10" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/App/UserActivitiesService.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.18668123">
-          <caret line="210" column="25" selection-start-line="210" selection-start-column="25" selection-end-line="210" selection-end-column="25" />
+        <state vertical-scroll-proportion="0.25982532">
+          <caret line="227" column="39" selection-start-line="227" selection-start-column="39" selection-end-line="227" selection-end-column="39" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Jobs/ViewEvent.php">
+    <entry file="file://$PROJECT_DIR$/app/Jobs/MakeVouchRequest.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5120087">
-          <caret line="26" column="28" selection-start-line="26" selection-start-column="28" selection-end-line="26" selection-end-column="28" />
+        <state vertical-scroll-proportion="0.34170306">
+          <caret line="49" column="61" selection-start-line="49" selection-start-column="61" selection-end-line="49" selection-end-column="61" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/AppApi/VouchesController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="99" column="61" selection-start-line="99" selection-start-column="61" selection-end-line="99" selection-end-column="61" />
-          <folding>
-            <element signature="e#6089#10060#1#PHP" expanded="false" />
-          </folding>
+        <state vertical-scroll-proportion="0.26855895">
+          <caret line="63" column="42" selection-start-line="63" selection-start-column="42" selection-end-line="63" selection-end-column="42" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Stream.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="6" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/migrations/2016_01_01_200036_create_streams_table.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="46" selection-start-line="14" selection-start-column="46" selection-end-line="14" selection-end-column="46" />
-          <folding>
-            <element signature="e#276#541#1#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Support/Collection.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="185" column="20" selection-start-line="185" selection-start-column="20" selection-end-line="185" selection-end-column="20" />
-          <folding>
-            <element signature="e#4366#4641#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Console/Commands/EventAdSectionDeactivation.php">
+    <entry file="file://$PROJECT_DIR$/app/Console/Commands/ArtistRequestWeeklyReport.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.56113535">
-          <caret line="47" column="51" selection-start-line="47" selection-start-column="51" selection-end-line="47" selection-end-column="51" />
-          <folding>
-            <element signature="e#1215#1308#2#PHP" expanded="false" />
-          </folding>
+          <caret line="45" column="42" selection-start-line="45" selection-start-column="42" selection-end-line="45" selection-end-column="42" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Following.php">
+    <entry file="file://$PROJECT_DIR$/app/Console/Commands/ArtistRequestManager.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.48799127">
+          <caret line="46" column="54" selection-start-line="46" selection-start-column="54" selection-end-line="46" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/tom-lingham/searchy/config/searchy.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/AppApi/EventsController.php">
+    <entry file="file://$PROJECT_DIR$/vendor/tom-lingham/searchy/src/Facades/Searchy.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33296943">
+          <caret line="9" column="6" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/tom-lingham/searchy/src/SearchyServiceProvider.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.29257643">
+          <caret line="4" column="39" selection-start-line="4" selection-start-column="39" selection-end-line="4" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/AppApi/SearchController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="41" column="50" selection-start-line="41" selection-start-column="50" selection-end-line="41" selection-end-column="50" />
-          <folding>
-            <element signature="e#1155#1522#0#PHP" expanded="false" />
-          </folding>
+          <caret line="49" column="38" selection-start-line="49" selection-start-column="38" selection-end-line="49" selection-end-column="38" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Repositories/EventAdRepository.php">
+    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/Interfaces/SmsApiInterface.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <element signature="e#122#140#0#PHP" expanded="false" />
-            <element signature="e#981#1106#0#PHP" expanded="false" />
-            <element signature="e#1766#1896#0#PHP" expanded="false" />
-            <element signature="e#2679#2996#2#PHP" expanded="false" />
-            <element signature="e#3267#3365#2#PHP" expanded="false" />
-            <element signature="e#3580#3659#2#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Helpers/Transformers/Mobile/MobileTrackCollectionTransformer.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="86" column="0" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
-          <folding>
-            <element signature="e#3192#3408#2#PHP" expanded="false" />
-            <element signature="e#3422#3833#2#PHP" expanded="false" />
-            <element signature="e#3554#3735#2#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/ServiceProviders/SmsServiceProvider.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48799127">
-          <caret line="26" column="91" selection-start-line="26" selection-start-column="91" selection-end-line="26" selection-end-column="91" />
-          <folding>
-            <element signature="e#517#575#1#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/guzzlehttp/guzzle/src/Client.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.201965">
-          <caret line="63" column="41" selection-start-line="63" selection-start-column="41" selection-end-line="63" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Jobs/RegisterUser.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.99126637">
-          <caret line="53" column="42" selection-start-line="53" selection-start-column="42" selection-end-line="53" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Events/UserCreated.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.21943231">
-          <caret line="25" column="5" selection-start-line="25" selection-start-column="5" selection-end-line="25" selection-end-column="5" />
-          <folding />
+          <caret line="13" column="59" selection-start-line="13" selection-start-column="59" selection-end-line="13" selection-end-column="59" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Listeners/SendOtp.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9268559">
-          <caret line="35" column="67" selection-start-line="35" selection-start-column="67" selection-end-line="35" selection-end-column="67" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/Core_c.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.69868994">
-          <caret line="278" column="26" selection-start-line="278" selection-start-column="26" selection-end-line="278" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/ServiceProviders/NotificationServiceProvider.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.40611354">
-          <caret line="15" column="1" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
-          <folding>
-            <element signature="e#135#192#0#PHP" expanded="true" />
-            <element signature="e#380#589#0#PHP" expanded="true" />
-            <element signature="e#502#581#1#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/Internal/GoogleCloudMessagingService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33296943">
-          <caret line="17" column="6" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
-          <folding>
-            <element signature="e#127#187#0#PHP" expanded="true" />
-            <element signature="e#744#947#0#PHP" expanded="true" />
-            <element signature="e#1061#1249#0#PHP" expanded="true" />
-            <element signature="e#1363#1555#0#PHP" expanded="true" />
-            <element signature="e#1644#2250#0#PHP" expanded="true" />
-            <element signature="e#1866#2243#0#PHP" expanded="false" />
-            <element signature="e#1894#2099#1#PHP" expanded="true" />
-            <element signature="e#2113#2233#1#PHP" expanded="true" />
-            <element signature="e#4810#5013#0#PHP" expanded="true" />
-            <element signature="e#5081#5704#0#PHP" expanded="true" />
-            <element signature="e#5320#5697#0#PHP" expanded="false" />
-            <element signature="e#5348#5553#1#PHP" expanded="true" />
-            <element signature="e#5567#5687#1#PHP" expanded="true" />
-            <element signature="e#5772#6455#0#PHP" expanded="true" />
-            <element signature="e#6071#6448#0#PHP" expanded="false" />
-            <element signature="e#6099#6304#1#PHP" expanded="true" />
-            <element signature="e#6318#6438#1#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/ServiceProviders/ArtistActivitiesServiceProvider.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6342795">
-          <caret line="24" column="58" selection-start-line="24" selection-start-column="30" selection-end-line="24" selection-end-column="58" />
-          <folding>
-            <element signature="e#483#558#1#PHP" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.0">
+          <caret line="32" column="5" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config/app.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="172" column="58" selection-start-line="172" selection-start-column="58" selection-end-line="172" selection-end-column="58" />
-          <folding />
+          <caret line="172" column="51" selection-start-line="172" selection-start-column="51" selection-end-line="172" selection-end-column="51" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/Interfaces/NotificationServiceInterface.php">
+    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/ServiceProviders/SmsServiceProvider.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.29257643">
-          <caret line="19" column="56" selection-start-line="19" selection-start-column="56" selection-end-line="19" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/Interfaces/GoogleCloudMessagingServiceInterface.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.58515286">
-          <caret line="13" column="28" selection-start-line="13" selection-start-column="28" selection-end-line="13" selection-end-column="28" />
-          <folding />
+        <state vertical-scroll-proportion="0.47925764">
+          <caret line="27" column="26" selection-start-line="27" selection-start-column="26" selection-end-line="27" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.env">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.29257643">
-          <caret line="32" column="18" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="18" />
-          <folding />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="31" column="16" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="16" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Providers/EventServiceProvider.php">
+    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/Internal/TxtGhanaSmsApi.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="52" selection-start-line="33" selection-start-column="52" selection-end-line="33" selection-end-column="52" />
-          <folding>
-            <element signature="e#1442#1545#0#PHP" expanded="true" />
-          </folding>
+          <caret line="23" column="42" selection-start-line="23" selection-start-column="42" selection-end-line="23" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/ThirdPartyServices/SmsApi.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="42" column="82" selection-start-line="42" selection-start-column="20" selection-end-line="42" selection-end-column="82" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/Internal/MessageBirdSmsApi.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="50" column="21" selection-start-line="50" selection-start-column="21" selection-end-line="50" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Jobs/AnswerVouch.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="57" column="39" selection-start-line="57" selection-start-column="39" selection-end-line="57" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/UsersController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/App/VouchService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="48" column="46" selection-start-line="48" selection-start-column="46" selection-end-line="48" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/Interfaces/VouchServiceInterface.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="24" column="20" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Jobs/FollowGenre.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="33" column="30" selection-start-line="33" selection-start-column="30" selection-end-line="33" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Category.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="32" column="5" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/Interfaces/GoogleCloudMessagingServiceInterface.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/Interfaces/NotificationServiceInterface.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="41" column="22" selection-start-line="41" selection-start-column="22" selection-end-line="41" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/guzzlehttp/guzzle/src/Client.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33296943">
+          <caret line="20" column="3" selection-start-line="20" selection-start-column="3" selection-end-line="20" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/guzzlehttp/promises/src/PromiseInterface.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.40611354">
+          <caret line="28" column="37" selection-start-line="28" selection-start-column="37" selection-end-line="28" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/InternalApi/CategoryApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="147" column="66" selection-start-line="147" selection-start-column="66" selection-end-line="147" selection-end-column="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Services/Internal/GoogleCloudMessagingService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="235" column="22" selection-start-line="235" selection-start-column="22" selection-end-line="235" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/AppApi/CategoriesController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="76" column="69" selection-start-line="76" selection-start-column="69" selection-end-line="76" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Repositories/CategoryRepository.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="119" column="5" selection-start-line="119" selection-start-column="5" selection-end-line="119" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/CategoriesController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5120087">
+          <caret line="40" column="42" selection-start-line="40" selection-start-column="42" selection-end-line="40" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/AppApi/ArtistsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="98" column="30" selection-start-line="98" selection-start-column="30" selection-end-line="98" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/AppApi/UsersController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="82" column="29" selection-start-line="82" selection-start-column="29" selection-end-line="82" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/AppApi/TracksController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.731441">
-          <caret line="179" column="20" selection-start-line="179" selection-start-column="20" selection-end-line="179" selection-end-column="20" />
+        <state vertical-scroll-proportion="-1.4868996">
+          <caret line="189" column="54" selection-start-line="189" selection-start-column="54" selection-end-line="189" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="41" column="34" selection-start-line="41" selection-start-column="34" selection-end-line="41" selection-end-column="34" />
           <folding>
-            <element signature="e#1675#2516#0#PHP" expanded="true" />
-            <element signature="e#5646#5739#2#PHP" expanded="true" />
-            <element signature="e#5766#5839#2#PHP" expanded="true" />
-            <element signature="e#6406#6547#0#PHP" expanded="true" />
+            <element signature="e#5665#10064#1#PHP" expanded="true" />
+            <element signature="e#6089#10060#1#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/EurekaCachet/Helpers/Utils/UploadFile.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.48799127">
+          <caret line="24" column="5" selection-start-line="17" selection-start-column="4" selection-end-line="24" selection-end-column="5" />
+          <folding>
+            <element signature="e#123#170#0#PHP" expanded="true" />
+            <element signature="e#252#567#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>

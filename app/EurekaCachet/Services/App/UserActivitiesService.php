@@ -176,8 +176,6 @@ class UserActivitiesService implements UserContract
      */
     public function unFollowCategory(Category $category, User $user)
     {
-        //We first need to update the GCM store
-
         $deleted = Following::where([
             'user_id'=>$user->id,
             'followable_id'=>$category->id,
