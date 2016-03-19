@@ -65,8 +65,11 @@ class CategoriesController extends PublicApiController
      */
     public function follow($genreId, Request $request, NotificationServiceInterface $interface)
     {
+
         $user_gcm_reg_token = $request->get('token');
         $genre = $this->categoryRepository->getCategory($genreId);
+
+        dd($user_gcm_reg_token, $genre);
         try{
             $this->dispatch(new FollowGenre($genre, $this->user, $user_gcm_reg_token));
             $res = $interface->ptest($user_gcm_reg_token, ['title'=>'test one', 'body'=>'no body', 'event'=>'no-event']);
