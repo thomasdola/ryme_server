@@ -45,11 +45,12 @@ class FollowGenre extends AppApiJobs implements ShouldQueue
      */
     public function handle(UserContract $userActivity, NotificationServiceInterface $notificationService)
     {
-        try{
-            $notificationService->subscribe($this->token, $this->genre->channel->uuid);
-            $userActivity->followCategory($this->genre, $this->user);
-        }catch (\Exception $e){
-            throw $e;
-        }
+        dd("here");
+//        try{
+//            $notificationService->subscribe($this->token, $this->genre->channel->uuid);
+//            $userActivity->followCategory($this->genre, $this->user);
+//        }catch (\Exception $e){
+//            throw $e;
+//        }
     }
 }

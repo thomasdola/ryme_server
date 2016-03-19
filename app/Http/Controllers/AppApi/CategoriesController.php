@@ -67,6 +67,7 @@ class CategoriesController extends PublicApiController
     {
         $user_gcm_reg_token = $request->get('token');
         $genre = $this->categoryRepository->getCategory($genreId);
+        dd("here 2");
         try{
             $this->dispatch(new FollowGenre($genre, $this->user, $user_gcm_reg_token));
             $res = $interface->ptest($user_gcm_reg_token, ['title'=>'test one', 'body'=>'no body', 'event'=>'no-event']);
