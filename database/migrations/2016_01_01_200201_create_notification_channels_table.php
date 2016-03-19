@@ -16,7 +16,7 @@ class CreateNotificationChannelsTable extends Migration
             $table->increments('id');
             $table->integer('channelable_id')->index();
             $table->string('channelable_type');
-            $table->uuid('name');
+            $table->string('name');
             $table->uuid('uuid');
             $table->timestamps();
         });
