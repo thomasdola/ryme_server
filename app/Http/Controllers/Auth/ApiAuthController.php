@@ -16,9 +16,9 @@ use Dingo\Api\Http\Request;
 use Eureka\Helpers\Transformers\Mobile\UserItemTransformer;
 use Eureka\Repositories\UserRepository;
 use Eureka\Repositories\VerificationCodeRepository;
+use Exception;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
-use Mockery\Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -63,11 +63,9 @@ class ApiAuthController extends PublicApiController
             $token = JWTAuth::attempt($credentials);
             if( ! $token ){
                 return $this->respondForAuth("error", 500, "Invalid Credentials", null, null);
-//                return response()->json(['error'=>'Invalid Credentials'], 401);
             }
         } catch(JWTException $e){
             return $this->respondForAuth("error", 500, "Could not create token", null, null);
-//            return response()->json(['error'=>'Could not create token'], 500);
         }
         $user = $this->userRepository->getUserByUsername($request->get('username'));
         $user = $this->transform($user);
@@ -77,34 +75,38 @@ class ApiAuthController extends PublicApiController
     public function register(Request $request)
     {
         $rules = $this->getRegistrationRules();
-        $payload = $request->only('dial_code', 'phone_number', 'username', 'password');
+        $payload = $this->getPayloadToValidate($request);
         try{
             $this->validateData($payload, $rules);
         }catch (StoreResourceFailedException $e){
             return $this->respondForAuth('error', $e->getCode(), $e->getMessage());
-//            throw $e;
         }
-        $job = new RegisterUser(collect($request->all()));
+
+        $job = new RegisterUser(collect($payload));
         try{
             $this->dispatch($job);
         }catch (Exception $e){
-//            throw $e;
             return $this->respondForAuth('error', $e->getCode(), $e->getMessage());
         }
+
         return $this->respondForAuth('success', 200, 'user created');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function verifyOtp(Request $request)
     {
-        $otp = $request->get("code");
-        $code = $this->codeRepository->getCode($otp);
-        if( ! $code ){
-            return $this->respondForAuth('error', 400, 'Invalid Code');
+        try{
+            list($otp, $user) = $this->validateVerificationCode($request);
+        }catch (Exception $e){
+            return $this->respondForAuth('error', $e->getCode(), $e->getMessage());
         }
-        $user = $code->user;
-        $token = $this->generateToken($code->user);
-//        $this->deleteOtp($otp);
-//        $this->updateUserStatus($user);
+
+        $token = $this->generateToken($user);
+        $this->deleteOtp($otp);
+        $this->updateUserStatus($user);
         $user = $this->fractal->createData(new Item($user, new UserItemTransformer, 'user'))->toArray();
         return $this->respondForAuth('success', '200', 'user registered successfully', $token, $user);
     }
@@ -136,8 +138,9 @@ class ApiAuthController extends PublicApiController
     private function getRegistrationRules()
     {
         $rules = [
+            'gender' => ['required'],
             'dial_code' => ['required'],
-            'phone_number' => ['required'],
+            'phone_number' => ['required', 'unique:users'],
             'username' => ['required', 'unique:users'],
             'password' => ['required', 'min:10']
         ];
@@ -188,5 +191,45 @@ class ApiAuthController extends PublicApiController
     private function transform($user)
     {
         return $this->fractal->createData(new Item($user, new UserItemTransformer, 'user'))->toArray();
+    }
+
+    private function makeNumber(Request $payload)
+    {
+        $dial_code = $payload->get('dial_code');
+        $raw_phone = $payload->get('phone_number');
+        $phone = $dial_code . $raw_phone;
+        return $phone;
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    private function getPayloadToValidate(Request $request)
+    {
+        $phone_number = $this->makeNumber($request);
+        $payload = $request->only('gender', 'username', 'password', 'dial_code');
+        $payload = array_add($payload, 'phone_number', $phone_number);
+        return $payload;
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     * @throws Exception
+     */
+    private function validateVerificationCode(Request $request)
+    {
+        $otp = $request->get("code");
+        $user_phone = $request->get("phone_number");
+        $code = $this->codeRepository->getCode($otp);
+        if (!$code) {
+            throw new Exception("Invalid Code", 401);
+        }
+        $user = $code->user;
+        if ($user->phone_number != $user_phone) {
+            throw new Exception("Invalid Code", 401);
+        }
+        return array($otp, $user);
     }
 }
