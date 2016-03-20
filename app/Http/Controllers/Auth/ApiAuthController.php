@@ -209,7 +209,7 @@ class ApiAuthController extends PublicApiController
     {
         $phone_number = $this->makeNumber($request);
         $payload = $request->only('gender', 'username', 'password', 'dial_code');
-        $payload = array_add($payload, 'phone_number', $phone_number);
+        $payload = array_add($payload, 'phone', $phone_number);
         return $payload;
     }
 
