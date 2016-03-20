@@ -141,7 +141,7 @@ class ApiAuthController extends PublicApiController
         $rules = [
             'gender' => ['required'],
             'dial_code' => ['required'],
-            'phone_number' => ['required', 'unique:users'],
+            'phone' => ['required', 'unique:users'],
             'username' => ['required', 'unique:users'],
             'password' => ['required', 'min:10']
         ];
