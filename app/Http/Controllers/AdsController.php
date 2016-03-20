@@ -27,7 +27,6 @@ class AdsController extends Controller
                                 CompanyRepository $companyRepository, CompanyRepository $companyRepository){
         $this->adRepository = $adRepository;
         $this->companyRepository = $companyRepository;
-        $this->companyRepository = $companyRepository;
     }
     /**
      * Display a listing of the resource.
