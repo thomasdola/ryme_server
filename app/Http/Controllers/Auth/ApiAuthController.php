@@ -79,7 +79,8 @@ class ApiAuthController extends PublicApiController
         try{
             $this->validateData($payload, $rules);
         }catch (StoreResourceFailedException $e){
-            return $this->respondForAuth('error', $e->getCode(), $e->getMessage());
+            throw $e;
+//            return $this->respondForAuth('error', $e->getCode(), $e->getMessage());
         }
 
         $job = new RegisterUser(collect($payload));
