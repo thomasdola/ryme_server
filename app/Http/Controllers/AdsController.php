@@ -23,10 +23,8 @@ class AdsController extends Controller
      * @param AdRepository $adRepository
      * @param CompanyRepository $companyRepository
      */
-    public function __construct(AdRepository $adRepository,
-                                CompanyRepository $companyRepository, CompanyRepository $companyRepository){
+    public function __construct(AdRepository $adRepository, CompanyRepository $companyRepository){
         $this->adRepository = $adRepository;
-        $this->companyRepository = $companyRepository;
         $this->companyRepository = $companyRepository;
     }
     /**

@@ -37,9 +37,7 @@ class RegisterUser extends AppApiJobs implements ShouldQueue
      */
     public function handle(UserRepository $userRepository)
     {
-        $payload = $this->data->only('dial_code', 'phone_number', 'username', 'password');
-        $phone = $this->setPhoneNumber($this->data);
-        $data = $this->prepareData($payload, $phone);
+        $data = $this->prepareData($this->data);
         DB::beginTransaction();
         try{
             $user = $userRepository->add($data);
@@ -59,26 +57,17 @@ class RegisterUser extends AppApiJobs implements ShouldQueue
         DB::commit();
     }
 
-    private function setPhoneNumber(Collection $payload)
-    {
-        $dial_code = $payload->get('dial_code');
-        $raw_phone = $payload->get('phone_number');
-        $phone = $dial_code . $raw_phone;
-        return $phone;
-    }
-
     private function generateOTP()
     {
         return mt_rand(1000, 9999);
     }
 
-    private function prepareData($payload, $phone)
+    private function prepareData(Collection $payload)
     {
-        $payload = collect($payload)->except('dial_code', 'phone_number');
+        $payload = $payload->except('dial_code');
         $password = bcrypt($payload->get('password'));
         $uuid = Uuid::generate(4);
         $data = array_add(array_add($payload->except('password')->all(), 'uuid', $uuid), 'type', 'user');
-        $data = array_add($data, 'phone', $phone);
         return array_add($data, 'password', $password);
     }
 }

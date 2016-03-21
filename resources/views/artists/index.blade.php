@@ -79,5 +79,5 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('js/artists.js') }}"></script>
+    <script src="{{ asset('js/artists.js', false) }}"></script>
 @endsection

@@ -48,7 +48,6 @@ class AdRepository
     public function getActiveAds()
     {
         return $this->ad->where('is_active', true)
-            ->orderBy('updated_on', 'desc')
             ->get();
     }
 
@@ -65,8 +64,7 @@ class AdRepository
      */
     public function getPausedAds()
     {
-       return $this->ad->orderBy('updated_at', 'desc')
-           ->where('is_active', false)
+       return $this->ad->where('is_active', false)
            ->get();
     }
 
@@ -83,7 +81,7 @@ class AdRepository
      */
     public function getAllAds()
     {
-       return $this->ad->orderBy('updated_at', 'desc')->get();
+       return $this->ad->all();
     }
 
     /**

@@ -147,9 +147,20 @@ class CategoryApiController extends InternalApiController
         $payload = $request->only("name");
         $payload = array_add($payload, "uuid", Uuid::generate(4));
         $category = $this->categoryRepository->addCategory($payload);
-        $category->channel()->create(['name'=>$category->name."-channel", "uuid"=>Uuid::generate(4)]);
+        $channelData = $this->getChannelData($category);
+        $category->channel()->create($channelData);
         $data = $this->fractal->createData(new Item($category,
             new CategoryCollectionTransformer, self::RESOURCE_KEY))->toArray();
         return response()->json($data);
+    }
+
+    /**
+     * @param $category
+     * @return array
+     * @throws \Exception
+     */
+    private function getChannelData($category)
+    {
+        return ['name' => $category->name . "-channel", "uuid" => Uuid::generate(4)];
     }
 }

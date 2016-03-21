@@ -101,6 +101,7 @@ class ArtistsController extends PublicApiController
      */
     public function upload(Request $request)
     {
+        dd($request->track);
         if($request->track != null){
             return $this->respondForAction("success", 200, "Track Uploaded Successfully.");
         }

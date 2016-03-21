@@ -385,5 +385,5 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('js/companies.js') }}"></script>
+    <script src="{{ asset('js/companies.js', false) }}"></script>
 @endsection

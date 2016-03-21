@@ -40,7 +40,7 @@ class CompanyRepository
 
     private function getAllCompanies()
     {
-       return $this->company->orderBy('updated_at', 'desc');
+       return $this->company->all();
     }
 
 }
