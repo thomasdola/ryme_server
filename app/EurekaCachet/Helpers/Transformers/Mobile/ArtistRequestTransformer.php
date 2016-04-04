@@ -30,7 +30,7 @@ class ArtistRequestTransformer extends TransformerAbstract
         return [
             "stage_name" => $user->stage_name,
             "avatar" => $user->photos->where('type', 'avatar')->first()
-                ? "http://localhost:8000". $user->photos->where('type', 'avatar')->first()->path : null,
+                ? "http://192.168.74.1:8000". $user->photos->where('type', 'avatar')->first()->path : null,
             "uuid" => $user->vouchRequests->last()->uuid,
             "yes" => $user->vouchRequests->last()->responses->where('answer', '1')->count(),
             "no" => $user->vouchRequests->last()->responses->where('answer', '0')->count(),

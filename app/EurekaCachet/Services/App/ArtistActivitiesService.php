@@ -84,7 +84,7 @@ class ArtistActivitiesService implements ArtistContract
         }else{
             $result = $artist->photos()->save(
                 new Photo(['path'=>collect($data)->get('path'),
-                    'type'=>'avatar', 'uuid'=>Uuid::generate(4),
+                    'type'=>'background', 'uuid'=>Uuid::generate(4),
                     'extension' => collect($data)->get('extension')])
             );
         }

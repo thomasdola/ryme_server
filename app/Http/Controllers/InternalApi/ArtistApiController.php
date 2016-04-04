@@ -1,13 +1,15 @@
 <?php
 namespace App\Http\Controllers\InternalApi;
 
-use Eureka\Helpers\Transformers\ArtistTransformer;
+use Eureka\Helpers\Transformers\Server\ArtistCollectionTransformer;
+use Eureka\Helpers\Transformers\Server\ArtistItemTransformer;
+use Eureka\Helpers\Transformers\Server\RequestTransformer;
 use Eureka\Repositories\ArtistRepository;
 use Illuminate\Http\Request;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
+use League\Fractal\Serializer\DataArraySerializer;
 
 /**
  * Class ArtistApiController
@@ -34,7 +36,7 @@ class ArtistApiController extends InternalApiController
      */
     public function __construct(ArtistRepository $artistRepository, Manager $fractal){
         $this->artistRepository = $artistRepository;
-        $this->fractal = $fractal->setSerializer(new JsonApiSerializer(self::BASE_URL));
+        $this->fractal = $fractal->setSerializer(new DataArraySerializer());
     }
 
     /**
@@ -44,7 +46,7 @@ class ArtistApiController extends InternalApiController
     {
         $artists = $this->artistRepository->getAllArtists();
         $data = $this->fractal->createData(new Collection($artists,
-            new ArtistTransformer(), self::RESOURCE_KEY))->toArray();
+            new ArtistCollectionTransformer))->toArray();
         return response()->json($data);
     }
 
@@ -64,7 +66,7 @@ class ArtistApiController extends InternalApiController
             );
         }
         $data = $this->fractal->createData(new Item($artist,
-            new ArtistTransformer(), self::RESOURCE_KEY))->toArray();
+            new ArtistItemTransformer))->toArray();
         return response()->json($data);
     }
 
@@ -76,7 +78,7 @@ class ArtistApiController extends InternalApiController
     {
         return $this->fractal->createData(
             new Collection($this->artistRepository->getTrendingArtistsByCategory($id),
-                new ArtistTransformer, 'artists'))->toArray();
+                new ArtistCollectionTransformer))->toArray();
     }
 
     /**
@@ -88,18 +90,41 @@ class ArtistApiController extends InternalApiController
         $artistsJoinedThisWeek = $this->artistRepository->getArtistsJoinedThisWeekCount();
         $artistsJoinedThisMonth = $this->artistRepository->getArtistsJoinedThisMonthCount();
         $allArtistsCount = $this->artistRepository->getAllArtistsCount();
-        $artistsToBe = $this->artistRepository->getArtistToBe();
-        $trendingArtists = $this->fractal->createData(
-            new Collection($this->artistRepository->getTrendingArtists(),
-                new ArtistTransformer, self::RESOURCE_KEY))->toArray();
         return response()->json([
-            'joinedToday'=>$artistsJoinedToday,
-            'joinedThisWeek'=>$artistsJoinedThisWeek,
-            'joinedThisMonth'=>$artistsJoinedThisMonth,
-            'all'=>$allArtistsCount,
-            'requests'=>$artistsToBe,
-            'trendingArtists' => $trendingArtists
+            [
+                'title' => 'Artists Joined today',
+                'total' => $artistsJoinedToday
+            ],
+            [
+                'title' => 'Artists Joined this Week',
+                'total' => $artistsJoinedThisWeek,
+            ],
+            [
+                'title' => 'Artists Joined this month',
+                'total' => $artistsJoinedThisMonth
+            ],
+            [
+                'title' => 'Total Artists',
+                'total' => $allArtistsCount
+            ]
         ]);
+    }
+
+    public function trending()
+    {
+        return $this->fractal->createData(
+            new Collection($this->artistRepository->getTrendingArtists(),
+                new ArtistCollectionTransformer))->toArray();
+//        return response()->json([
+//            'data' => $trendingArtists
+//        ]);
+    }
+
+    public function requests()
+    {
+        return $trendingArtists = $this->fractal->createData(
+            new Collection($this->artistRepository->getArtistToBe(),
+                new RequestTransformer))->toArray();
     }
 
     /**
@@ -108,7 +133,26 @@ class ArtistApiController extends InternalApiController
      */
     public function search(Request $request)
     {
-        $query = $request->search_query;
-        return response()->json(['query'=>$query]);
+        $query = $request->q;
+        $artist = $this->artistRepository->findArtistByName($query);
+        return $this->fractal->createData(
+            new Collection($artist,
+                new ArtistCollectionTransformer))->toArray();
+    }
+
+    public function totalArtists()
+    {
+        $allArtistsCount = $this->artistRepository->getAllArtistsCount();
+        return response()->json([
+            'title' => 'artists',
+            'total' => $allArtistsCount
+        ])->setStatusCode(200);
+    }
+
+    public function topArtists()
+    {
+        return $this->fractal->createData(
+            new Collection($this->artistRepository->getTrendingArtists(),
+                new ArtistCollectionTransformer))->toArray();
     }
 }

@@ -20,7 +20,7 @@ class CommentCollectionTransformer extends TransformerAbstract
             "username" => $this->getUsername($comment->user),
             "message" => $comment->body,
             "time" => Carbon::parse($comment->created_at)->timestamp * 1000,
-            "userAvatar" => "http://localhost:8000" . $comment->user->photos->where('type', 'avatar')->first()
+            "userAvatar" => "http://192.168.74.1:8000" . $comment->user->photos->where('type', 'avatar')->first()
                 ? $comment->user->photos->where('type', 'avatar')->first()->path : null,
         ];
     }

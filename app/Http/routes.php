@@ -36,10 +36,20 @@ Route::group(['prefix'=>'admin/internal', 'middleware' => ['api']], function(){
     Route::get('/artists/data', ['as'=>'artists.data', 'uses'=>'ArtistsController@getArtistsPageData']);
 
     Route::group(['namespace'=>'InternalApi'], function(){
+
+        Route::get('/dashboard/total-users', ['uses'=>'UsersApiController@totalUsers']);
+        Route::get('/dashboard/total-tracks', ['uses'=>'TrackApiController@totalTracks']);
+        Route::get('/dashboard/total-artists', ['uses'=>'ArtistApiController@totalArtists']);
+        Route::get('/dashboard/total-ads', ['uses'=>'AudioAdApiController@totalAds']);
+        Route::get('/dashboard/trending-tracks', ['uses'=>'TrackApiController@getTrendingTracks']);
+        Route::get('/dashboard/top-artists', ['uses'=>'ArtistApiController@topArtists']);
+
         //Artists Page Internal Api ==> sort of (:)
         Route::get('/artists', ['as'=>'artists.all', 'uses'=>'ArtistApiController@all']);
         Route::get('/artists/data', ['as'=>'artists.page.data', 'uses'=>'ArtistApiController@getIndexPageData']);
         Route::get('/artists/search', ['as'=>'artists.search', 'uses'=>'ArtistApiController@search']);
+        Route::get('/artists/trending', ['as'=>'artists.trending', 'uses'=>'ArtistApiController@trending']);
+        Route::get('/artists/requests', ['as'=>'artists.requests', 'uses'=>'ArtistApiController@requests']);
         Route::get('/artists/{id}', ['as'=>'artists.single', 'uses'=>'ArtistApiController@single']);
 
         //Category Page Internal Api ==> kind of (:)

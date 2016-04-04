@@ -44,7 +44,7 @@ class VouchRepository
     {
         return $this->vouch->where('is_active', true)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->take(50);
     }
 
     /**

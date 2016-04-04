@@ -58,9 +58,10 @@
 		props: ['active'],
 		methods: {
 		    getCategory(category){
-		        this.$http.get("internal/categories/{id}", {id: category.id}).then(function(response){
-                    this.tracks = response.data.trendingTracks;
-                    this.artists = response.data.trendingArtists;
+		        this.$http.get("internal/categories/{id}", {id: category.uuid})
+                        .then(function(response){
+                    this.tracks = response.data.trendingTracks.tracks;
+                    this.artists = response.data.trendingArtists.artists;
 		        }, function(response){});
 		    }
 		},

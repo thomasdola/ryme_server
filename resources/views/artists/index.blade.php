@@ -17,42 +17,10 @@
     <section class="content">
 
         <div class="row margin-bottom">
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-aqua"><i class="fa fa-users"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Artists Joined today</span>
-                        <span class="info-box-number">@{{ data.joinedToday.total | abbreviate }}</span>
-                    </div><!-- /.info-box-content -->
-                </div><!-- /.info-box -->
-            </div><!-- /.col -->
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-green"><i class="fa fa-users"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Artists Joined this Week</span>
-                        <span class="info-box-number">@{{ data.joinedThisWeek.total | abbreviate }}</span>
-                    </div><!-- /.info-box-content -->
-                </div><!-- /.info-box -->
-            </div><!-- /.col -->
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-yellow"><i class="fa fa-users"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Artists Joined this month</span>
-                        <span class="info-box-number">@{{ data.joinedThisMonth.total | abbreviate }}</span>
-                    </div><!-- /.info-box-content -->
-                </div><!-- /.info-box -->
-            </div><!-- /.col -->
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-red"><i class="fa fa-users"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Total Artists</span>
-                        <span class="info-box-number">@{{ data.all.total | abbreviate }}</span>
-                    </div><!-- /.info-box-content -->
-                </div><!-- /.info-box -->
-            </div><!-- /.col -->
+            <info-box :data="data[0]"></info-box>
+            <info-box :data="data[1]"></info-box>
+            <info-box :data="data[2]"></info-box>
+            <info-box :data="data[3]"></info-box>
         </div>
 
         <div class="row margin">
@@ -61,7 +29,7 @@
 
         <div class="row">
             <div class="col-xs-6">
-                <trending-artists :artists="data.artists"></trending-artists>
+                <trending-artists :artists="artists"></trending-artists>
             </div>
 
             <div class="col-xs-6">
@@ -70,7 +38,7 @@
                         <h3 class="box-title">Vouching Request(s)</h3>
                     </div><!-- /.box-header -->
                     <div class="box-body table-responsive">
-                        <vouching-requests :requests="data.requests"></vouching-requests>
+                        <vouching-requests :requests="requests"></vouching-requests>
                     </div><!-- /.box-body -->
                 </div>
             </div>

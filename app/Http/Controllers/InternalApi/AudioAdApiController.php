@@ -109,4 +109,13 @@ class AudioAdApiController extends InternalApiController
             'companiesCount' => $companiesCount
         ]);
     }
+
+    public function totalAds()
+    {
+        $audioActiveCount = $this->audioAdRepository->getAds()->count();
+        return response()->json([
+            'title' => 'active ads',
+            'total' => $audioActiveCount
+        ])->setStatusCode(200);
+    }
 }

@@ -49,12 +49,14 @@ class TrackRepository
      */
     public function getTrendingTracks()
     {
-        $tracks = $this->track->has('streams')->take(50)->get();
+        $tracks = $this->track->with('streams', 'author', 'genre',
+            'usersWhoDownloaded', 'usersWhoLiked', 'comments')
+            ->get();
         $tracks = $tracks->sortByDesc(function($track)
         {
             return $track->streams->count();
         });
-        return $tracks->load('streams', 'artist', 'category', 'download', 'favorites', 'comments');
+        return $tracks;
     }
 
     /**
@@ -72,6 +74,12 @@ class TrackRepository
     public function getTrendingTracksByArtist($id)
     {
         $artist = $this->artistRepository->getArtist($id);
+        $tracks = $this->track->with('artist', 'favorites', 'streams', 'downloads', 'comments')
+            ->where('user_id', $artist->id)->get();
+        $trendingOnes = $tracks->sortByDesc(function($track){
+            return $track->streams->count();
+        });
+        return $trendingOnes;
     }
 
     /**

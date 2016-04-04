@@ -15,66 +15,54 @@ Vue.filter('abbreviate', function(value){
 new Vue({
     el: 'section.content',
     data: {
-        data: {
-            joinedToday:{
-                title: 'Artists Joined Today',
-                total: 2000
-            },
-            joinedThisWeek:{
-                title: 'Artists Joined This Week',
-                total: 2000
-            },
-            joinedThisMonth:{
-                title: 'Artists Joined This Month',
-                total: 2000
-            },
-            all:{
-                title: 'Total Artists',
-                total: 2000
-            },
-            requests: [
-                {
-                    user:{
-                        name: 'thomas paul',
-                        stage_name: 'pinana pijo',
-                        category: {
-                            name: 'hip hop'
-                        }
-                    },
-                    end_date: "12/02/2016"
-                },
-                {
-                    user:{
-                        name: 'thomas paul',
-                        stage_name: 'pinana pijo',
-                        category: {
-                            name: 'hip hop'
-                        }
-                    },
-                    end_date: "12/02/2016"
-                }
-            ],
-            artists: [
-                {
-                    name: "Stone Bowy",
-                    category: {
-                        name: 'dancehall'
-                    },
-                    followers: [
-                        {user_id:1},
-                        {user_id:1},
-                        {user_id:1}
-                    ],
-                    tracks: [
-                        {track_id:1},
-                        {track_id:1},
-                        {track_id:1}
-                    ]
-                }
-            ]
-        }
+        data: {},
+        requests: [],
+        artists: [],
+        searchResult: []
     },
     components: {Search, InfoBox, TrendingArtists, VouchingRequests},
-    methods: {},
+    methods: {
+        fetchData(target, source=null, query=null){
+            let data;
+            let url = `internal/artists/${source}`;
+
+            if(source == null){
+                url = 'internal/artists'
+            }
+
+            if(query != null){
+                url = `internal/artists/${source}?${query}`;
+            }
+            console.log(`final url -> ${url}`);
+            this.$http.get(url).then(function(response){
+                if(source == 'data'){
+                    data =  response.data;
+                }else{
+                    data = response.data.data;
+                }
+                console.log(`target -> ${target} ----> data -> ${data}`);
+                this.$set(target, data);
+            }, function(response){
+                console.log(response);
+            });
+        },
+        initialData(){
+            this.fetchData('data', 'data');
+        },
+        getTrendingArtists(){
+            this.fetchData('artists', 'trending');
+        },
+        getUsersRequests(){
+            this.fetchData('requests', 'requests');
+        },
+        performSearch(query){
+            this.fetchData('searchResult', 'search', query);
+        }
+    },
+    created(){
+        this.initialData();
+        this.getTrendingArtists();
+        this.getUsersRequests();
+    },
     ready(){}
 });

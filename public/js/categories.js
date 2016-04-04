@@ -11878,38 +11878,38 @@ if (module.hot) {(function () {  module.hot.accept()
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-				value: true
+    value: true
 });
 exports.default = {
-				props: ['active'],
-				methods: {
-								getCategory: function getCategory(category) {
-												this.$http.get("internal/categories/{id}", { id: category.id }).then(function (response) {
-																this.tracks = response.data.trendingTracks;
-																this.artists = response.data.trendingArtists;
-												}, function (response) {});
-								}
-				},
-				computed: {},
-				data: function data() {
-								return {
-												tracks: [],
-												artists: []
-								};
-				},
-				ready: function ready() {},
+    props: ['active'],
+    methods: {
+        getCategory: function getCategory(category) {
+            this.$http.get("internal/categories/{id}", { id: category.uuid }).then(function (response) {
+                this.tracks = response.data.trendingTracks.tracks;
+                this.artists = response.data.trendingArtists.artists;
+            }, function (response) {});
+        }
+    },
+    computed: {},
+    data: function data() {
+        return {
+            tracks: [],
+            artists: []
+        };
+    },
+    ready: function ready() {},
 
-				watch: {
-								'active': function active(category) {
-												this.$emit('category-changed', category);
-								}
-				},
-				events: {
-								'category-changed': function categoryChanged(category) {
-												console.log('got ' + category.name);
-												this.getCategory(category);
-								}
-				}
+    watch: {
+        'active': function active(category) {
+            this.$emit('category-changed', category);
+        }
+    },
+    events: {
+        'category-changed': function categoryChanged(category) {
+            console.log('got ' + category.name);
+            this.getCategory(category);
+        }
+    }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"nav-tabs-custom\">\n        <ul class=\"nav nav-tabs\">\n            <li class=\"active\"><a href=\"#trending_tracks\" data-toggle=\"tab\">Trending Tracks</a></li>\n            <li><a href=\"#trending_artists\" data-toggle=\"tab\">Trending Artists</a></li>\n        </ul>\n        <div class=\"tab-content\">\n            <div class=\"tab-pane active\" id=\"trending_tracks\">\n                <div class=\"table-responsive mailbox-messages\">\n                    <table class=\"table table-hover table-striped\">\n                        <thead>\n                            <tr>\n                                <th>Title</th>\n                                <th>Artist(s)</th>\n                                <th>Stream(s)</th>\n                                <th>Download(s)</th>\n                                <th>Favorite(s)</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                        <tr v-for=\"track in tracks\">\n                            <td><a href=\"#\">{{track.artist}}</a></td>\n                            <td>{{track.artist}}</td>\n                            <td>{{track.streams}}</td>\n                            <td>{{track.downloads}}</td>\n                            <td>{{track.likes}}</td>\n                        </tr>\n                        </tbody>\n                    </table><!-- /.table -->\n                </div>\n            </div><!-- /.tab-pane -->\n            <div class=\"tab-pane\" id=\"trending_artists\">\n                <div class=\"table-responsive mailbox-messages\">\n                    <table class=\"table table-hover table-striped\">\n                        <thead>\n                            <tr>\n                                <th>Name</th>\n                                <th>followers</th>\n                                <th>tracks</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                        <tr v-for=\"artist in artists\">\n                            <td><a href=\"#\">{{artist.name}}</a></td>\n                            <td>{{artist.followers}}</td>\n                            <td>{{artist.tracks}}</td>\n                        </tr>\n                        </tbody>\n                    </table><!-- /.table -->\n                </div>\n            </div><!-- /.tab-pane -->\n        </div><!-- /.tab-content -->\n    </div>\n"

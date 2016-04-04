@@ -2,18 +2,18 @@
 	<table class="table table-hover">
 	        <thead>
 	            <tr>
-	                <th>Name</th>
 	                <th>Stage Name</th>
-	                <th>Categories</th>
-	                <th>Days Left</th>
+	                <th>Genre</th>
+	                <th>Start Date</th>
+	                <th>End Date</th>
 	                <th>Action</th>
 	            </tr>
 	        </thead>
 	        <tbody>
 	            <tr v-for="request in requests">
-	            <td>{{ request.user.name }}</td>
-	            <td>{{ request.user.stage_name }}</td>
-	            <td>{{ request.user.categories }}</td>
+	            <td>{{ request.stage_name }}</td>
+	            <td>{{ request.genre }}</td>
+	            <td>{{ request.start_date }}</td>
 	            <td>{{ request.end_date }}</td>
 	            <td>
 	                <button type="button" 

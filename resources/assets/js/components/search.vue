@@ -1,4 +1,4 @@
-<style>
+<style type="text/css">
 	ul.result__vew{
 		z-index: 9999;
 		position: absolute;
@@ -27,11 +27,11 @@
 		    	  	</span>
 	        	</div>
         	</div>
-        	<div class="col-xs-12" v-if="searchResult">
+        	<div class="col-xs-12" v-if="searchResult && searchQuery">
         		<ul class="list-group result__vew">
         			<li class="list-group-item" v-for="result in searchResult">
         				<a href="#">
-        					{{ result.user.name }}
+        					{{ result.name }}
         				</a>
     				</li>
         		</ul>
@@ -45,20 +45,27 @@
 		data(){
 			return {
 				searchQuery:"",
-				searhResult: []
+				searchResult: []
 			}
 		},
 		methods: {
 			search(){
 				if(this.searchQuery.trim()){
-					console.log(this.searchQuery.trim());
+                    this.performSearch(this.searchQuery.trim());
 				}
 			},
 			searchWithQuery(){
 				if(this.searchQuery.trim()){
-					console.log(this.searchQuery.trim());
-					this.searchQuery = "";
+                    this.performSearch(this.searchQuery.trim())
 				}
+			},
+			performSearch(query){
+				this.$http.get(`internal/artists/search?q=${query}`).then(function(response){
+					console.log(response);
+					this.$set('searchResult', response.data.data);
+				}, function(response){
+					console.log(response);
+				});
 			}
 		}
 	}

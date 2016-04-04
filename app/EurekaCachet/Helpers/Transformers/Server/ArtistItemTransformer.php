@@ -13,20 +13,22 @@ use League\Fractal\Resource\Collection;
 use League\Fractal\TransformerAbstract;
 class ArtistItemTransformer extends TransformerAbstract
 {
-    public function transform(User $user)
+    public function transform(User $artist)
     {
         return [
-            'id' => $user->uuid,
-            'email' => $user->email,
-            'name' => $user->stage_name,
-            'username' => $user->username,
+            'id' => $artist->uuid,
+            'name' => $artist->stage_name,
+            'username' => $artist->username,
             'category' => [
-                'name' => $user->category->name,
-                'id' => (int)$user->category->id
+                'name' => $artist->category->name,
+                'id' => $artist->category->uuid
             ],
-            'followers' => (int)$user->followers->count(),
-            'tracks' => (int)$user->tracks->count(),
-            'photos' => ''
+            'followers' => $artist->followers->count(),
+            'tracks' => $artist->uploadedTracks->count(),
+            "profilePic" =>  $artist->photos->where('type', 'avatar')->first()
+                ?"localhost:8000". $artist->photos->where('type', 'avatar')->first()->path : null,
+            "backPic" => $artist->photos->where('type', 'background')->first()
+                ?"localhost:8000". $artist->photos->where('type', 'background')->first()->path : null,
         ];
     }
 }

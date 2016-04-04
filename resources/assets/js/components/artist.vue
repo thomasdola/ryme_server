@@ -9,7 +9,7 @@
 		props:['artist'],
 		computed:{
 			avatar(){
-				return this.artist.photo.photo.path;
+				return this.artist.profilePic;
 			}
 		}
 	}

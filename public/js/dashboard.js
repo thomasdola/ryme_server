@@ -1,440 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var isKind = require('./isKind');
-    /**
-     */
-    var isArray = Array.isArray || function (val) {
-        return isKind(val, 'Array');
-    };
-    module.exports = isArray;
-
-
-},{"./isKind":2}],2:[function(require,module,exports){
-var kindOf = require('./kindOf');
-    /**
-     * Check if value is from a specific "kind".
-     */
-    function isKind(val, kind){
-        return kindOf(val) === kind;
-    }
-    module.exports = isKind;
-
-
-},{"./kindOf":3}],3:[function(require,module,exports){
-
-
-    var _rKind = /^\[object (.*)\]$/,
-        _toString = Object.prototype.toString,
-        UNDEF;
-
-    /**
-     * Gets the "kind" of value. (e.g. "String", "Number", etc)
-     */
-    function kindOf(val) {
-        if (val === null) {
-            return 'Null';
-        } else if (val === UNDEF) {
-            return 'Undefined';
-        } else {
-            return _rKind.exec( _toString.call(val) )[1];
-        }
-    }
-    module.exports = kindOf;
-
-
-},{}],4:[function(require,module,exports){
-var isArray = require('./isArray');
-
-    /**
-     * covert value into number if numeric
-     */
-    function toNumber(val){
-        // numberic values should come first because of -0
-        if (typeof val === 'number') return val;
-        // we want all falsy values (besides -0) to return zero to avoid
-        // headaches
-        if (!val) return 0;
-        if (typeof val === 'string') return parseFloat(val);
-        // arrays are edge cases. `Number([4]) === 4`
-        if (isArray(val)) return NaN;
-        return Number(val);
-    }
-
-    module.exports = toNumber;
-
-
-
-},{"./isArray":1}],5:[function(require,module,exports){
-
-
-    /**
-     * Typecast a value to a String, using an empty string value for null or
-     * undefined.
-     */
-    function toString(val){
-        return val == null ? '' : val.toString();
-    }
-
-    module.exports = toString;
-
-
-
-},{}],6:[function(require,module,exports){
-
-
-//automatically generated, do not edit!
-//run `node build` instead
-module.exports = {
-    'MAX_INT' : require('./number/MAX_INT'),
-    'MAX_SAFE_INTEGER' : require('./number/MAX_SAFE_INTEGER'),
-    'MAX_UINT' : require('./number/MAX_UINT'),
-    'MIN_INT' : require('./number/MIN_INT'),
-    'abbreviate' : require('./number/abbreviate'),
-    'currencyFormat' : require('./number/currencyFormat'),
-    'enforcePrecision' : require('./number/enforcePrecision'),
-    'isNaN' : require('./number/isNaN'),
-    'nth' : require('./number/nth'),
-    'ordinal' : require('./number/ordinal'),
-    'pad' : require('./number/pad'),
-    'rol' : require('./number/rol'),
-    'ror' : require('./number/ror'),
-    'sign' : require('./number/sign'),
-    'toInt' : require('./number/toInt'),
-    'toUInt' : require('./number/toUInt'),
-    'toUInt31' : require('./number/toUInt31')
-};
-
-
-
-},{"./number/MAX_INT":7,"./number/MAX_SAFE_INTEGER":8,"./number/MAX_UINT":9,"./number/MIN_INT":10,"./number/abbreviate":11,"./number/currencyFormat":12,"./number/enforcePrecision":13,"./number/isNaN":14,"./number/nth":15,"./number/ordinal":16,"./number/pad":17,"./number/rol":18,"./number/ror":19,"./number/sign":20,"./number/toInt":21,"./number/toUInt":22,"./number/toUInt31":23}],7:[function(require,module,exports){
-/**
- * @constant Maximum 32-bit signed integer value. (2^31 - 1)
- */
-
-    module.exports = 2147483647;
-
-
-},{}],8:[function(require,module,exports){
-
-
-    // maximum safe integer (Math.pow(2, 53) - 1)
-    // see: http://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer
-    module.exports = 9007199254740991;
-
-
-
-},{}],9:[function(require,module,exports){
-/**
- * @constant Maximum 32-bit unsigned integet value (2^32 - 1)
- */
-
-    module.exports = 4294967295;
-
-
-},{}],10:[function(require,module,exports){
-/**
- * @constant Minimum 32-bit signed integer value (-2^31).
- */
-
-    module.exports = -2147483648;
-
-
-},{}],11:[function(require,module,exports){
-var enforcePrecision = require('./enforcePrecision');
-
-    var _defaultDict = {
-        thousand : 'K',
-        million : 'M',
-        billion : 'B'
-    };
-
-    /**
-     * Abbreviate number if bigger than 1000. (eg: 2.5K, 17.5M, 3.4B, ...)
-     */
-    function abbreviateNumber(val, nDecimals, dict){
-        nDecimals = nDecimals != null? nDecimals : 1;
-        dict = dict || _defaultDict;
-        val = enforcePrecision(val, nDecimals);
-
-        var str, mod;
-
-        if (val < 1000000) {
-            mod = enforcePrecision(val / 1000, nDecimals);
-            // might overflow to next scale during rounding
-            str = mod < 1000? mod + dict.thousand : 1 + dict.million;
-        } else if (val < 1000000000) {
-            mod = enforcePrecision(val / 1000000, nDecimals);
-            str = mod < 1000? mod + dict.million : 1 + dict.billion;
-        } else {
-            str = enforcePrecision(val / 1000000000, nDecimals) + dict.billion;
-        }
-
-        return str;
-    }
-
-    module.exports = abbreviateNumber;
-
-
-
-},{"./enforcePrecision":13}],12:[function(require,module,exports){
-var toNumber = require('../lang/toNumber');
-
-    /**
-     * Converts number into currency format
-     */
-    function currencyFormat(val, nDecimalDigits, decimalSeparator, thousandsSeparator) {
-        val = toNumber(val);
-        nDecimalDigits = nDecimalDigits == null? 2 : nDecimalDigits;
-        decimalSeparator = decimalSeparator == null? '.' : decimalSeparator;
-        thousandsSeparator = thousandsSeparator == null? ',' : thousandsSeparator;
-
-        //can't use enforce precision since it returns a number and we are
-        //doing a RegExp over the string
-        var fixed = val.toFixed(nDecimalDigits),
-            //separate begin [$1], middle [$2] and decimal digits [$4]
-            parts = new RegExp('^(-?\\d{1,3})((?:\\d{3})+)(\\.(\\d{'+ nDecimalDigits +'}))?$').exec( fixed );
-
-        if(parts){ //val >= 1000 || val <= -1000
-            return parts[1] + parts[2].replace(/\d{3}/g, thousandsSeparator + '$&') + (parts[4] ? decimalSeparator + parts[4] : '');
-        }else{
-            return fixed.replace('.', decimalSeparator);
-        }
-    }
-
-    module.exports = currencyFormat;
-
-
-
-},{"../lang/toNumber":4}],13:[function(require,module,exports){
-var toNumber = require('../lang/toNumber');
-    /**
-     * Enforce a specific amount of decimal digits and also fix floating
-     * point rounding issues.
-     */
-    function enforcePrecision(val, nDecimalDigits){
-        val = toNumber(val);
-        var pow = Math.pow(10, nDecimalDigits);
-        return +(Math.round(val * pow) / pow).toFixed(nDecimalDigits);
-    }
-    module.exports = enforcePrecision;
-
-
-},{"../lang/toNumber":4}],14:[function(require,module,exports){
-
-
-    /**
-     * ES6 Number.isNaN
-     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN
-     */
-    function isNaN(val){
-        // jshint eqeqeq:false
-        return typeof val === 'number' && val != val;
-    }
-
-    module.exports = isNaN;
-
-
-
-},{}],15:[function(require,module,exports){
-
-
-    /**
-     * Returns "nth" of number (1 = "st", 2 = "nd", 3 = "rd", 4..10 = "th", ...)
-     */
-    function nth(i) {
-        var t = (i % 100);
-        if (t >= 10 && t <= 20) {
-            return 'th';
-        }
-        switch(i % 10) {
-            case 1:
-                return 'st';
-            case 2:
-                return 'nd';
-            case 3:
-                return 'rd';
-            default:
-                return 'th';
-        }
-    }
-
-    module.exports = nth;
-
-
-
-},{}],16:[function(require,module,exports){
-var toInt = require('./toInt');
-var nth = require('./nth');
-
-    /**
-     * converts number into ordinal form (1st, 2nd, 3rd, 4th, ...)
-     */
-    function ordinal(n){
-       n = toInt(n);
-       return n + nth(n);
-    }
-
-    module.exports = ordinal;
-
-
-
-},{"./nth":15,"./toInt":21}],17:[function(require,module,exports){
-var lpad = require('../string/lpad');
-var toNumber = require('../lang/toNumber');
-
-    /**
-     * Add padding zeros if n.length < minLength.
-     */
-    function pad(n, minLength, char){
-        n = toNumber(n);
-        return lpad(''+ n, minLength, char || '0');
-    }
-
-    module.exports = pad;
-
-
-
-},{"../lang/toNumber":4,"../string/lpad":24}],18:[function(require,module,exports){
-
-    /**
-     * Bitwise circular shift left
-     * http://en.wikipedia.org/wiki/Circular_shift
-     */
-    function rol(val, shift){
-        return (val << shift) | (val >> (32 - shift));
-    }
-    module.exports = rol;
-
-
-},{}],19:[function(require,module,exports){
-
-    /**
-     * Bitwise circular shift right
-     * http://en.wikipedia.org/wiki/Circular_shift
-     */
-    function ror(val, shift){
-        return (val >> shift) | (val << (32 - shift));
-    }
-    module.exports = ror;
-
-
-},{}],20:[function(require,module,exports){
-var toNumber = require('../lang/toNumber');
-
-    /**
-     * Get sign of the value.
-     */
-    function sign(val) {
-        var num = toNumber(val);
-        if (num === 0) return num; // +0 and +0 === 0
-        if (isNaN(num)) return num; // NaN
-        return num < 0? -1 : 1;
-    }
-
-    module.exports = sign;
-
-
-
-},{"../lang/toNumber":4}],21:[function(require,module,exports){
-
-
-    /**
-     * "Convert" value into an 32-bit integer.
-     * Works like `Math.floor` if val > 0 and `Math.ceil` if val < 0.
-     * IMPORTANT: val will wrap at 2^31 and -2^31.
-     * Perf tests: http://jsperf.com/vs-vs-parseint-bitwise-operators/7
-     */
-    function toInt(val){
-        // we do not use lang/toNumber because of perf and also because it
-        // doesn't break the functionality
-        return ~~val;
-    }
-
-    module.exports = toInt;
-
-
-
-},{}],22:[function(require,module,exports){
-
-
-    /**
-     * "Convert" value into a 32-bit unsigned integer.
-     * IMPORTANT: Value will wrap at 2^32.
-     */
-    function toUInt(val){
-        // we do not use lang/toNumber because of perf and also because it
-        // doesn't break the functionality
-        return val >>> 0;
-    }
-
-    module.exports = toUInt;
-
-
-
-},{}],23:[function(require,module,exports){
-var MAX_INT = require('./MAX_INT');
-
-    /**
-     * "Convert" value into an 31-bit unsigned integer (since 1 bit is used for sign).
-     * IMPORTANT: value wil wrap at 2^31, if negative will return 0.
-     */
-    function toUInt31(val){
-        // we do not use lang/toNumber because of perf and also because it
-        // doesn't break the functionality
-        return (val <= 0)? 0 : (val > MAX_INT? ~~(val % (MAX_INT + 1)) : ~~val);
-    }
-
-    module.exports = toUInt31;
-
-
-
-},{"./MAX_INT":7}],24:[function(require,module,exports){
-var toString = require('../lang/toString');
-var repeat = require('./repeat');
-
-    /**
-     * Pad string with `char` if its' length is smaller than `minLen`
-     */
-    function lpad(str, minLen, ch) {
-        str = toString(str);
-        ch = ch || ' ';
-
-        return (str.length < minLen) ?
-            repeat(ch, minLen - str.length) + str : str;
-    }
-
-    module.exports = lpad;
-
-
-
-},{"../lang/toString":5,"./repeat":25}],25:[function(require,module,exports){
-var toString = require('../lang/toString');
-var toInt = require('../number/toInt');
-
-    /**
-     * Repeat string n times
-     */
-     function repeat(str, n){
-         var result = '';
-         str = toString(str);
-         n = toInt(n);
-        if (n < 1) {
-            return '';
-        }
-        while (n > 0) {
-            if (n % 2) {
-                result += str;
-            }
-            n = Math.floor(n / 2);
-            str += str;
-        }
-        return result;
-     }
-
-     module.exports = repeat;
-
-
-
-},{"../lang/toString":5,"../number/toInt":21}],26:[function(require,module,exports){
 var Vue // late bind
 var map = Object.create(null)
 var shimmed = false
@@ -675,7 +239,7 @@ function format (id) {
   return id.match(/[^\/]+\.vue$/)[0]
 }
 
-},{}],27:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 /**
  * Before Interceptor.
  */
@@ -695,7 +259,7 @@ module.exports = {
 
 };
 
-},{"../util":50}],28:[function(require,module,exports){
+},{"../util":25}],3:[function(require,module,exports){
 /**
  * Base client.
  */
@@ -762,7 +326,7 @@ function parseHeaders(str) {
     return headers;
 }
 
-},{"../../promise":43,"../../util":50,"./xhr":31}],29:[function(require,module,exports){
+},{"../../promise":18,"../../util":25,"./xhr":6}],4:[function(require,module,exports){
 /**
  * JSONP client.
  */
@@ -812,7 +376,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":43,"../../util":50}],30:[function(require,module,exports){
+},{"../../promise":18,"../../util":25}],5:[function(require,module,exports){
 /**
  * XDomain client (Internet Explorer).
  */
@@ -851,7 +415,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":43,"../../util":50}],31:[function(require,module,exports){
+},{"../../promise":18,"../../util":25}],6:[function(require,module,exports){
 /**
  * XMLHttp client.
  */
@@ -903,7 +467,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":43,"../../util":50}],32:[function(require,module,exports){
+},{"../../promise":18,"../../util":25}],7:[function(require,module,exports){
 /**
  * CORS Interceptor.
  */
@@ -942,7 +506,7 @@ function crossOrigin(request) {
     return (requestUrl.protocol !== originUrl.protocol || requestUrl.host !== originUrl.host);
 }
 
-},{"../util":50,"./client/xdr":30}],33:[function(require,module,exports){
+},{"../util":25,"./client/xdr":5}],8:[function(require,module,exports){
 /**
  * Header Interceptor.
  */
@@ -970,7 +534,7 @@ module.exports = {
 
 };
 
-},{"../util":50}],34:[function(require,module,exports){
+},{"../util":25}],9:[function(require,module,exports){
 /**
  * Service for sending network requests.
  */
@@ -1070,7 +634,7 @@ Http.headers = {
 
 module.exports = _.http = Http;
 
-},{"../promise":43,"../util":50,"./before":27,"./client":28,"./cors":32,"./header":33,"./interceptor":35,"./jsonp":36,"./method":37,"./mime":38,"./timeout":39}],35:[function(require,module,exports){
+},{"../promise":18,"../util":25,"./before":2,"./client":3,"./cors":7,"./header":8,"./interceptor":10,"./jsonp":11,"./method":12,"./mime":13,"./timeout":14}],10:[function(require,module,exports){
 /**
  * Interceptor factory.
  */
@@ -1117,7 +681,7 @@ function when(value, fulfilled, rejected) {
     return promise.then(fulfilled, rejected);
 }
 
-},{"../promise":43,"../util":50}],36:[function(require,module,exports){
+},{"../promise":18,"../util":25}],11:[function(require,module,exports){
 /**
  * JSONP Interceptor.
  */
@@ -1137,7 +701,7 @@ module.exports = {
 
 };
 
-},{"./client/jsonp":29}],37:[function(require,module,exports){
+},{"./client/jsonp":4}],12:[function(require,module,exports){
 /**
  * HTTP method override Interceptor.
  */
@@ -1156,7 +720,7 @@ module.exports = {
 
 };
 
-},{}],38:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /**
  * Mime Interceptor.
  */
@@ -1194,7 +758,7 @@ module.exports = {
 
 };
 
-},{"../util":50}],39:[function(require,module,exports){
+},{"../util":25}],14:[function(require,module,exports){
 /**
  * Timeout Interceptor.
  */
@@ -1226,7 +790,7 @@ module.exports = function () {
     };
 };
 
-},{}],40:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /**
  * Install plugin.
  */
@@ -1281,7 +845,7 @@ if (window.Vue) {
 
 module.exports = install;
 
-},{"./http":34,"./promise":43,"./resource":44,"./url":45,"./util":50}],41:[function(require,module,exports){
+},{"./http":9,"./promise":18,"./resource":19,"./url":20,"./util":25}],16:[function(require,module,exports){
 /**
  * Promises/A+ polyfill v1.1.4 (https://github.com/bramstein/promis)
  */
@@ -1462,7 +1026,7 @@ p.catch = function (onRejected) {
 
 module.exports = Promise;
 
-},{"../util":50}],42:[function(require,module,exports){
+},{"../util":25}],17:[function(require,module,exports){
 /**
  * URL Template v2.0.6 (https://github.com/bramstein/url-template)
  */
@@ -1614,7 +1178,7 @@ exports.encodeReserved = function (str) {
     }).join('');
 };
 
-},{}],43:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /**
  * Promise adapter.
  */
@@ -1725,7 +1289,7 @@ p.always = function (callback) {
 
 module.exports = Promise;
 
-},{"./lib/promise":41,"./util":50}],44:[function(require,module,exports){
+},{"./lib/promise":16,"./util":25}],19:[function(require,module,exports){
 /**
  * Service for interacting with RESTful services.
  */
@@ -1837,7 +1401,7 @@ Resource.actions = {
 
 module.exports = _.resource = Resource;
 
-},{"./util":50}],45:[function(require,module,exports){
+},{"./util":25}],20:[function(require,module,exports){
 /**
  * Service for URL templating.
  */
@@ -1969,7 +1533,7 @@ function serialize(params, obj, scope) {
 
 module.exports = _.url = Url;
 
-},{"../util":50,"./legacy":46,"./query":47,"./root":48,"./template":49}],46:[function(require,module,exports){
+},{"../util":25,"./legacy":21,"./query":22,"./root":23,"./template":24}],21:[function(require,module,exports){
 /**
  * Legacy Transform.
  */
@@ -2017,7 +1581,7 @@ function encodeUriQuery(value, spaces) {
         replace(/%20/g, (spaces ? '%20' : '+'));
 }
 
-},{"../util":50}],47:[function(require,module,exports){
+},{"../util":25}],22:[function(require,module,exports){
 /**
  * Query Parameter Transform.
  */
@@ -2043,7 +1607,7 @@ module.exports = function (options, next) {
     return url;
 };
 
-},{"../util":50}],48:[function(require,module,exports){
+},{"../util":25}],23:[function(require,module,exports){
 /**
  * Root Prefix Transform.
  */
@@ -2061,7 +1625,7 @@ module.exports = function (options, next) {
     return url;
 };
 
-},{"../util":50}],49:[function(require,module,exports){
+},{"../util":25}],24:[function(require,module,exports){
 /**
  * URL Template (RFC 6570) Transform.
  */
@@ -2079,7 +1643,7 @@ module.exports = function (options) {
     return url;
 };
 
-},{"../lib/url-template":42}],50:[function(require,module,exports){
+},{"../lib/url-template":17}],25:[function(require,module,exports){
 /**
  * Utility functions.
  */
@@ -2203,7 +1767,7 @@ function merge(target, source, deep) {
     }
 }
 
-},{}],51:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 /*!
  * Vue.js v1.0.14
  * (c) 2016 Evan You
@@ -11721,7 +11285,7 @@ function merge(target, source, deep) {
   return Vue;
 
 }));
-},{}],52:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -11731,7 +11295,7 @@ exports.default = {
 	props: ['artist'],
 	computed: {
 		avatar: function avatar() {
-			return this.artist.photo.photo.path;
+			return this.artist.profilePic;
 		}
 	}
 };
@@ -11748,26 +11312,16 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":51,"vue-hot-reload-api":26}],53:[function(require,module,exports){
-'use strict';
+},{"vue":26,"vue-hot-reload-api":1}],28:[function(require,module,exports){
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-
-// import _ from "lodash";
-var numberUtils = require('mout/number');
 exports.default = {
-	data: function data() {
-		return {};
-	},
-	methods: function methods() {},
-
+	methods: {},
 	props: ['data'],
 	computed: {
-		total: function total() {
-			return numberUtils.abbreviate(this.data.total);
-		},
 		icon: function icon() {
 			switch (this.data.title) {
 				case "users":
@@ -11779,15 +11333,21 @@ exports.default = {
 				case "artists":
 					return "fa fa-user";
 					break;
-				case "activeAds":
+				case "active ads":
 					return "fa fa-tv";
+					break;
+				default:
+					return "fa fa-user";
 					break;
 			}
 		}
+	},
+	ready: function ready() {
+		console.log("infoBox component is ready with data -> " + this.data);
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"col-md-3 col-sm-6 col-xs-12\">\n      <div class=\"info-box\">\n        <span class=\"info-box-icon bg-green\"><i :class=\"icon\"></i></span>\n        <div class=\"info-box-content\">\n          <span class=\"info-box-text\">{{ data.title }}</span>\n          <span class=\"info-box-number\">{{ total }}</span>\n        </div><!-- /.info-box-content -->\n      </div><!-- /.info-box -->\n    </div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"col-md-3 col-sm-6 col-xs-12\">\n      <div class=\"info-box\">\n        <span class=\"info-box-icon bg-green\"><i :class=\"icon\"></i></span>\n        <div class=\"info-box-content\">\n          <span class=\"info-box-text\">{{ data.title }}</span>\n          <span class=\"info-box-number\">{{ data.total | abbreviate }}</span>\n        </div>\n      </div>\n    </div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11799,7 +11359,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"mout/number":6,"vue":51,"vue-hot-reload-api":26}],54:[function(require,module,exports){
+},{"vue":26,"vue-hot-reload-api":1}],29:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11834,7 +11394,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./artist.vue":52,"vue":51,"vue-hot-reload-api":26}],55:[function(require,module,exports){
+},{"./artist.vue":27,"vue":26,"vue-hot-reload-api":1}],30:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -11849,7 +11409,7 @@ exports.default = {
 	props: ['tracks']
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"box box-info\">\n        <div class=\"box-header with-border\">\n          <h3 class=\"box-title\">Trending Tracks</h3>\n          <div class=\"box-tools pull-right\">\n            <button class=\"btn btn-box-tool\" data-widget=\"collapse\"><i class=\"fa fa-minus\"></i></button>\n            <button class=\"btn btn-box-tool\" data-widget=\"remove\"><i class=\"fa fa-times\"></i></button>\n          </div>\n        </div><!-- /.box-header -->\n        <div class=\"box-body\">\n          <div class=\"table-responsive\">\n            <table class=\"table no-margin\">\n              <thead>\n              <tr>\n                <th>Title</th>\n                <th>Artist(s)</th>\n                <th>Category</th>\n                <th>Streams</th>\n                <th>Download</th>\n              </tr>\n              </thead>\n              <tbody>\n              <tr v-for=\"track in tracks\">\n                <td><a href=\"pages/examples/invoice.html\">{{ track.title }}</a></td>\n                <td>{{ track.artist.name }}</td>\n                <td>{{ track.category.name }}</td>\n                <td>{{ track.streams.length }}</td>\n                <td>{{ track.downloads.length }}</td>\n              </tr>\n              </tbody>\n            </table>\n          </div><!-- /.table-responsive -->\n        </div><!-- /.box-body -->\n      </div><!-- /.box -->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"box box-info\">\n        <div class=\"box-header with-border\">\n          <h3 class=\"box-title\">Trending Tracks</h3>\n          <div class=\"box-tools pull-right\">\n            <button class=\"btn btn-box-tool\" data-widget=\"collapse\"><i class=\"fa fa-minus\"></i></button>\n            <button class=\"btn btn-box-tool\" data-widget=\"remove\"><i class=\"fa fa-times\"></i></button>\n          </div>\n        </div><!-- /.box-header -->\n        <div class=\"box-body\">\n          <div class=\"table-responsive\">\n            <table class=\"table no-margin\">\n              <thead>\n              <tr>\n                <th>Title</th>\n                <th>Artist(s)</th>\n                <th>Category</th>\n                <th>Streams</th>\n                <th>Download</th>\n              </tr>\n              </thead>\n              <tbody>\n              <tr v-for=\"track in tracks\">\n                <td>{{ track.title }}</td>\n                <td>{{ track.artist }}</td>\n                <td>{{ track.genre }}</td>\n                <td>{{ track.streams }}</td>\n                <td>{{ track.downloads }}</td>\n              </tr>\n              </tbody>\n            </table>\n          </div><!-- /.table-responsive -->\n        </div><!-- /.box-body -->\n      </div><!-- /.box -->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11861,7 +11421,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":51,"vue-hot-reload-api":26}],56:[function(require,module,exports){
+},{"vue":26,"vue-hot-reload-api":1}],31:[function(require,module,exports){
 'use strict';
 
 var _vue = require('vue');
@@ -11889,66 +11449,62 @@ _vue2.default.use(require('vue-resource'));
 new _vue2.default({
     el: "section.content",
     data: {
-        data: {
-            users: {
-                title: 'users', total: 2000000
-            },
-            tracks: {
-                title: 'tracks', total: 200000
-            },
-            artists: {
-                title: 'artists', total: 2000000
-            },
-            activeAds: {
-                title: 'activeAds', total: 2000000
-            },
-            trendingTracks: [{
-                title: 'Kai Kai',
-                artist: {
-                    name: 'shattaWale'
-                },
-                category: {
-                    name: 'DanceHall'
-                },
-                streams: [{
-                    user_id: 1
-                }, {
-                    user_id: 2
-                }],
-                downloads: [{
-                    user_id: 1
-                }, {
-                    user_id: 2
-                }]
-            }],
-            trendingArtists: [{
-                name: "Stone Bowy",
-                photo: {
-                    photo: {
-                        path: 'img/user1-128x128.jpg'
-                    }
-                }
-            }, {
-                name: "ShataWale",
-                photo: {
-                    photo: {
-                        path: "img/user1-128x128.jpg"
-                    }
-                }
-            }]
-        }
+        users: {},
+        tracks: {},
+        artists: {},
+        activeAds: {},
+        trendingTracks: [],
+        trendingArtists: []
     },
     components: { InfoBox: _infoBox2.default, TrendingTracks: _trendingTracks2.default, TrendingArtists: _trendingArtists2.default },
+    created: function created() {
+        console.log('dashboard component created');
+    },
     ready: function ready() {
-        this.data = JSON.parse(this.fetchDashboardData());
-        console.log(this.data);
+        console.log('dashboard component is ready');
+        this.totalUsers();
+        this.totalArtists();
+        this.totalTracks();
+        this.activeAudioAds();
+        this.getTrendingTracks();
+        this.getPopularArtists();
     },
 
     methods: {
-        fetchDashboardData: function fetchDashboardData() {}
+        fetchData: function fetchData(source, target) {
+            var data = undefined;
+            this.$http.get('internal/dashboard/' + source).then(function (response) {
+                if (source == 'trending-tracks' || source == 'top-artists') {
+                    data = response.data.data;
+                } else {
+                    data = response.data;
+                }
+                this.$set(target, data);
+            }, function (response) {
+                console.log(response);
+            });
+        },
+        totalUsers: function totalUsers() {
+            this.fetchData('total-users', 'users');
+        },
+        totalTracks: function totalTracks() {
+            this.fetchData('total-tracks', 'tracks');
+        },
+        totalArtists: function totalArtists() {
+            this.fetchData('total-artists', 'artists');
+        },
+        activeAudioAds: function activeAudioAds() {
+            this.fetchData('total-ads', 'activeAds');
+        },
+        getTrendingTracks: function getTrendingTracks() {
+            this.fetchData('trending-tracks', 'trendingTracks');
+        },
+        getPopularArtists: function getPopularArtists() {
+            this.fetchData('top-artists', 'trendingArtists');
+        }
     }
 });
 
-},{"./components/infoBox.vue":53,"./components/trendingArtists.vue":54,"./components/trendingTracks.vue":55,"vue":51,"vue-resource":40}]},{},[56]);
+},{"./components/infoBox.vue":28,"./components/trendingArtists.vue":29,"./components/trendingTracks.vue":30,"vue":26,"vue-resource":15}]},{},[31]);
 
 //# sourceMappingURL=dashboard.js.map

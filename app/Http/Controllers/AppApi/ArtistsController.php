@@ -101,19 +101,21 @@ class ArtistsController extends PublicApiController
      */
     public function upload(Request $request)
     {
-        dd($request->track);
-        if($request->track != null){
-            return $this->respondForAction("success", 200, "Track Uploaded Successfully.");
-        }
-        return $this->respondForAction("error", 401, "Track file not found");
-//        $audioData = $this->prepareAudioData($request);
-//        $job = new UploadTrack($audioData, $this->auth->user());
-//        try{
-//            $this->dispatch($job);
+//        dd($request->track);
+//        if($request->track != null && $request->cover != null){
+//            $this->moveToLocal($request->track, "track_file");
+//            $this->moveToLocal($request->cover, "track_cover");
 //            return $this->respondForAction("success", 200, "Track Uploaded Successfully.");
-//        }catch (Exception $e){
-//            return $this->respondForAction("error", $e->getCode(), $e->getMessage());
 //        }
+//        return $this->respondForAction("error", 401, "Track file not found");
+        $audioData = $this->prepareAudioData($request);
+        $job = new UploadTrack($audioData, $this->auth->user());
+        try{
+            $this->dispatch($job);
+            return $this->respondForAction("success", 200, "Track Uploaded Successfully.");
+        }catch (Exception $e){
+            return $this->respondForAction("error", $e->getCode(), $e->getMessage());
+        }
     }
 
     /**
@@ -140,7 +142,7 @@ class ArtistsController extends PublicApiController
         $cover = $request->cover;
         $title = str_slug($request->title);
         $date = Carbon::parse($request->date);
-        $featurings = $this->multiexplode(["#"], $request->featurings);
+//        $featurings = $this->multiexplode(["#"], $request->featurings);
         $category = $this->categoryRepository->getCategoryIdByName($request->category);
         $local_track = $this->moveToLocal($track, $title);
         $local_cover = $this->moveToLocal($cover, $title . "_cover");
@@ -150,7 +152,7 @@ class ArtistsController extends PublicApiController
         $audioData = array_add($request->only('title', 'downloadable'), "track_full_path", $track_path);
         $audioData = array_add($audioData, "cover_full_path", $cover_path);
         $audioData = array_add($audioData, "released_date", $date);
-        $audioData = array_add($audioData, "featurings", $featurings);
+//        $audioData = array_add($audioData, "featurings", $featurings);
         $audioData = array_add($audioData, "category_id", $category);
         $audioData = array_add($audioData, "length", $length);
         $audioData = array_add($audioData, "track_ext", $local_track->getExtension());

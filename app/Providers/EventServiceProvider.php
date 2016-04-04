@@ -37,7 +37,6 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\NotifyToBeArtistEndorsers',
         ],
         'App\Events\TrackUploaded' => [
-            'App\Listeners\NotifyArtistFollowers',
             'App\Listeners\NotifyArtistFollowersOfNewTrack',
         ],
         'App\Events\UserCreated' => [

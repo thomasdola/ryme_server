@@ -16,9 +16,9 @@
                     <tbody>
                         <tr v-for="artist in artists">
                             <td>{{ artist.name }}</td>
-                            <td>{{ artist.category.name }}</td>
-                            <td>{{ artist.followers.length }}</td>
-                            <td>{{ artist.tracks.length }}</td>
+                            <td>{{ artist.genre }}</td>
+                            <td>{{ artist.followers }}</td>
+                            <td>{{ artist.tracks }}</td>
                         </tr>
                     </tbody>
                 </table>

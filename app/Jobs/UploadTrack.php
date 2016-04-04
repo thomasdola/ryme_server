@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\TrackUploaded;
 use App\User;
 use Eureka\Services\Interfaces\ArtistContract;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -42,12 +43,10 @@ class UploadTrack extends AppApiJobs implements ShouldQueue
 
         try{
             $track = $artistActivity->uploadTrack($audioData, $this->artist);
+            event(new TrackUploaded($track));
         }catch (\Exception $e){
             throw $e;
         }
-        //fire an event
-//        event()->fire(new TrackUploaded($track));
-//        dd($track);
     }
 
     protected function saveDataToSession()

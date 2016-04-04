@@ -9,8 +9,6 @@ use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 class TrackCollectionTransformer extends TransformerAbstract
 {
-    protected $defaultIncludes = ['genre'];
-
     public function transform(Track $track)
     {
         return [
@@ -21,6 +19,11 @@ class TrackCollectionTransformer extends TransformerAbstract
                 'month' => Carbon::parse($track->released_date)->month,
                 'day' => Carbon::parse($track->released_date)->day
             ],
+            'artist' => $track->author->stage_name,
+            'streams' => $track->streams->count(),
+            'downloads' => $track->usersWhoDownloaded->count(),
+            'genre' => $track->category->name,
+            'likes' => $track->usersWhoLiked->count()
         ];
     }
 

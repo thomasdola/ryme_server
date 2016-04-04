@@ -67,4 +67,13 @@ class UsersApiController extends InternalApiController
             'allCount'=>$allCount
         ]);
     }
+
+    public function totalUsers()
+    {
+        $allUsersCount = $this->userRepository->getAllUsersCount();
+        return response()->json([
+            'title' => 'users',
+            'total' => $allUsersCount
+        ])->setStatusCode(200);
+    }
 }

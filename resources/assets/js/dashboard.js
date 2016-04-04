@@ -9,74 +9,57 @@ import TrendingArtists from "./components/trendingArtists.vue";
 new Vue({
     el:"section.content",
     data:{
-        data: {
-            users: {
-                title:'users', total:2000000
-            },
-            tracks: {
-                title: 'tracks', total: 200000
-            },
-            artists: {
-                title:'artists', total:2000000
-            },
-            activeAds: {
-                title:'activeAds', total:2000000
-            },
-            trendingTracks: [
-                {
-                    title: 'Kai Kai',
-                    artist: {
-                        name: 'shattaWale'
-                    },
-                    category: {
-                        name: 'DanceHall'
-                    },
-                    streams: [
-                        {
-                            user_id: 1
-                        },
-                        {
-                            user_id: 2
-                        }
-                    ],
-                    downloads: [
-                        {
-                            user_id: 1
-                        },
-                        {
-                            user_id: 2
-                        }
-                    ]
-                }
-            ],
-            trendingArtists: [
-                {
-                    name: "Stone Bowy",
-                    photo: {
-                        photo: {
-                            path: 'img/user1-128x128.jpg'
-                        }
-                    }
-                },
-                {
-                    name: "ShataWale",
-                    photo: {
-                        photo: {
-                            path: "img/user1-128x128.jpg"
-                        }
-                    }
-                }
-            ]
-        }
+        users: {},
+        tracks: {},
+        artists: {},
+        activeAds: {},
+        trendingTracks: [],
+        trendingArtists: []
     },
     components:{InfoBox, TrendingTracks, TrendingArtists},
+    created(){
+        console.log('dashboard component created');
+    },
     ready(){
-        this.data = JSON.parse(this.fetchDashboardData());
-        console.log(this.data);
+        console.log('dashboard component is ready');
+        this.totalUsers();
+        this.totalArtists();
+        this.totalTracks();
+        this.activeAudioAds();
+        this.getTrendingTracks();
+        this.getPopularArtists();
     },
     methods:{
-        fetchDashboardData(){
-
+        fetchData(source, target){
+            let data;
+            this.$http.get(`internal/dashboard/${source}`).then(function(response){
+                if(source == 'trending-tracks' || source == 'top-artists'){
+                    data =  response.data.data;
+                }else{
+                    data = response.data;
+                }
+                this.$set(target, data);
+            }, function(response){
+                console.log(response);
+            });
+        },
+        totalUsers(){
+            this.fetchData('total-users', 'users');
+        },
+        totalTracks(){
+            this.fetchData('total-tracks', 'tracks');
+        },
+        totalArtists(){
+            this.fetchData('total-artists', 'artists');
+        },
+        activeAudioAds(){
+            this.fetchData('total-ads', 'activeAds');
+        },
+        getTrendingTracks(){
+            this.fetchData('trending-tracks', 'trendingTracks');
+        },
+        getPopularArtists(){
+            this.fetchData('top-artists', 'trendingArtists');
         }
     }
 });

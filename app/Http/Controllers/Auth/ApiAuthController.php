@@ -19,6 +19,7 @@ use Eureka\Repositories\VerificationCodeRepository;
 use Exception;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
+use TomLingham\Searchy\Facades\Searchy;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -79,8 +80,8 @@ class ApiAuthController extends PublicApiController
         try{
             $this->validateData($payload, $rules);
         }catch (StoreResourceFailedException $e){
-            throw $e;
-//            return $this->respondForAuth('error', $e->getCode(), $e->getMessage());
+//            throw $e;
+            return $this->respondForAuth('error', $e->getCode(), $e->getMessage());
         }
 
         $job = new RegisterUser(collect($payload));

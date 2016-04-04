@@ -33,9 +33,9 @@ class MobileArtistItemTransformer extends TransformerAbstract
             "stage_name" => $artist->stage_name,
             "followers" => $artist->followers->count(),
             "profilePic" =>  $artist->photos->where('type', 'avatar')->first()
-                ?"http://localhost:8000" . $artist->photos->where('type', 'avatar')->first()->path : null,
+                ?"http://192.168.74.1:8000" . $artist->photos->where('type', 'avatar')->first()->path : null,
             "backPic" => $artist->photos->where('type', 'background')->first()
-                ? "http://localhost:8000" . $artist->photos->where('type', 'background')->first()->path : null,
+                ? "http://192.168.74.1:8000" . $artist->photos->where('type', 'background')->first()->path : null,
             "followed" => $this->dejaVu($artist->followers),
             "amTheOne" => $this->amI($artist->uuid)
         ];

@@ -21,11 +21,11 @@
               </thead>
               <tbody>
               <tr v-for="track in tracks">
-                <td><a href="pages/examples/invoice.html">{{ track.title }}</a></td>
-                <td>{{ track.artist.name }}</td>
-                <td>{{ track.category.name }}</td>
-                <td>{{ track.streams.length }}</td>
-                <td>{{ track.downloads.length }}</td>
+                <td>{{ track.title }}</td>
+                <td>{{ track.artist }}</td>
+                <td>{{ track.genre }}</td>
+                <td>{{ track.streams }}</td>
+                <td>{{ track.downloads }}</td>
               </tr>
               </tbody>
             </table>

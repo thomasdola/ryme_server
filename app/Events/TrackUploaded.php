@@ -7,7 +7,7 @@ use App\Track;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class TrackUploaded extends Event implements ShouldBroadcast
+class TrackUploaded extends Event
 {
     use SerializesModels;
     /**
@@ -22,7 +22,6 @@ class TrackUploaded extends Event implements ShouldBroadcast
      */
     public function __construct(Track $track)
     {
-        //
         $this->track = $track;
     }
 

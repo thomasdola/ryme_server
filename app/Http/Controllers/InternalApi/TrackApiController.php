@@ -1,10 +1,11 @@
 <?php
 namespace App\Http\Controllers\InternalApi;
 
-use Eureka\Helpers\Transformers\TrackTransformer;
+use Eureka\Helpers\Transformers\Server\TrackCollectionTransformer;
 use Eureka\Repositories\TrackRepository;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
+use League\Fractal\Serializer\DataArraySerializer;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 class TrackApiController extends InternalApiController
@@ -19,7 +20,7 @@ class TrackApiController extends InternalApiController
     private $trackRepository;
 
     public function __construct(Manager $fractal, TrackRepository $trackRepository){
-        $this->fractal = $fractal->setSerializer(new JsonApiSerializer(self::BASE_URL));
+        $this->fractal = $fractal->setSerializer(new DataArraySerializer());
         $this->trackRepository = $trackRepository;
     }
 
@@ -27,11 +28,29 @@ class TrackApiController extends InternalApiController
     {
         return $this->fractal->createData(
             new Collection($this->trackRepository->getTrendingTracksByCategory($id),
-                new TrackTransformer, 'tracks'))->toArray();
+                new TrackCollectionTransformer, 'tracks'))->toArray();
     }
 
     public function getTrendingTracksByArtist($id)
     {
-        return $this->trackRepository->getTrendingTracksByArtist($id);
+        return $this->fractal->createData(
+            new Collection($this->trackRepository->getTrendingTracksByArtist($id),
+                new TrackCollectionTransformer, 'tracks'))->toArray();
+    }
+
+    public function getTrendingTracks()
+    {
+        return $this->fractal->createData(
+            new Collection($this->trackRepository->getTrendingTracks(),
+                new TrackCollectionTransformer, 'tracks'))->toArray();
+    }
+
+    public function totalTracks()
+    {
+        $allTracksCount = $this->trackRepository->getAllTracksCount();
+        return response()->json([
+            'title' => 'tracks',
+            'total' => $allTracksCount
+        ])->setStatusCode(200);
     }
 }

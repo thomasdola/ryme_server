@@ -72,4 +72,7 @@ input.cmn-toggle-round-flat:checked + label:after {
   float: left;
   border-bottom-width: 0; }
 
+.info-box-text {
+  text-transform: capitalize; }
+
 /*# sourceMappingURL=app.css.map */

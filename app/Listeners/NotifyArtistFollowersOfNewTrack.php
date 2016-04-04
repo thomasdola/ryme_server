@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\TrackUploaded;
 use App\Track;
+use Carbon\Carbon;
 use Eureka\Services\Interfaces\NotificationServiceInterface;
 use Exception;
 use Illuminate\Queue\InteractsWithQueue;
@@ -35,17 +36,21 @@ class NotifyArtistFollowersOfNewTrack
      */
     public function handle(TrackUploaded $event)
     {
-        $event_type = snake_case("TrackUploaded");
-        $channel = $event->track->author->channel->uuid;
-        $message = $this->makeMessage($event->track);
-        try{
-            $this->notificationService->publish($channel, $message, $event_type);
-        }catch (Exception $e){
-            throw $e;
+        if($this->isReleasedToday($event->track)){
+            $event_type = snake_case("TrackUploaded");
+            $channel = $event->track->author->channel->uuid;
+            $message = $this->makeMessage($event->track);
+            try{
+                $this->notificationService->publish($channel, $message, $event_type);
+            }catch (Exception $e){
+                throw $e;
+            }
         }
     }
 
     /**
+     * construct the mobile device notification message
+     *
      * @param Track $track
      * @return array
      */
@@ -58,5 +63,16 @@ class NotifyArtistFollowersOfNewTrack
             'body' => "{$track_title} by {$artist_name}",
             'track_id' => $track->uuid
         ];
+    }
+
+    /**
+     * checks if the track date is today
+     *
+     * @param $track
+     * @return bool
+     */
+    private function isReleasedToday($track)
+    {
+        return Carbon::parse($track->released_date)->eq(Carbon::today());
     }
 }

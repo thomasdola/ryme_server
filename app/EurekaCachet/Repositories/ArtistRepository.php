@@ -33,20 +33,16 @@ class ArtistRepository
     }
 
     /**
-     * @param $id
      * @return mixed
      */
     public function getTrendingArtists()
     {
         $artists = $this->user
-            ->with(['photos', 'tracks', 'followers'])
-            ->has('tracks')
+            ->with(['photos', 'uploadedTracks', 'followers'])
             ->get();
-//        $artists = $artists->sortByDesc(function($artist)
-//        {
-//            return $artist->followers->count();
-//        });
-        return $artists->take(50);
+        return $artists->sortByDesc(function($artist){
+            return $artist->followers->count();
+        })->take(50);
     }
 
     public function getTrendingArtistsByCategory($id)
@@ -59,9 +55,6 @@ class ArtistRepository
         return $trendingOnes;
     }
 
-    /**
-     *
-     */
     public function getAllArtistsCount()
     {
         return $this->user->where('is_artist', true)->count();
@@ -75,7 +68,7 @@ class ArtistRepository
     public function getArtistToBe()
     {
         $req = $this->vouchRepository->getRecentRequests();
-        return $req->load('user');
+        return $req;
     }
 
     public function getArtistJoinedTodayCount()
@@ -127,6 +120,16 @@ class ArtistRepository
     public function search($query)
     {
         return $this->user->where('stage_name', 'like', "%{$query}%")
+            ->where(function($query){
+                $query->where('is_artist', '1')
+                    ->orwhere('is_request_active', '1');
+            })
+            ->get();
+    }
+
+    public function findArtistByName($q)
+    {
+        return $this->user->where('stage_name', 'like', "%{$q}%")
             ->where(function($query){
                 $query->where('is_artist', '1')
                     ->orwhere('is_request_active', '1');

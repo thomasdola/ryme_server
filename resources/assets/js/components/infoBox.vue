@@ -1,18 +1,8 @@
 <script type="text/babel">
-	// import _ from "lodash";
-	var numberUtils = require('mout/number');
-	export default {
-		data(){
-			return {
-
-			}
-		},
-		methods(){},
-		props:['data'],
+    export default {
+		methods: {},
+		props: ['data'],
 		computed: {
-			total(){
-				return numberUtils.abbreviate(this.data.total);
-			},
 			icon(){
 				switch(this.data.title){
 					case "users":
@@ -24,12 +14,18 @@
 					case "artists":
 						return "fa fa-user";
 					break;
-					case "activeAds":
+					case "active ads":
 						return "fa fa-tv";
 					break;
+                    default:
+                        return "fa fa-user";
+                    break;
 				}
 			}
-		}
+		},
+        ready(){
+            console.log(`infoBox component is ready with data -> ${this.data}`);
+        },
 	}
 </script>
 
@@ -39,8 +35,8 @@
         <span class="info-box-icon bg-green"><i :class="icon"></i></span>
         <div class="info-box-content">
           <span class="info-box-text">{{ data.title }}</span>
-          <span class="info-box-number">{{ total }}</span>
-        </div><!-- /.info-box-content -->
-      </div><!-- /.info-box -->
+          <span class="info-box-number">{{ data.total | abbreviate }}</span>
+        </div>
+      </div>
     </div>
 </template>

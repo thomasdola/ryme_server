@@ -72,15 +72,15 @@ class CategoriesController extends PublicApiController
         $user_gcm_reg_token = $request->get('token');
         $genre = $this->categoryRepository->getCategory($genreId);
 
-        dd($user_gcm_reg_token, $genre);
+//        dd($user_gcm_reg_token, $genre);
         try{
             $this->dispatch(new FollowGenre($genre, $this->user, $user_gcm_reg_token));
-            $res = $interface->ptest($user_gcm_reg_token, ['title'=>'test one', 'body'=>'no body', 'event'=>'no-event']);
+//            $res = $interface->ptest($user_gcm_reg_token, ['title'=>'test one', 'body'=>'no body', 'event'=>'no-event']);
 //            dd($res);
             return $this->respondForAction("success", 200, "category followed successfully");
         }catch (Exception $e){
-            throw $e;
-//            return $this->respondForAction("error", $e->getCode());
+//            throw $e;
+            return $this->respondForAction("error", $e->getCode());
         }
     }
 

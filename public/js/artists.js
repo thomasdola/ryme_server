@@ -11779,77 +11779,71 @@ _vue2.default.filter('abbreviate', function (value) {
 new _vue2.default({
     el: 'section.content',
     data: {
-        data: {
-            joinedToday: {
-                title: 'Artists Joined Today',
-                total: 2000
-            },
-            joinedThisWeek: {
-                title: 'Artists Joined This Week',
-                total: 2000
-            },
-            joinedThisMonth: {
-                title: 'Artists Joined This Month',
-                total: 2000
-            },
-            all: {
-                title: 'Total Artists',
-                total: 2000
-            },
-            requests: [{
-                user: {
-                    name: 'thomas paul',
-                    stage_name: 'pinana pijo',
-                    category: {
-                        name: 'hip hop'
-                    }
-                },
-                end_date: "12/02/2016"
-            }, {
-                user: {
-                    name: 'thomas paul',
-                    stage_name: 'pinana pijo',
-                    category: {
-                        name: 'hip hop'
-                    }
-                },
-                end_date: "12/02/2016"
-            }],
-            artists: [{
-                name: "Stone Bowy",
-                category: {
-                    name: 'dancehall'
-                },
-                followers: [{ user_id: 1 }, { user_id: 1 }, { user_id: 1 }],
-                tracks: [{ track_id: 1 }, { track_id: 1 }, { track_id: 1 }]
-            }]
-        }
+        data: {},
+        requests: [],
+        artists: [],
+        searchResult: []
     },
     components: { Search: _search2.default, InfoBox: _infoBox2.default, TrendingArtists: _trendingArtistTable2.default, VouchingRequests: _vouchingRequestsTable2.default },
-    methods: {},
+    methods: {
+        fetchData: function fetchData(target) {
+            var source = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+            var query = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
+            var data = undefined;
+            var url = 'internal/artists/' + source;
+
+            if (source == null) {
+                url = 'internal/artists';
+            }
+
+            if (query != null) {
+                url = 'internal/artists/' + source + '?' + query;
+            }
+            console.log('final url -> ' + url);
+            this.$http.get(url).then(function (response) {
+                if (source == 'data') {
+                    data = response.data;
+                } else {
+                    data = response.data.data;
+                }
+                console.log('target -> ' + target + ' ----> data -> ' + data);
+                this.$set(target, data);
+            }, function (response) {
+                console.log(response);
+            });
+        },
+        initialData: function initialData() {
+            this.fetchData('data', 'data');
+        },
+        getTrendingArtists: function getTrendingArtists() {
+            this.fetchData('artists', 'trending');
+        },
+        getUsersRequests: function getUsersRequests() {
+            this.fetchData('requests', 'requests');
+        },
+        performSearch: function performSearch(query) {
+            this.fetchData('searchResult', 'search', query);
+        }
+    },
+    created: function created() {
+        this.initialData();
+        this.getTrendingArtists();
+        this.getUsersRequests();
+    },
     ready: function ready() {}
 });
 
 },{"./components/infoBox.vue":54,"./components/search.vue":55,"./components/trendingArtistTable.vue":56,"./components/vouchingRequestsTable.vue":57,"mout/number":6,"vue":51,"vue-resource":40}],54:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-
-// import _ from "lodash";
-var numberUtils = require('mout/number');
 exports.default = {
-	data: function data() {
-		return {};
-	},
-	methods: function methods() {},
-
+	methods: {},
 	props: ['data'],
 	computed: {
-		total: function total() {
-			return numberUtils.abbreviate(this.data.total);
-		},
 		icon: function icon() {
 			switch (this.data.title) {
 				case "users":
@@ -11861,15 +11855,21 @@ exports.default = {
 				case "artists":
 					return "fa fa-user";
 					break;
-				case "activeAds":
+				case "active ads":
 					return "fa fa-tv";
+					break;
+				default:
+					return "fa fa-user";
 					break;
 			}
 		}
+	},
+	ready: function ready() {
+		console.log("infoBox component is ready with data -> " + this.data);
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"col-md-3 col-sm-6 col-xs-12\">\n      <div class=\"info-box\">\n        <span class=\"info-box-icon bg-green\"><i :class=\"icon\"></i></span>\n        <div class=\"info-box-content\">\n          <span class=\"info-box-text\">{{ data.title }}</span>\n          <span class=\"info-box-number\">{{ total }}</span>\n        </div><!-- /.info-box-content -->\n      </div><!-- /.info-box -->\n    </div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"col-md-3 col-sm-6 col-xs-12\">\n      <div class=\"info-box\">\n        <span class=\"info-box-icon bg-green\"><i :class=\"icon\"></i></span>\n        <div class=\"info-box-content\">\n          <span class=\"info-box-text\">{{ data.title }}</span>\n          <span class=\"info-box-number\">{{ data.total | abbreviate }}</span>\n        </div>\n      </div>\n    </div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11881,7 +11881,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"mout/number":6,"vue":51,"vue-hot-reload-api":26}],55:[function(require,module,exports){
+},{"vue":51,"vue-hot-reload-api":26}],55:[function(require,module,exports){
 var __vueify_style__ = require("vueify-insert-css").insert("\nul.result__vew{\n\tz-index: 9999;\n\tposition: absolute;\n\twidth: 90%;\n}\nul.result__vew li a{\n\ttext-decoration: none;\n}\n.search__btn:hover{\n\tcursor: pointer;\n}\n")
 "use strict";
 
@@ -11892,26 +11892,33 @@ exports.default = {
 	data: function data() {
 		return {
 			searchQuery: "",
-			searhResult: []
+			searchResult: []
 		};
 	},
 
 	methods: {
 		search: function search() {
 			if (this.searchQuery.trim()) {
-				console.log(this.searchQuery.trim());
+				this.performSearch(this.searchQuery.trim());
 			}
 		},
 		searchWithQuery: function searchWithQuery() {
 			if (this.searchQuery.trim()) {
-				console.log(this.searchQuery.trim());
-				this.searchQuery = "";
+				this.performSearch(this.searchQuery.trim());
 			}
+		},
+		performSearch: function performSearch(query) {
+			this.$http.get("internal/artists/search?q=" + query).then(function (response) {
+				console.log(response);
+				this.$set('searchResult', response.data.data);
+			}, function (response) {
+				console.log(response);
+			});
 		}
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"input-group col-md-5 col-md-offset-3\">\n        <div class=\"row\">\n        \t<div class=\"col-xs-12\">\n\t        \t<div class=\"input-group\">\n\t        \t  \t<input type=\"text\" v-model=\"searchQuery\" @keyup=\"search | debounce 500\" placeholder=\"search for artists...\" class=\"form-control\">\n\t\t        \t<span class=\"input-group-addon search__btn\" @click=\"searchWithQuery\">\n\t\t        \t  \t<i class=\"fa fa-search fa-spin\"></i>\n\t\t    \t  \t</span>\n\t        \t</div>\n        \t</div>\n        \t<div class=\"col-xs-12\" v-if=\"searchResult\">\n        \t\t<ul class=\"list-group result__vew\">\n        \t\t\t<li class=\"list-group-item\" v-for=\"result in searchResult\">\n        \t\t\t\t<a href=\"#\">\n        \t\t\t\t\t{{ result.user.name }}\n        \t\t\t\t</a>\n    \t\t\t\t</li>\n        \t\t</ul>\n        \t</div>\n        </div>\n    </div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"input-group col-md-5 col-md-offset-3\">\n        <div class=\"row\">\n        \t<div class=\"col-xs-12\">\n\t        \t<div class=\"input-group\">\n\t        \t  \t<input type=\"text\" v-model=\"searchQuery\" @keyup=\"search | debounce 500\" placeholder=\"search for artists...\" class=\"form-control\">\n\t\t        \t<span class=\"input-group-addon search__btn\" @click=\"searchWithQuery\">\n\t\t        \t  \t<i class=\"fa fa-search fa-spin\"></i>\n\t\t    \t  \t</span>\n\t        \t</div>\n        \t</div>\n        \t<div class=\"col-xs-12\" v-if=\"searchResult &amp;&amp; searchQuery\">\n        \t\t<ul class=\"list-group result__vew\">\n        \t\t\t<li class=\"list-group-item\" v-for=\"result in searchResult\">\n        \t\t\t\t<a href=\"#\">\n        \t\t\t\t\t{{ result.name }}\n        \t\t\t\t</a>\n    \t\t\t\t</li>\n        \t\t</ul>\n        \t</div>\n        </div>\n    </div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11937,7 +11944,7 @@ exports.default = {
 	props: ['artists']
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"box\">\n        <div class=\"box-header\">\n            <h3 class=\"box-title\">Trending Artists</h3>\n        </div><!-- /.box-header -->\n        <div class=\"box-body table-responsive\">\n            <table class=\"table table-hover\">\n                <thead>\n                    <tr>\n                        <th>Name</th>\n                        <th>Categories</th>\n                        <th>followers</th>\n                        <th>tracks</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    <tr v-for=\"artist in artists\">\n                        <td>{{ artist.name }}</td>\n                        <td>{{ artist.category.name }}</td>\n                        <td>{{ artist.followers.length }}</td>\n                        <td>{{ artist.tracks.length }}</td>\n                    </tr>\n                </tbody>\n            </table>\n        </div><!-- /.box-body -->\n    </div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"box\">\n        <div class=\"box-header\">\n            <h3 class=\"box-title\">Trending Artists</h3>\n        </div><!-- /.box-header -->\n        <div class=\"box-body table-responsive\">\n            <table class=\"table table-hover\">\n                <thead>\n                    <tr>\n                        <th>Name</th>\n                        <th>Categories</th>\n                        <th>followers</th>\n                        <th>tracks</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    <tr v-for=\"artist in artists\">\n                        <td>{{ artist.name }}</td>\n                        <td>{{ artist.genre }}</td>\n                        <td>{{ artist.followers }}</td>\n                        <td>{{ artist.tracks }}</td>\n                    </tr>\n                </tbody>\n            </table>\n        </div><!-- /.box-body -->\n    </div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11964,7 +11971,7 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<table class=\"table table-hover\">\n        <thead>\n            <tr>\n                <th>Name</th>\n                <th>Stage Name</th>\n                <th>Categories</th>\n                <th>Days Left</th>\n                <th>Action</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for=\"request in requests\">\n            <td>{{ request.user.name }}</td>\n            <td>{{ request.user.stage_name }}</td>\n            <td>{{ request.user.categories }}</td>\n            <td>{{ request.end_date }}</td>\n            <td>\n                <button type=\"button\" @click=\"cancelRequest(request, $index)\" class=\"btn btn-xs btn-default\">\n                    <i class=\"fa fa-times\"></i>\n                </button>\n            </td>\n        </tr>\n        </tbody>\n    </table>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<table class=\"table table-hover\">\n        <thead>\n            <tr>\n                <th>Stage Name</th>\n                <th>Genre</th>\n                <th>Start Date</th>\n                <th>End Date</th>\n                <th>Action</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for=\"request in requests\">\n            <td>{{ request.stage_name }}</td>\n            <td>{{ request.genre }}</td>\n            <td>{{ request.start_date }}</td>\n            <td>{{ request.end_date }}</td>\n            <td>\n                <button type=\"button\" @click=\"cancelRequest(request, $index)\" class=\"btn btn-xs btn-default\">\n                    <i class=\"fa fa-times\"></i>\n                </button>\n            </td>\n        </tr>\n        </tbody>\n    </table>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
