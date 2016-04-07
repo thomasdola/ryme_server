@@ -1,4 +1,4 @@
-<style>
+<style type="text/css">
 	
 </style>
 
@@ -13,7 +13,7 @@
 	      <form @submit.prevent="updateStaff">
 		      <div class="modal-body">
 		        	<div class="form-group">
-	                    <label for="name">Staff Name</label>
+	                    <label for="staffName">Staff Name</label>
 	                    <input v-model="staffBuffer.name"
 	                           required
 	                           type="text"
@@ -23,7 +23,7 @@
 	                           placeholder="Name">
 	                </div>
 	                <div class="form-group">
-	                    <label for="name">Staff Email</label>
+	                    <label for="StaffEmail">Staff Email</label>
 	                    <input v-model="staffBuffer.email"
 	                           required
 	                           type="email" name="email"
@@ -51,6 +51,9 @@
 		      </div>
 	      </form>
 	    </div><!-- /.modal-content -->
+          <div class="overlay" v-if="updatingStaff">
+              <i class="fa fa-refresh fa-spin"></i>
+          </div>
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </template>	
@@ -60,13 +63,29 @@
 		props: ['staff', 'roles'],
 		methods:{
 			updateStaff(){
+                this.updatingStaff = true;
 				let name = this.staffBuffer.name.trim();
 				let email = this.staffBuffer.email.trim();
 				if(name && email){
-					this.staff.name = this.staffBuffer.name;
-					this.staff.email = this.staffBuffer.email;
-					this.staff.role.id = this.staffBuffer.role_id;
-					$('#myModal').modal('hide');
+                    let data = new FormData;
+                    data.append('type', 'general');
+                    data.append('name', name);
+                    data.append('email', email);
+                    data.append('role_id', this.staffBuffer.role_id);
+                    this.$http.put(`internal/staffs/${this.staff.id}`, this.staffBuffer)
+                            .then((response) => {
+                                let uStaff = response.data.data;
+                                this.staff.name = uStaff.name;
+                                this.staff.email = uStaff.email;
+                                this.staff.role.title = uStaff.role.title;
+                                this.staff.role.id = uStaff.role.id;
+                                $('#myModal').modal('hide');
+                                this.updatingStaff = false;
+                            },
+                            (response) => {
+                                console.log(response)
+                                this.updatingStaff = false;
+                            });
 				}
 			},
 			setBuffer(staff){
@@ -81,7 +100,8 @@
 					name: '',
 					email: '',
 					role_id: null
-				}
+				},
+				updatingStaff: false
 			}
 		},
 		ready(){

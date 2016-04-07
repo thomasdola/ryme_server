@@ -30,12 +30,24 @@
     <ul class="sidebar-menu">
       <li class="header">NAVIGATION</li>
       <!-- Optionally, you can add icons to the links -->
-      <li class="active"><a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-      <li><a href="{{ route('artists') }}"><i class="fa fa-male"></i> <span>Artists</span></a></li>
-      <li><a href="{{ route('admin.categories.index') }}"><i class="fa fa-list"></i> <span>Categories</span></a></li>
-      <li><a href="{{ route('admin.users.index') }}"><i class="fa fa-group"></i> <span>Users</span></a></li>
-      <li><a href="{{ route('admin.ads.index') }}"><i class="fa fa-money"></i> <span>Ads</span></a></li>
-      <li><a href="{{ route('settings') }}"><i class="fa fa-briefcase"></i> <span>Admin</span></a></li>
+      <li class="{{ Request::is('admin/dashboard') ? "active" : '' }}">
+          <a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+      </li>
+      <li class="{{ Request::is('admin/artists') ? "active" : '' }}">
+          <a href="{{ route('artists') }}"><i class="fa fa-male"></i> <span>Artists</span></a>
+      </li>
+      <li class="{{ Request::is('admin/categories') ? "active" : '' }}">
+          <a href="{{ route('admin.categories.index') }}"><i class="fa fa-list"></i> <span>Categories</span></a>
+      </li>
+      <li class="{{ Request::is('admin/users') ? "active" : '' }}">
+          <a href="{{ route('admin.users.index') }}"><i class="fa fa-group"></i> <span>Users</span></a>
+      </li>
+      <li class="{{ Request::is('admin/ads') ? "active" : '' }}">
+          <a href="{{ route('admin.ads.index') }}"><i class="fa fa-money"></i> <span>Ads</span></a>
+      </li>
+      <li class="{{ Request::is('admin/settings') ? "active" : '' }}">
+          <a href="{{ route('settings') }}"><i class="fa fa-briefcase"></i> <span>Admin</span></a>
+      </li>
     </ul><!-- /.sidebar-menu -->
   </section>
   <!-- /.sidebar -->

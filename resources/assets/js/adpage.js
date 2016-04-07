@@ -13,7 +13,11 @@ new Vue({
     components: {},
     methods: {},
     data: {
-        ads: [],
+        activeActiveAds: {},
+        activeEventAds: {},
+        totalCompanies: {},
+        audioAds: [],
+        eventAds: [],
         newCompany:{
             name: ''
         },

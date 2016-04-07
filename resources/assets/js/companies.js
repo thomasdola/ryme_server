@@ -4,19 +4,23 @@ Vue.use(require('vue-resource'));
 Vue.config.warnExpressionErrors = false;
 var numberUtils = require('mout/number');
 
+import EventAdsTable from './components/eventAdsTable.vue';
+import AudioAdsTable from './components/audioAdsTable.vue';
+import InfoBox from './components/infoBox.vue';
+
 Vue.filter('abbreviate', function(value){
     return numberUtils.abbreviate(value)
 });
 
 new Vue({
     el: "section.content",
-    components: {},
+    components: {EventAdsTable, AudioAdsTable, InfoBox},
     methods: {
         saveCompany(){
             let name = this.newCompany.name.trim();
             if(name){
                 this.savingCompany = true;
-                this.$http.post("internal/companies", {name: name}).then(function(response){
+                this.$http.post("internal/companies", {name: name}).then((response) => {
                     console.log(response);
                     this.clearFields(this.newCompany);
                     this.companies.push(response.data.data);
@@ -136,25 +140,28 @@ new Vue({
             });
         },
         loadCompanies(){
-            this.$http.get("internal/companies").then(function(response){
+            this.$http.get("internal/companies").then((response) => {
                 console.log(response);
                 this.companies = response.data.data;
+                this.totalCompanies.total = this.companies.length;
             }, function(response){
                 console.log(response);
             });
         },
         loadAudioAds(){
-            this.$http.get("internal/audio-ads").then(function(response){
+            this.$http.get("internal/audio-ads").then((response) => {
                 console.log(response);
                 this.audioAds = response.data.data;
+                this.activeAudioAds.total = this.audioAds.length;
             }, function(response){
                 console.log(response);
             });
         },
         loadEventAds(){
-            this.$http.get("internal/event-ads").then(function(response){
+            this.$http.get("internal/event-ads").then((response) => {
                 console.log(response);
                 this.eventAds = response.data.data;
+                this.activeEventAds.total = this.eventAds.length;
             }, function(response){
                 console.log(response);
             });
@@ -177,6 +184,18 @@ new Vue({
         }
     },
     data: {
+        activeAudioAds: {
+            title: 'Active Audio Ads',
+            total: null
+        },
+        activeEventAds: {
+            title: 'Active Event Ads',
+            total: null
+        },
+        totalCompanies: {
+            title: 'Total Companies',
+            total: null
+        },
         savingCompany: false,
         savingAd: false,
         savingSession: false,
@@ -216,12 +235,13 @@ new Vue({
             image_file: null
         }
     },
-    created(){},
-    ready(){
+    created(){
         this.loadCompanies();
         this.loadAudioAds();
         this.loadEventAds();
         this.loadSections();
         this.loadCategories();
+    },
+    ready(){
     }
 });

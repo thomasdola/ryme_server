@@ -9,13 +9,13 @@
 namespace App\Http\Controllers\InternalApi;
 
 
-use Eureka\Helpers\Transformers\RoleCollectionTransformer;
+use Eureka\Helpers\Transformers\Server\RoleCollectionTransformer;
 use Eureka\Repositories\RolesRepository;
 use Illuminate\Http\Request;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\JsonApiSerializer;
+use League\Fractal\Serializer\DataArraySerializer;
 
 /**
  * Class RolesApiController
@@ -39,7 +39,7 @@ class RolesApiController extends InternalApiController
      */
     public function __construct(RolesRepository $rolesRepository, Manager $fractal){
         $this->rolesRepository = $rolesRepository;
-        $this->fractal = $fractal->setSerializer(new JsonApiSerializer(self::BASE_URL));
+        $this->fractal = $fractal->setSerializer(new DataArraySerializer);
     }
 
     /**
@@ -49,7 +49,7 @@ class RolesApiController extends InternalApiController
     {
         $roles = $this->rolesRepository->getAll();
         $data = $this->fractal->createData(new Collection($roles,
-            new RoleCollectionTransformer, self::RESOURCE_KEY))->toArray();
+            new RoleCollectionTransformer))->toArray();
         return response()->json($data);
     }
 
@@ -60,7 +60,8 @@ class RolesApiController extends InternalApiController
     public function single($id)
     {
         $role = $this->rolesRepository->getSingle($id);
-        return $this->returnResponse($role);
+        return $this->fractal->createData(new Item($role,
+            new RoleCollectionTransformer))->toArray();
     }
 
     /**
@@ -68,10 +69,11 @@ class RolesApiController extends InternalApiController
      * @param $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update($id, $data)
+    public function update($id, Request $data)
     {
-        $role = $this->rolesRepository->update($id, $data);
-        return $this->returnResponse($role);
+        $role = $this->rolesRepository->update($id, $data->all());
+        return $this->fractal->createData(new Item($role,
+            new RoleCollectionTransformer))->toArray();
     }
 
     /**
@@ -81,7 +83,8 @@ class RolesApiController extends InternalApiController
     public function store(Request $request)
     {
         $role = $this->rolesRepository->create($request->all());
-        return $this->returnResponse($role);
+        return $this->fractal->createData(new Item($role,
+            new RoleCollectionTransformer))->toArray();
     }
 
     /**
@@ -101,7 +104,7 @@ class RolesApiController extends InternalApiController
     protected function returnResponse($role)
     {
         $data = $this->fractal->createData(new Item($role,
-            new RoleCollectionTransformer, self::RESOURCE_KEY))->toArray();
+            new RoleCollectionTransformer))->toArray();
         return response()->json($data);
     }
 }

@@ -435,6 +435,247 @@ var toInt = require('../number/toInt');
 
 
 },{"../lang/toString":5,"../number/toInt":21}],26:[function(require,module,exports){
+var Vue // late bind
+var map = Object.create(null)
+var shimmed = false
+var isBrowserify = false
+
+/**
+ * Determine compatibility and apply patch.
+ *
+ * @param {Function} vue
+ * @param {Boolean} browserify
+ */
+
+exports.install = function (vue, browserify) {
+  if (shimmed) return
+  shimmed = true
+
+  Vue = vue
+  isBrowserify = browserify
+
+  exports.compatible = !!Vue.internalDirectives
+  if (!exports.compatible) {
+    console.warn(
+      '[HMR] vue-loader hot reload is only compatible with ' +
+      'Vue.js 1.0.0+.'
+    )
+    return
+  }
+
+  // patch view directive
+  patchView(Vue.internalDirectives.component)
+  console.log('[HMR] Vue component hot reload shim applied.')
+  // shim router-view if present
+  var routerView = Vue.elementDirective('router-view')
+  if (routerView) {
+    patchView(routerView)
+    console.log('[HMR] vue-router <router-view> hot reload shim applied.')
+  }
+}
+
+/**
+ * Shim the view directive (component or router-view).
+ *
+ * @param {Object} View
+ */
+
+function patchView (View) {
+  var unbuild = View.unbuild
+  View.unbuild = function (defer) {
+    if (!this.hotUpdating) {
+      var prevComponent = this.childVM && this.childVM.constructor
+      removeView(prevComponent, this)
+      // defer = true means we are transitioning to a new
+      // Component. Register this new component to the list.
+      if (defer) {
+        addView(this.Component, this)
+      }
+    }
+    // call original
+    return unbuild.call(this, defer)
+  }
+}
+
+/**
+ * Add a component view to a Component's hot list
+ *
+ * @param {Function} Component
+ * @param {Directive} view - view directive instance
+ */
+
+function addView (Component, view) {
+  var id = Component && Component.options.hotID
+  if (id) {
+    if (!map[id]) {
+      map[id] = {
+        Component: Component,
+        views: [],
+        instances: []
+      }
+    }
+    map[id].views.push(view)
+  }
+}
+
+/**
+ * Remove a component view from a Component's hot list
+ *
+ * @param {Function} Component
+ * @param {Directive} view - view directive instance
+ */
+
+function removeView (Component, view) {
+  var id = Component && Component.options.hotID
+  if (id) {
+    map[id].views.$remove(view)
+  }
+}
+
+/**
+ * Create a record for a hot module, which keeps track of its construcotr,
+ * instnaces and views (component directives or router-views).
+ *
+ * @param {String} id
+ * @param {Object} options
+ */
+
+exports.createRecord = function (id, options) {
+  if (typeof options === 'function') {
+    options = options.options
+  }
+  if (typeof options.el !== 'string' && typeof options.data !== 'object') {
+    makeOptionsHot(id, options)
+    map[id] = {
+      Component: null,
+      views: [],
+      instances: []
+    }
+  }
+}
+
+/**
+ * Make a Component options object hot.
+ *
+ * @param {String} id
+ * @param {Object} options
+ */
+
+function makeOptionsHot (id, options) {
+  options.hotID = id
+  injectHook(options, 'created', function () {
+    var record = map[id]
+    if (!record.Component) {
+      record.Component = this.constructor
+    }
+    record.instances.push(this)
+  })
+  injectHook(options, 'beforeDestroy', function () {
+    map[id].instances.$remove(this)
+  })
+}
+
+/**
+ * Inject a hook to a hot reloadable component so that
+ * we can keep track of it.
+ *
+ * @param {Object} options
+ * @param {String} name
+ * @param {Function} hook
+ */
+
+function injectHook (options, name, hook) {
+  var existing = options[name]
+  options[name] = existing
+    ? Array.isArray(existing)
+      ? existing.concat(hook)
+      : [existing, hook]
+    : [hook]
+}
+
+/**
+ * Update a hot component.
+ *
+ * @param {String} id
+ * @param {Object|null} newOptions
+ * @param {String|null} newTemplate
+ */
+
+exports.update = function (id, newOptions, newTemplate) {
+  var record = map[id]
+  // force full-reload if an instance of the component is active but is not
+  // managed by a view
+  if (!record || (record.instances.length && !record.views.length)) {
+    console.log('[HMR] Root or manually-mounted instance modified. Full reload may be required.')
+    if (!isBrowserify) {
+      window.location.reload()
+    } else {
+      // browserify-hmr somehow sends incomplete bundle if we reload here
+      return
+    }
+  }
+  if (!isBrowserify) {
+    // browserify-hmr already logs this
+    console.log('[HMR] Updating component: ' + format(id))
+  }
+  var Component = record.Component
+  // update constructor
+  if (newOptions) {
+    // in case the user exports a constructor
+    Component = record.Component = typeof newOptions === 'function'
+      ? newOptions
+      : Vue.extend(newOptions)
+    makeOptionsHot(id, Component.options)
+  }
+  if (newTemplate) {
+    Component.options.template = newTemplate
+  }
+  // handle recursive lookup
+  if (Component.options.name) {
+    Component.options.components[Component.options.name] = Component
+  }
+  // reset constructor cached linker
+  Component.linker = null
+  // reload all views
+  record.views.forEach(function (view) {
+    updateView(view, Component)
+  })
+}
+
+/**
+ * Update a component view instance
+ *
+ * @param {Directive} view
+ * @param {Function} Component
+ */
+
+function updateView (view, Component) {
+  if (!view._bound) {
+    return
+  }
+  view.Component = Component
+  view.hotUpdating = true
+  // disable transitions
+  view.vm._isCompiled = false
+  // save state
+  var state = view.childVM.$data
+  // remount, make sure to disable keep-alive
+  var keepAlive = view.keepAlive
+  view.keepAlive = false
+  view.mountComponent()
+  view.keepAlive = keepAlive
+  // restore state
+  view.childVM.$data = state
+  // re-eanble transitions
+  view.vm._isCompiled = true
+  view.hotUpdating = false
+}
+
+function format (id) {
+  return id.match(/[^\/]+\.vue$/)[0]
+}
+
+},{}],27:[function(require,module,exports){
 /**
  * Before Interceptor.
  */
@@ -454,7 +695,7 @@ module.exports = {
 
 };
 
-},{"../util":49}],27:[function(require,module,exports){
+},{"../util":50}],28:[function(require,module,exports){
 /**
  * Base client.
  */
@@ -521,7 +762,7 @@ function parseHeaders(str) {
     return headers;
 }
 
-},{"../../promise":42,"../../util":49,"./xhr":30}],28:[function(require,module,exports){
+},{"../../promise":43,"../../util":50,"./xhr":31}],29:[function(require,module,exports){
 /**
  * JSONP client.
  */
@@ -571,7 +812,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":42,"../../util":49}],29:[function(require,module,exports){
+},{"../../promise":43,"../../util":50}],30:[function(require,module,exports){
 /**
  * XDomain client (Internet Explorer).
  */
@@ -610,7 +851,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":42,"../../util":49}],30:[function(require,module,exports){
+},{"../../promise":43,"../../util":50}],31:[function(require,module,exports){
 /**
  * XMLHttp client.
  */
@@ -662,7 +903,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":42,"../../util":49}],31:[function(require,module,exports){
+},{"../../promise":43,"../../util":50}],32:[function(require,module,exports){
 /**
  * CORS Interceptor.
  */
@@ -701,7 +942,7 @@ function crossOrigin(request) {
     return (requestUrl.protocol !== originUrl.protocol || requestUrl.host !== originUrl.host);
 }
 
-},{"../util":49,"./client/xdr":29}],32:[function(require,module,exports){
+},{"../util":50,"./client/xdr":30}],33:[function(require,module,exports){
 /**
  * Header Interceptor.
  */
@@ -729,7 +970,7 @@ module.exports = {
 
 };
 
-},{"../util":49}],33:[function(require,module,exports){
+},{"../util":50}],34:[function(require,module,exports){
 /**
  * Service for sending network requests.
  */
@@ -829,7 +1070,7 @@ Http.headers = {
 
 module.exports = _.http = Http;
 
-},{"../promise":42,"../util":49,"./before":26,"./client":27,"./cors":31,"./header":32,"./interceptor":34,"./jsonp":35,"./method":36,"./mime":37,"./timeout":38}],34:[function(require,module,exports){
+},{"../promise":43,"../util":50,"./before":27,"./client":28,"./cors":32,"./header":33,"./interceptor":35,"./jsonp":36,"./method":37,"./mime":38,"./timeout":39}],35:[function(require,module,exports){
 /**
  * Interceptor factory.
  */
@@ -876,7 +1117,7 @@ function when(value, fulfilled, rejected) {
     return promise.then(fulfilled, rejected);
 }
 
-},{"../promise":42,"../util":49}],35:[function(require,module,exports){
+},{"../promise":43,"../util":50}],36:[function(require,module,exports){
 /**
  * JSONP Interceptor.
  */
@@ -896,7 +1137,7 @@ module.exports = {
 
 };
 
-},{"./client/jsonp":28}],36:[function(require,module,exports){
+},{"./client/jsonp":29}],37:[function(require,module,exports){
 /**
  * HTTP method override Interceptor.
  */
@@ -915,7 +1156,7 @@ module.exports = {
 
 };
 
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 /**
  * Mime Interceptor.
  */
@@ -953,7 +1194,7 @@ module.exports = {
 
 };
 
-},{"../util":49}],38:[function(require,module,exports){
+},{"../util":50}],39:[function(require,module,exports){
 /**
  * Timeout Interceptor.
  */
@@ -985,7 +1226,7 @@ module.exports = function () {
     };
 };
 
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 /**
  * Install plugin.
  */
@@ -1040,7 +1281,7 @@ if (window.Vue) {
 
 module.exports = install;
 
-},{"./http":33,"./promise":42,"./resource":43,"./url":44,"./util":49}],40:[function(require,module,exports){
+},{"./http":34,"./promise":43,"./resource":44,"./url":45,"./util":50}],41:[function(require,module,exports){
 /**
  * Promises/A+ polyfill v1.1.4 (https://github.com/bramstein/promis)
  */
@@ -1221,7 +1462,7 @@ p.catch = function (onRejected) {
 
 module.exports = Promise;
 
-},{"../util":49}],41:[function(require,module,exports){
+},{"../util":50}],42:[function(require,module,exports){
 /**
  * URL Template v2.0.6 (https://github.com/bramstein/url-template)
  */
@@ -1373,7 +1614,7 @@ exports.encodeReserved = function (str) {
     }).join('');
 };
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 /**
  * Promise adapter.
  */
@@ -1484,7 +1725,7 @@ p.always = function (callback) {
 
 module.exports = Promise;
 
-},{"./lib/promise":40,"./util":49}],43:[function(require,module,exports){
+},{"./lib/promise":41,"./util":50}],44:[function(require,module,exports){
 /**
  * Service for interacting with RESTful services.
  */
@@ -1596,7 +1837,7 @@ Resource.actions = {
 
 module.exports = _.resource = Resource;
 
-},{"./util":49}],44:[function(require,module,exports){
+},{"./util":50}],45:[function(require,module,exports){
 /**
  * Service for URL templating.
  */
@@ -1728,7 +1969,7 @@ function serialize(params, obj, scope) {
 
 module.exports = _.url = Url;
 
-},{"../util":49,"./legacy":45,"./query":46,"./root":47,"./template":48}],45:[function(require,module,exports){
+},{"../util":50,"./legacy":46,"./query":47,"./root":48,"./template":49}],46:[function(require,module,exports){
 /**
  * Legacy Transform.
  */
@@ -1776,7 +2017,7 @@ function encodeUriQuery(value, spaces) {
         replace(/%20/g, (spaces ? '%20' : '+'));
 }
 
-},{"../util":49}],46:[function(require,module,exports){
+},{"../util":50}],47:[function(require,module,exports){
 /**
  * Query Parameter Transform.
  */
@@ -1802,7 +2043,7 @@ module.exports = function (options, next) {
     return url;
 };
 
-},{"../util":49}],47:[function(require,module,exports){
+},{"../util":50}],48:[function(require,module,exports){
 /**
  * Root Prefix Transform.
  */
@@ -1820,7 +2061,7 @@ module.exports = function (options, next) {
     return url;
 };
 
-},{"../util":49}],48:[function(require,module,exports){
+},{"../util":50}],49:[function(require,module,exports){
 /**
  * URL Template (RFC 6570) Transform.
  */
@@ -1838,7 +2079,7 @@ module.exports = function (options) {
     return url;
 };
 
-},{"../lib/url-template":41}],49:[function(require,module,exports){
+},{"../lib/url-template":42}],50:[function(require,module,exports){
 /**
  * Utility functions.
  */
@@ -1962,7 +2203,7 @@ function merge(target, source, deep) {
     }
 }
 
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 /*!
  * Vue.js v1.0.14
  * (c) 2016 Evan You
@@ -11480,18 +11721,206 @@ function merge(target, source, deep) {
   return Vue;
 
 }));
-},{}],51:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
+var inserted = exports.cache = {}
+
+exports.insert = function (css) {
+  if (inserted[css]) return
+  inserted[css] = true
+
+  var elem = document.createElement('style')
+  elem.setAttribute('type', 'text/css')
+
+  if ('textContent' in elem) {
+    elem.textContent = css
+  } else {
+    elem.styleSheet.cssText = css
+  }
+
+  document.getElementsByTagName('head')[0].appendChild(elem)
+  return elem
+}
+
+},{}],53:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = {
+	methods: {},
+	props: ['data'],
+	computed: {
+		icon: function icon() {
+			switch (this.data.title) {
+				case "users":
+					return "fa fa-users";
+					break;
+				case "tracks":
+					return "fa fa-play";
+					break;
+				case "artists":
+					return "fa fa-user";
+					break;
+				case "active ads":
+					return "fa fa-tv";
+					break;
+				case 'Active Audio Ads':
+					return 'fa fa-tv';
+					break;
+				case 'Active Event Ads':
+					return 'fa fa-tv';
+					break;
+				case 'Total Companies':
+					return 'fa fa-building';
+					break;
+				default:
+					return "fa fa-user";
+					break;
+			}
+		}
+	},
+	ready: function ready() {
+		console.log("infoBox component is ready with data -> " + this.data);
+	}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"col-md-3 col-sm-6 col-xs-12\">\n      <div class=\"info-box\">\n        <span class=\"info-box-icon bg-green\"><i :class=\"icon\"></i></span>\n        <div class=\"info-box-content\">\n          <span class=\"info-box-text\">{{ data.title }}</span>\n          <span class=\"info-box-number\">{{ data.total | abbreviate }}</span>\n        </div>\n      </div>\n    </div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\infoBox.vue"
+  if (!module.hot.data) {
+    hotAPI.createRecord(id, module.exports)
+  } else {
+    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":51,"vue-hot-reload-api":26}],54:[function(require,module,exports){
+var __vueify_style__ = require("vueify-insert-css").insert("\nul.result__vew{\n\tz-index: 9999;\n\tposition: absolute;\n\twidth: 90%;\n}\nul.result__vew li a{\n\ttext-decoration: none;\n}\n.search__btn:hover{\n\tcursor: pointer;\n}\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = {
+	data: function data() {
+		return {
+			searchQuery: "",
+			searchResult: []
+		};
+	},
+
+	computed: {
+		placeholder: function placeholder() {
+			if (this.page == 'users') {
+				return 'Search for users ...';
+			} else if (this.page == 'artists') {
+				return 'Search for artists ...';
+			}
+		}
+	},
+	props: ['page'],
+	methods: {
+		search: function search() {
+			if (this.searchQuery.trim()) {
+				if (this.page == 'users') {
+					this.performSearch(this.searchQuery.trim(), 'users');
+				} else if (this.page == 'artists') {
+					this.performSearch(this.searchQuery.trim(), 'artists');
+				}
+			}
+		},
+		searchWithQuery: function searchWithQuery() {
+			if (this.searchQuery.trim()) {
+				if (this.page == 'users') {
+					this.performSearch(this.searchQuery.trim(), 'users');
+				} else if (this.page == 'artists') {
+					this.performSearch(this.searchQuery.trim(), 'artists');
+				}
+			}
+		},
+		performSearch: function performSearch(query, type) {
+			var _this = this;
+
+			this.$http.get('internal/artists/search?q=' + query + '&type=' + type).then(function (response) {
+				_this.$set('searchResult', response.data.data);
+			}, function (response) {
+				console.log(response);
+			});
+		}
+	}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"input-group col-md-5 col-md-offset-3\">\n        <div class=\"row\">\n        \t<div class=\"col-xs-12\">\n\t        \t<div class=\"input-group\">\n\t        \t  \t<input type=\"text\" v-model=\"searchQuery\" @keyup=\"search | debounce 500\" :placeholder=\"placeholder\" class=\"form-control\">\n\t\t        \t<span class=\"input-group-addon search__btn\" @click=\"searchWithQuery\">\n\t\t        \t  \t<i class=\"fa fa-search fa-spin\"></i>\n\t\t    \t  \t</span>\n\t        \t</div>\n        \t</div>\n        \t<div class=\"col-xs-12\" v-if=\"searchResult &amp;&amp; searchQuery\">\n        \t\t<ul class=\"list-group result__vew\">\n        \t\t\t<li class=\"list-group-item\" v-for=\"result in searchResult\">\n        \t\t\t\t<a href=\"#\">\n        \t\t\t\t\t{{ result.name }}\n        \t\t\t\t</a>\n    \t\t\t\t</li>\n        \t\t</ul>\n        \t</div>\n        </div>\n    </div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\search.vue"
+  module.hot.dispose(function () {
+    require("vueify-insert-css").cache["\nul.result__vew{\n\tz-index: 9999;\n\tposition: absolute;\n\twidth: 90%;\n}\nul.result__vew li a{\n\ttext-decoration: none;\n}\n.search__btn:hover{\n\tcursor: pointer;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord(id, module.exports)
+  } else {
+    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":51,"vue-hot-reload-api":26,"vueify-insert-css":52}],55:[function(require,module,exports){
+var __vueify_style__ = require("vueify-insert-css").insert("\n\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    props: ['users']
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"row\">\n    <div class=\"col-xs-8 col-xs-offset-2\">\n        <div class=\"box\">\n            <div class=\"box-header\">\n                <h3 class=\"box-title\">User Joined Today</h3>\n            </div><!-- /.box-header -->\n            <div class=\"box-body table-responsive\">\n                <table class=\"table table-hover\">\n                    <thead>\n                        <tr>\n                            <th>Name</th>\n                            <th>Phone Number</th>\n                            <th> # Category(ies)</th>\n                            <th> # Artists(s)</th>\n                        </tr>\n                    </thead>\n                    <tbody>\n                        <tr v-for=\"user in users\">\n                            <td>{{ user.username }}</td>\n                            <td>{{ user.phone }}</td>\n                            <td>{{user.categories }}</td>\n                            <td>{{ user.artists }}</td>\n                        </tr>\n                    </tbody>\n                </table>\n            </div><!-- /.box-body -->\n        </div><!-- /.box -->\n    </div>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\usersTable.vue"
+  module.hot.dispose(function () {
+    require("vueify-insert-css").cache["\n\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord(id, module.exports)
+  } else {
+    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":51,"vue-hot-reload-api":26,"vueify-insert-css":52}],56:[function(require,module,exports){
 'use strict';
 
 var _vue = require('vue');
 
 var _vue2 = _interopRequireDefault(_vue);
 
+var _infoBox = require('./components/infoBox.vue');
+
+var _infoBox2 = _interopRequireDefault(_infoBox);
+
+var _search = require('./components/search.vue');
+
+var _search2 = _interopRequireDefault(_search);
+
+var _usersTable = require('./components/usersTable.vue');
+
+var _usersTable2 = _interopRequireDefault(_usersTable);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _vue2.default.use(require('vue-resource'));
 
 //import components
+
 var numberUtils = require('mout/number');
 
 _vue2.default.filter('abbreviate', function (value) {
@@ -11500,15 +11929,47 @@ _vue2.default.filter('abbreviate', function (value) {
 
 new _vue2.default({
     el: "section.content",
-    components: {},
-    methods: {},
+    components: { InfoBox: _infoBox2.default, Search: _search2.default, UsersTable: _usersTable2.default },
+    methods: {
+        fetchData: function fetchData(target) {
+            var _this = this;
+
+            var source = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+            var url = 'internal/users/' + source;
+            var data = undefined;
+            if (source == null) {
+                url = 'internal/users';
+            }
+            this.$http.get(url).then(function (response) {
+                if (source == 'data') {
+                    data = response.data;
+                } else {
+                    data = response.data.data;
+                }
+                _this.$set(target, data);
+            }, function (response) {
+                return console.log(response);
+            });
+        },
+        getInitialData: function getInitialData() {
+            this.fetchData('data', 'data');
+        },
+        getUsers: function getUsers() {
+            this.fetchData('users');
+        }
+    },
     data: {
+        data: {},
         users: []
     },
-    created: function created() {},
+    created: function created() {
+        this.getInitialData();
+        this.getUsers();
+    },
     ready: function ready() {}
 });
 
-},{"mout/number":6,"vue":50,"vue-resource":39}]},{},[51]);
+},{"./components/infoBox.vue":53,"./components/search.vue":54,"./components/usersTable.vue":55,"mout/number":6,"vue":51,"vue-resource":40}]},{},[56]);
 
 //# sourceMappingURL=users.js.map

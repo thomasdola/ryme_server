@@ -18,30 +18,19 @@ use League\Fractal\TransformerAbstract;
 class StaffTransformer extends TransformerAbstract
 {
     /**
-     * @var array
-     */
-    protected $defaultIncludes = ['role'];
-
-    /**
-     * @param User $user
+     * @param User $staff
      * @return array
      */
-    public function transform(User $user)
+    public function transform(User $staff)
     {
         return [
-            'id' => $user->uuid,
-            'name' => $user->name,
-            'email' => $user->email
+            'id' => $staff->uuid,
+            'name' => $staff->name,
+            'email' => $staff->email,
+            'role' => [
+                'id' => $staff->role->id,
+                'title' => $staff->role->title
+            ]
         ];
-    }
-
-    /**
-     * @param User $user
-     * @return \League\Fractal\Resource\Item
-     */
-    public function includeRole(User $user)
-    {
-        $role = $user->role;
-        return $this->item($role, new RoleCollectionTransformer, 'roles');
     }
 }

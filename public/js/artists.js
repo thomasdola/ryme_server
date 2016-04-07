@@ -11858,6 +11858,15 @@ exports.default = {
 				case "active ads":
 					return "fa fa-tv";
 					break;
+				case 'Active Audio Ads':
+					return 'fa fa-tv';
+					break;
+				case 'Active Event Ads':
+					return 'fa fa-tv';
+					break;
+				case 'Total Companies':
+					return 'fa fa-building';
+					break;
 				default:
 					return "fa fa-user";
 					break;
@@ -11883,7 +11892,7 @@ if (module.hot) {(function () {  module.hot.accept()
 })()}
 },{"vue":51,"vue-hot-reload-api":26}],55:[function(require,module,exports){
 var __vueify_style__ = require("vueify-insert-css").insert("\nul.result__vew{\n\tz-index: 9999;\n\tposition: absolute;\n\twidth: 90%;\n}\nul.result__vew li a{\n\ttext-decoration: none;\n}\n.search__btn:hover{\n\tcursor: pointer;\n}\n")
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -11896,21 +11905,40 @@ exports.default = {
 		};
 	},
 
+	computed: {
+		placeholder: function placeholder() {
+			if (this.page == 'users') {
+				return 'Search for users ...';
+			} else if (this.page == 'artists') {
+				return 'Search for artists ...';
+			}
+		}
+	},
+	props: ['page'],
 	methods: {
 		search: function search() {
 			if (this.searchQuery.trim()) {
-				this.performSearch(this.searchQuery.trim());
+				if (this.page == 'users') {
+					this.performSearch(this.searchQuery.trim(), 'users');
+				} else if (this.page == 'artists') {
+					this.performSearch(this.searchQuery.trim(), 'artists');
+				}
 			}
 		},
 		searchWithQuery: function searchWithQuery() {
 			if (this.searchQuery.trim()) {
-				this.performSearch(this.searchQuery.trim());
+				if (this.page == 'users') {
+					this.performSearch(this.searchQuery.trim(), 'users');
+				} else if (this.page == 'artists') {
+					this.performSearch(this.searchQuery.trim(), 'artists');
+				}
 			}
 		},
-		performSearch: function performSearch(query) {
-			this.$http.get("internal/artists/search?q=" + query).then(function (response) {
-				console.log(response);
-				this.$set('searchResult', response.data.data);
+		performSearch: function performSearch(query, type) {
+			var _this = this;
+
+			this.$http.get('internal/artists/search?q=' + query + '&type=' + type).then(function (response) {
+				_this.$set('searchResult', response.data.data);
 			}, function (response) {
 				console.log(response);
 			});
@@ -11918,7 +11946,7 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"input-group col-md-5 col-md-offset-3\">\n        <div class=\"row\">\n        \t<div class=\"col-xs-12\">\n\t        \t<div class=\"input-group\">\n\t        \t  \t<input type=\"text\" v-model=\"searchQuery\" @keyup=\"search | debounce 500\" placeholder=\"search for artists...\" class=\"form-control\">\n\t\t        \t<span class=\"input-group-addon search__btn\" @click=\"searchWithQuery\">\n\t\t        \t  \t<i class=\"fa fa-search fa-spin\"></i>\n\t\t    \t  \t</span>\n\t        \t</div>\n        \t</div>\n        \t<div class=\"col-xs-12\" v-if=\"searchResult &amp;&amp; searchQuery\">\n        \t\t<ul class=\"list-group result__vew\">\n        \t\t\t<li class=\"list-group-item\" v-for=\"result in searchResult\">\n        \t\t\t\t<a href=\"#\">\n        \t\t\t\t\t{{ result.name }}\n        \t\t\t\t</a>\n    \t\t\t\t</li>\n        \t\t</ul>\n        \t</div>\n        </div>\n    </div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"input-group col-md-5 col-md-offset-3\">\n        <div class=\"row\">\n        \t<div class=\"col-xs-12\">\n\t        \t<div class=\"input-group\">\n\t        \t  \t<input type=\"text\" v-model=\"searchQuery\" @keyup=\"search | debounce 500\" :placeholder=\"placeholder\" class=\"form-control\">\n\t\t        \t<span class=\"input-group-addon search__btn\" @click=\"searchWithQuery\">\n\t\t        \t  \t<i class=\"fa fa-search fa-spin\"></i>\n\t\t    \t  \t</span>\n\t        \t</div>\n        \t</div>\n        \t<div class=\"col-xs-12\" v-if=\"searchResult &amp;&amp; searchQuery\">\n        \t\t<ul class=\"list-group result__vew\">\n        \t\t\t<li class=\"list-group-item\" v-for=\"result in searchResult\">\n        \t\t\t\t<a href=\"#\">\n        \t\t\t\t\t{{ result.name }}\n        \t\t\t\t</a>\n    \t\t\t\t</li>\n        \t\t</ul>\n        \t</div>\n        </div>\n    </div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

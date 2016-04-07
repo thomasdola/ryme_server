@@ -11,29 +11,25 @@
 |
 */
 
-use Illuminate\Support\Facades\Auth;
-use LucaDegasperi\OAuth2Server\Facades\Authorizer;
-
-//Auth::loginUsingId(50);
-
 Route::group(['middleware' => ['web'], 'prefix'=>'admin'], function () {
-    Route::get('/dashboard',['as'=>'dashboard', 'uses'=>'PagesController@dashboard']);
 
-    Route::get('/artists', ['as'=>'artists', 'uses'=>'ArtistsController@index']);
-    Route::get('/artists/show', ['as'=>'artist', 'uses'=>'ArtistsController@show']);
+    Route::get('/auth/login', ['as' => 'getLogin', 'uses' => 'AdminAuthController@login']);
+    Route::post('/auth/login', ['as' => 'postLogin', 'uses' => 'AdminAuthController@postLogin']);
+    Route::get('/auth/logout', ['as' => 'logout', 'uses' => 'AdminAuthController@logout']);
 
-    Route::resource('categories', 'CategoriesController');
+    Route::group(['middleware' => 'auth'], function(){
+        Route::get('/dashboard',['as'=>'dashboard', 'uses'=>'PagesController@dashboard']);
+        Route::get('/artists', ['as'=>'artists', 'uses'=>'ArtistsController@index']);
+        Route::get('/artists/show', ['as'=>'artist', 'uses'=>'ArtistsController@show']);
+        Route::resource('categories', 'CategoriesController');
+        Route::resource('users', 'UsersController');
+        Route::resource('ads', 'AdsController');
+        Route::get('/settings', ['as'=>'settings', 'uses'=>'AdminController@index']);
+    });
 
-    Route::resource('users', 'UsersController');
-
-    Route::resource('ads', 'AdsController');
-
-    Route::get('/settings', ['as'=>'settings', 'uses'=>'AdminController@index']);
 });
 
 Route::group(['prefix'=>'admin/internal', 'middleware' => ['api']], function(){
-    Route::get('/dashboard/data', ['as'=>'dashboard.data', 'uses'=>'PagesController@getDashboardData']);
-    Route::get('/artists/data', ['as'=>'artists.data', 'uses'=>'ArtistsController@getArtistsPageData']);
 
     Route::group(['namespace'=>'InternalApi'], function(){
 
@@ -87,11 +83,11 @@ Route::group(['prefix'=>'admin/internal', 'middleware' => ['api']], function(){
         Route::delete('/companies/{id}', ['as'=>'companies.delete', 'uses'=>'CompanyApiController@delete']);
 
         //Admin Settings Page Internal Api really scary (:)
-        Route::get('/staff', ['as'=>'staff.all', 'uses'=>'StaffApiController@all']);
-        Route::get('/staff/{id}', ['as'=>'staff.single', 'uses'=>'StaffApiController@single']);
-        Route::post('/staff', ['as'=>'staff.create', 'uses'=>'StaffApiController@store']);
-        Route::put('/staff/{id}', ['as'=>'staff.update', 'uses'=>'StaffApiController@update']);
-        Route::delete('/staff', ['as'=>'staff.delete', 'uses'=>'StaffApiController@delete']);
+        Route::get('/staffs', ['as'=>'staff.all', 'uses'=>'StaffApiController@all']);
+        Route::get('/staffs/{id}', ['as'=>'staff.single', 'uses'=>'StaffApiController@single']);
+        Route::post('/staffs', ['as'=>'staff.create', 'uses'=>'StaffApiController@store']);
+        Route::put('/staffs/{id}', ['as'=>'staff.update', 'uses'=>'StaffApiController@update']);
+        Route::delete('/staffs/{id}', ['as'=>'staff.delete', 'uses'=>'StaffApiController@delete']);
 
         Route::get('/roles', ['as'=>'role.all', 'uses'=>'RolesApiController@all']);
         Route::get('/roles/{id}', ['as'=>'role.single', 'uses'=>'RolesApiController@single']);
@@ -102,7 +98,6 @@ Route::group(['prefix'=>'admin/internal', 'middleware' => ['api']], function(){
 });
 
 $api = app('Dingo\Api\Routing\Router');
-
 $api->version('v1', function($api){
     $api->post('register', ['as'=>'api.auth.register', 'uses'=>'App\Http\Controllers\Auth\ApiAuthController@register']);
     $api->post('verify', ['as'=>'api.auth.verify-otp', 'uses'=>'App\Http\Controllers\Auth\ApiAuthController@verifyOtp']);

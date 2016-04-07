@@ -24,7 +24,7 @@
         </div>
 
         <div class="row margin">
-            <search></search>
+            <search :page="'artists'"></search>
         </div>
 
         <div class="row">

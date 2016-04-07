@@ -55,7 +55,18 @@
 				this.setEditedStaff(staff);
 				this.$broadcast('edit-staff', staff);
 			},
-			deleteStaff(staff){},
+			deleteStaff(staff){
+
+                if(confirm("Are you Sure?")){
+                    this.$http.delete(`internal/staffs/${staff.id}`)
+                            .then((response) => {
+                                this.staffs.$remove(staff);
+                            },
+                            (response) => {
+                                console.log(response)
+                            });
+                }
+            },
 			setEditedStaff(staff){
 				this.editedStaff = staff;
 			}

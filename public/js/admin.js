@@ -11771,17 +11771,67 @@ new _vue2.default({
     el: "section.content",
     methods: {
         saveRole: function saveRole() {
+            var _this = this;
+
             this.savingRole = true;
-            console.log(this.newRole);
+            var title = this.newRole.title.trim();
+            if (title) {
+                var data = new FormData();
+                data.append('title', title);
+                this.$http.post("internal/roles", data).then(function (response) {
+                    console.log(response.data);
+                    _this.newRole.title = "";
+                    _this.savingRole = false;
+                }, function (response) {
+                    console.log(response);
+                    _this.savingRole = false;
+                });
+            }
         },
         saveStaff: function saveStaff() {
+            var _this2 = this;
+
             this.savingStaff = true;
-            console.log(this.newStaff);
+            var name = this.newStaff.name.trim();
+            var email = this.newStaff.email.trim();
+            var role_id = this.newStaff.role_id;
+            if (name && email && role_id) {
+                var data = new FormData();
+                data.append('name', name);
+                data.append('email', email);
+                data.append('role_id', role_id);
+                this.$http.post('internal/staffs', data).then(function (response) {
+                    console.log(response.data.data);
+                    _this2.staffs.push(response.data.data);
+                    _this2.savingStaff = false;
+                }, function (response) {
+                    console.log(response);
+                    _this2.savingStaff = false;
+                });
+            }
+        },
+        fetchData: function fetchData(source, target) {
+            var _this3 = this;
+
+            this.$http.get('internal/' + source).then(function (response) {
+                console.log(response.data.data);
+                _this3.$set(target, response.data.data);
+            }, function (response) {
+                console.log(response);
+            });
+        },
+        loadRoles: function loadRoles() {
+            this.fetchData('roles', 'roles');
+        },
+        loadStaffs: function loadStaffs() {
+            this.fetchData('staffs', 'staffs');
         }
     },
     components: { StaffTable: _staffTable2.default, EditModal: _editStaffForm2.default },
     events: {},
     created: function created() {
+        this.loadRoles();
+        this.loadStaffs();
         console.log('main Component created');
     },
     ready: function ready() {
@@ -11799,16 +11849,8 @@ new _vue2.default({
             email: '',
             role_id: ''
         },
-        roles: [{ title: 'Admin', id: 1, users: 3 }, { title: 'Marketing', id: 2, users: 3 }, { title: 'Manager', id: 3, users: 3 }],
-        staffs: [{
-            name: 'thomas dola',
-            email: 'thomasdolar@gmail.com',
-            role: { title: 'Admin', id: 1 }
-        }, {
-            name: 'son selorm',
-            email: 'sonselorm@gmail.com',
-            role: { title: 'Admin', id: 1 }
-        }],
+        roles: [],
+        staffs: [],
         staff: {}
     }
 });
@@ -11824,13 +11866,29 @@ exports.default = {
 	props: ['staff', 'roles'],
 	methods: {
 		updateStaff: function updateStaff() {
+			var _this = this;
+
+			this.updatingStaff = true;
 			var name = this.staffBuffer.name.trim();
 			var email = this.staffBuffer.email.trim();
 			if (name && email) {
-				this.staff.name = this.staffBuffer.name;
-				this.staff.email = this.staffBuffer.email;
-				this.staff.role.id = this.staffBuffer.role_id;
-				$('#myModal').modal('hide');
+				var data = new FormData();
+				data.append('type', 'general');
+				data.append('name', name);
+				data.append('email', email);
+				data.append('role_id', this.staffBuffer.role_id);
+				this.$http.put('internal/staffs/' + this.staff.id, this.staffBuffer).then(function (response) {
+					var uStaff = response.data.data;
+					_this.staff.name = uStaff.name;
+					_this.staff.email = uStaff.email;
+					_this.staff.role.title = uStaff.role.title;
+					_this.staff.role.id = uStaff.role.id;
+					$('#myModal').modal('hide');
+					_this.updatingStaff = false;
+				}, function (response) {
+					console.log(response);
+					_this.updatingStaff = false;
+				});
 			}
 		},
 		setBuffer: function setBuffer(staff) {
@@ -11845,7 +11903,8 @@ exports.default = {
 				name: '',
 				email: '',
 				role_id: null
-			}
+			},
+			updatingStaff: false
 		};
 	},
 	ready: function ready() {
@@ -11860,7 +11919,7 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" id=\"myModal\">\n  <div class=\"modal-dialog modal-sm\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\">{{ staff.name | capitalize }}</h4>\n      </div>\n      <form @submit.prevent=\"updateStaff\">\n\t      <div class=\"modal-body\">\n\t        \t<div class=\"form-group\">\n                    <label for=\"name\">Staff Name</label>\n                    <input v-model=\"staffBuffer.name\" required=\"\" type=\"text\" name=\"name\" class=\"form-control\" id=\"staffName\" placeholder=\"Name\">\n                </div>\n                <div class=\"form-group\">\n                    <label for=\"name\">Staff Email</label>\n                    <input v-model=\"staffBuffer.email\" required=\"\" type=\"email\" name=\"email\" class=\"form-control\" id=\"StaffEmail\" placeholder=\"Email\">\n                </div>\n                <div class=\"form-group\">\n                    <label for=\"staffRole\">Role</label>\n                    <select v-model=\"staffBuffer.role_id\" required=\"\" name=\"role_id\" class=\"form-control\" id=\"staffRole\" style=\"width: 100%;\">\n                        <option v-for=\"role in roles\" :value=\"role.id\">\n                            {{ role.title | capitalize }}\n                        </option>\n                    </select>\n                </div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t        <button data-dismiss=\"modal\" type=\"button\" class=\"btn btn-default\">Close</button>\n\t        <button type=\"submit\" class=\"btn btn-primary\">Save changes</button>\n\t      </div>\n      </form>\n    </div><!-- /.modal-content -->\n  </div><!-- /.modal-dialog -->\n</div><!-- /.modal -->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" id=\"myModal\">\n\t  <div class=\"modal-dialog modal-sm\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\">{{ staff.name | capitalize }}</h4>\n\t      </div>\n\t      <form @submit.prevent=\"updateStaff\">\n\t\t      <div class=\"modal-body\">\n\t\t        \t<div class=\"form-group\">\n\t                    <label for=\"staffName\">Staff Name</label>\n\t                    <input v-model=\"staffBuffer.name\" required=\"\" type=\"text\" name=\"name\" class=\"form-control\" id=\"staffName\" placeholder=\"Name\">\n\t                </div>\n\t                <div class=\"form-group\">\n\t                    <label for=\"StaffEmail\">Staff Email</label>\n\t                    <input v-model=\"staffBuffer.email\" required=\"\" type=\"email\" name=\"email\" class=\"form-control\" id=\"StaffEmail\" placeholder=\"Email\">\n\t                </div>\n\t                <div class=\"form-group\">\n\t                    <label for=\"staffRole\">Role</label>\n\t                    <select v-model=\"staffBuffer.role_id\" required=\"\" name=\"role_id\" class=\"form-control\" id=\"staffRole\" style=\"width: 100%;\">\n\t                        <option v-for=\"role in roles\" :value=\"role.id\">\n\t                            {{ role.title | capitalize }}\n\t                        </option>\n\t                    </select>\n\t                </div>\n\t\t      </div>\n\t\t      <div class=\"modal-footer\">\n\t\t        <button data-dismiss=\"modal\" type=\"button\" class=\"btn btn-default\">Close</button>\n\t\t        <button type=\"submit\" class=\"btn btn-primary\">Save changes</button>\n\t\t      </div>\n\t      </form>\n\t    </div><!-- /.modal-content -->\n          <div class=\"overlay\" v-if=\"updatingStaff\">\n              <i class=\"fa fa-refresh fa-spin\"></i>\n          </div>\n\t  </div><!-- /.modal-dialog -->\n\t</div><!-- /.modal -->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -11905,7 +11964,17 @@ exports.default = {
 			this.setEditedStaff(staff);
 			this.$broadcast('edit-staff', staff);
 		},
-		deleteStaff: function deleteStaff(staff) {},
+		deleteStaff: function deleteStaff(staff) {
+			var _this = this;
+
+			if (confirm("Are you Sure?")) {
+				this.$http.delete('internal/staffs/' + staff.id).then(function (response) {
+					_this.staffs.$remove(staff);
+				}, function (response) {
+					console.log(response);
+				});
+			}
+		},
 		setEditedStaff: function setEditedStaff(staff) {
 			this.editedStaff = staff;
 		}

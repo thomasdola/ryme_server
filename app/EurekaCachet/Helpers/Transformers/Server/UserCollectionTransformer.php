@@ -13,10 +13,8 @@ class UserCollectionTransformer extends TransformerAbstract
             'username' => $user->username,
             'country' => $user->country,
             'phone' => $user->phone,
-            'followings' => [
-                'categories' => $user->following_categories->count(),
-                'artists' => $user->following_artists->count()
-            ]
+            'categories' => $user->following_categories->count(),
+            'artists' => $user->following_artists->count()
         ];
     }
 }

@@ -32,7 +32,8 @@
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="name">Role Title</label>
-                                <input v-model="newRole.title" type="text" class="form-control" id="name" placeholder="Role Title">
+                                <input v-model="newRole.title" type="text"
+                                       class="form-control" id="name" placeholder="Role Title">
                             </div>
                         </div><!-- /.box-body -->
 
@@ -44,9 +45,12 @@
                         </div>
                     </form>
                 </div><!-- /.box-body -->
+                <div class="overlay" v-if="savingRole">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
             </div><!-- /.box -->
 
-            <div class="box collapsed-box">
+            <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">Roles</h3>
                     <div class="box-tools">
@@ -58,13 +62,11 @@
                 <div class="box-body no-padding">
                     <ul class="nav nav-pills nav-stacked">
                         <li class="active" v-for="role in roles">
-                            <a href="#">
-                                <i class="fa fa-user"></i>
-                                @{{ role.title | capitalize }}
-                                <span class="label label-danger pull-right">
+                            <i class="fa fa-user"></i>
+                            @{{ role.title | capitalize }}
+                            <span class="label label-danger pull-right">
                                     @{{ role.staff | abbreviate }}
-                                </span>
-                            </a>
+                            </span>
                         </li>
                     </ul>
                 </div><!-- /.box-body -->
@@ -124,6 +126,9 @@
                         </div>
                     </form>
                 </div><!-- /.box-body -->
+                <div class="overlay" v-if="savingStaff">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
             </div><!-- /.box -->
 
         </div><!-- /.col -->

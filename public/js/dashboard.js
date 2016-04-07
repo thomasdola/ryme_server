@@ -11336,6 +11336,15 @@ exports.default = {
 				case "active ads":
 					return "fa fa-tv";
 					break;
+				case 'Active Audio Ads':
+					return 'fa fa-tv';
+					break;
+				case 'Active Event Ads':
+					return 'fa fa-tv';
+					break;
+				case 'Total Companies':
+					return 'fa fa-building';
+					break;
 				default:
 					return "fa fa-user";
 					break;

@@ -19,7 +19,7 @@ class RoleCollectionTransformer extends TransformerAbstract
         return [
             'id'=>(int) $role->id,
             'title'=>$role->title,
-            'staff'=>(int) $role->staff->count()
+            'staff'=>(int) $role->staffs->count()
         ];
     }
 }

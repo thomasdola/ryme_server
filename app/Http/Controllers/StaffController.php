@@ -96,11 +96,11 @@ class StaffController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $staff = $this->staffRepository->editStaff($request->all(), $id);
-        $data = $this->fractal->createData(
-            new Item($staff, new StaffTransformer, self::RESOURCE_KEY))
-            ->toArray();
-        return response()->json($data);
+//        $staff = $this->staffRepository->editStaff($request->all(), $id);
+//        $data = $this->fractal->createData(
+//            new Item($staff, new StaffTransformer, self::RESOURCE_KEY))
+//            ->toArray();
+//        return response()->json($data);
     }
 
     /**

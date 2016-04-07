@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/ionicons.min.css', false) }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('plugins/select2/select2.min.css', false) }}">
-    <link rel="stylesheet" href="{{ asset('css/AdminLTE.min.css', false) }}">
+    <link rel="stylesheet" href="{{ asset('css/AdminLTE.css', false) }}">
     <link rel="stylesheet" href="{{ asset('css/app.css', false) }}">
     <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
           page. However, you can choose any other skin. Make sure you

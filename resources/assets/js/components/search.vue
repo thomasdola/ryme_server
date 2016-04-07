@@ -20,7 +20,7 @@
 	        	  	<input type="text" 
 	        	  	v-model="searchQuery"
 	        	  	@keyup="search | debounce 500"
-	        	  	placeholder="search for artists..."
+	        	  	:placeholder="placeholder"
 	        	  	class="form-control">
 		        	<span class="input-group-addon search__btn" @click="searchWithQuery">
 		        	  	<i class="fa fa-search fa-spin"></i>
@@ -48,22 +48,40 @@
 				searchResult: []
 			}
 		},
+        computed: {
+            placeholder(){
+                if(this.page == 'users'){
+                    return 'Search for users ...';
+                }else if(this.page == 'artists'){
+                    return 'Search for artists ...';
+                }
+            }
+        },
+        props: ['page'],
 		methods: {
 			search(){
 				if(this.searchQuery.trim()){
-                    this.performSearch(this.searchQuery.trim());
+                    if(this.page == 'users'){
+                        this.performSearch(this.searchQuery.trim(), 'users')
+                    }else if(this.page == 'artists'){
+                        this.performSearch(this.searchQuery.trim(), 'artists')
+                    }
 				}
 			},
 			searchWithQuery(){
 				if(this.searchQuery.trim()){
-                    this.performSearch(this.searchQuery.trim())
+                    if(this.page == 'users'){
+                        this.performSearch(this.searchQuery.trim(), 'users')
+                    }else if(this.page == 'artists'){
+                        this.performSearch(this.searchQuery.trim(), 'artists')
+                    }
 				}
 			},
-			performSearch(query){
-				this.$http.get(`internal/artists/search?q=${query}`).then(function(response){
-					console.log(response);
+			performSearch(query, type){
+				this.$http.get(`internal/artists/search?q=${query}&type=${type}`)
+                        .then((response) => {
 					this.$set('searchResult', response.data.data);
-				}, function(response){
+				}, (response) => {
 					console.log(response);
 				});
 			}

@@ -15512,6 +15512,247 @@ var toInt = require('../number/toInt');
 
 
 },{"../lang/toString":6,"../number/toInt":22}],27:[function(require,module,exports){
+var Vue // late bind
+var map = Object.create(null)
+var shimmed = false
+var isBrowserify = false
+
+/**
+ * Determine compatibility and apply patch.
+ *
+ * @param {Function} vue
+ * @param {Boolean} browserify
+ */
+
+exports.install = function (vue, browserify) {
+  if (shimmed) return
+  shimmed = true
+
+  Vue = vue
+  isBrowserify = browserify
+
+  exports.compatible = !!Vue.internalDirectives
+  if (!exports.compatible) {
+    console.warn(
+      '[HMR] vue-loader hot reload is only compatible with ' +
+      'Vue.js 1.0.0+.'
+    )
+    return
+  }
+
+  // patch view directive
+  patchView(Vue.internalDirectives.component)
+  console.log('[HMR] Vue component hot reload shim applied.')
+  // shim router-view if present
+  var routerView = Vue.elementDirective('router-view')
+  if (routerView) {
+    patchView(routerView)
+    console.log('[HMR] vue-router <router-view> hot reload shim applied.')
+  }
+}
+
+/**
+ * Shim the view directive (component or router-view).
+ *
+ * @param {Object} View
+ */
+
+function patchView (View) {
+  var unbuild = View.unbuild
+  View.unbuild = function (defer) {
+    if (!this.hotUpdating) {
+      var prevComponent = this.childVM && this.childVM.constructor
+      removeView(prevComponent, this)
+      // defer = true means we are transitioning to a new
+      // Component. Register this new component to the list.
+      if (defer) {
+        addView(this.Component, this)
+      }
+    }
+    // call original
+    return unbuild.call(this, defer)
+  }
+}
+
+/**
+ * Add a component view to a Component's hot list
+ *
+ * @param {Function} Component
+ * @param {Directive} view - view directive instance
+ */
+
+function addView (Component, view) {
+  var id = Component && Component.options.hotID
+  if (id) {
+    if (!map[id]) {
+      map[id] = {
+        Component: Component,
+        views: [],
+        instances: []
+      }
+    }
+    map[id].views.push(view)
+  }
+}
+
+/**
+ * Remove a component view from a Component's hot list
+ *
+ * @param {Function} Component
+ * @param {Directive} view - view directive instance
+ */
+
+function removeView (Component, view) {
+  var id = Component && Component.options.hotID
+  if (id) {
+    map[id].views.$remove(view)
+  }
+}
+
+/**
+ * Create a record for a hot module, which keeps track of its construcotr,
+ * instnaces and views (component directives or router-views).
+ *
+ * @param {String} id
+ * @param {Object} options
+ */
+
+exports.createRecord = function (id, options) {
+  if (typeof options === 'function') {
+    options = options.options
+  }
+  if (typeof options.el !== 'string' && typeof options.data !== 'object') {
+    makeOptionsHot(id, options)
+    map[id] = {
+      Component: null,
+      views: [],
+      instances: []
+    }
+  }
+}
+
+/**
+ * Make a Component options object hot.
+ *
+ * @param {String} id
+ * @param {Object} options
+ */
+
+function makeOptionsHot (id, options) {
+  options.hotID = id
+  injectHook(options, 'created', function () {
+    var record = map[id]
+    if (!record.Component) {
+      record.Component = this.constructor
+    }
+    record.instances.push(this)
+  })
+  injectHook(options, 'beforeDestroy', function () {
+    map[id].instances.$remove(this)
+  })
+}
+
+/**
+ * Inject a hook to a hot reloadable component so that
+ * we can keep track of it.
+ *
+ * @param {Object} options
+ * @param {String} name
+ * @param {Function} hook
+ */
+
+function injectHook (options, name, hook) {
+  var existing = options[name]
+  options[name] = existing
+    ? Array.isArray(existing)
+      ? existing.concat(hook)
+      : [existing, hook]
+    : [hook]
+}
+
+/**
+ * Update a hot component.
+ *
+ * @param {String} id
+ * @param {Object|null} newOptions
+ * @param {String|null} newTemplate
+ */
+
+exports.update = function (id, newOptions, newTemplate) {
+  var record = map[id]
+  // force full-reload if an instance of the component is active but is not
+  // managed by a view
+  if (!record || (record.instances.length && !record.views.length)) {
+    console.log('[HMR] Root or manually-mounted instance modified. Full reload may be required.')
+    if (!isBrowserify) {
+      window.location.reload()
+    } else {
+      // browserify-hmr somehow sends incomplete bundle if we reload here
+      return
+    }
+  }
+  if (!isBrowserify) {
+    // browserify-hmr already logs this
+    console.log('[HMR] Updating component: ' + format(id))
+  }
+  var Component = record.Component
+  // update constructor
+  if (newOptions) {
+    // in case the user exports a constructor
+    Component = record.Component = typeof newOptions === 'function'
+      ? newOptions
+      : Vue.extend(newOptions)
+    makeOptionsHot(id, Component.options)
+  }
+  if (newTemplate) {
+    Component.options.template = newTemplate
+  }
+  // handle recursive lookup
+  if (Component.options.name) {
+    Component.options.components[Component.options.name] = Component
+  }
+  // reset constructor cached linker
+  Component.linker = null
+  // reload all views
+  record.views.forEach(function (view) {
+    updateView(view, Component)
+  })
+}
+
+/**
+ * Update a component view instance
+ *
+ * @param {Directive} view
+ * @param {Function} Component
+ */
+
+function updateView (view, Component) {
+  if (!view._bound) {
+    return
+  }
+  view.Component = Component
+  view.hotUpdating = true
+  // disable transitions
+  view.vm._isCompiled = false
+  // save state
+  var state = view.childVM.$data
+  // remount, make sure to disable keep-alive
+  var keepAlive = view.keepAlive
+  view.keepAlive = false
+  view.mountComponent()
+  view.keepAlive = keepAlive
+  // restore state
+  view.childVM.$data = state
+  // re-eanble transitions
+  view.vm._isCompiled = true
+  view.hotUpdating = false
+}
+
+function format (id) {
+  return id.match(/[^\/]+\.vue$/)[0]
+}
+
+},{}],28:[function(require,module,exports){
 /**
  * Before Interceptor.
  */
@@ -15531,7 +15772,7 @@ module.exports = {
 
 };
 
-},{"../util":50}],28:[function(require,module,exports){
+},{"../util":51}],29:[function(require,module,exports){
 /**
  * Base client.
  */
@@ -15598,7 +15839,7 @@ function parseHeaders(str) {
     return headers;
 }
 
-},{"../../promise":43,"../../util":50,"./xhr":31}],29:[function(require,module,exports){
+},{"../../promise":44,"../../util":51,"./xhr":32}],30:[function(require,module,exports){
 /**
  * JSONP client.
  */
@@ -15648,7 +15889,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":43,"../../util":50}],30:[function(require,module,exports){
+},{"../../promise":44,"../../util":51}],31:[function(require,module,exports){
 /**
  * XDomain client (Internet Explorer).
  */
@@ -15687,7 +15928,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":43,"../../util":50}],31:[function(require,module,exports){
+},{"../../promise":44,"../../util":51}],32:[function(require,module,exports){
 /**
  * XMLHttp client.
  */
@@ -15739,7 +15980,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":43,"../../util":50}],32:[function(require,module,exports){
+},{"../../promise":44,"../../util":51}],33:[function(require,module,exports){
 /**
  * CORS Interceptor.
  */
@@ -15778,7 +16019,7 @@ function crossOrigin(request) {
     return (requestUrl.protocol !== originUrl.protocol || requestUrl.host !== originUrl.host);
 }
 
-},{"../util":50,"./client/xdr":30}],33:[function(require,module,exports){
+},{"../util":51,"./client/xdr":31}],34:[function(require,module,exports){
 /**
  * Header Interceptor.
  */
@@ -15806,7 +16047,7 @@ module.exports = {
 
 };
 
-},{"../util":50}],34:[function(require,module,exports){
+},{"../util":51}],35:[function(require,module,exports){
 /**
  * Service for sending network requests.
  */
@@ -15906,7 +16147,7 @@ Http.headers = {
 
 module.exports = _.http = Http;
 
-},{"../promise":43,"../util":50,"./before":27,"./client":28,"./cors":32,"./header":33,"./interceptor":35,"./jsonp":36,"./method":37,"./mime":38,"./timeout":39}],35:[function(require,module,exports){
+},{"../promise":44,"../util":51,"./before":28,"./client":29,"./cors":33,"./header":34,"./interceptor":36,"./jsonp":37,"./method":38,"./mime":39,"./timeout":40}],36:[function(require,module,exports){
 /**
  * Interceptor factory.
  */
@@ -15953,7 +16194,7 @@ function when(value, fulfilled, rejected) {
     return promise.then(fulfilled, rejected);
 }
 
-},{"../promise":43,"../util":50}],36:[function(require,module,exports){
+},{"../promise":44,"../util":51}],37:[function(require,module,exports){
 /**
  * JSONP Interceptor.
  */
@@ -15973,7 +16214,7 @@ module.exports = {
 
 };
 
-},{"./client/jsonp":29}],37:[function(require,module,exports){
+},{"./client/jsonp":30}],38:[function(require,module,exports){
 /**
  * HTTP method override Interceptor.
  */
@@ -15992,7 +16233,7 @@ module.exports = {
 
 };
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 /**
  * Mime Interceptor.
  */
@@ -16030,7 +16271,7 @@ module.exports = {
 
 };
 
-},{"../util":50}],39:[function(require,module,exports){
+},{"../util":51}],40:[function(require,module,exports){
 /**
  * Timeout Interceptor.
  */
@@ -16062,7 +16303,7 @@ module.exports = function () {
     };
 };
 
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 /**
  * Install plugin.
  */
@@ -16117,7 +16358,7 @@ if (window.Vue) {
 
 module.exports = install;
 
-},{"./http":34,"./promise":43,"./resource":44,"./url":45,"./util":50}],41:[function(require,module,exports){
+},{"./http":35,"./promise":44,"./resource":45,"./url":46,"./util":51}],42:[function(require,module,exports){
 /**
  * Promises/A+ polyfill v1.1.4 (https://github.com/bramstein/promis)
  */
@@ -16298,7 +16539,7 @@ p.catch = function (onRejected) {
 
 module.exports = Promise;
 
-},{"../util":50}],42:[function(require,module,exports){
+},{"../util":51}],43:[function(require,module,exports){
 /**
  * URL Template v2.0.6 (https://github.com/bramstein/url-template)
  */
@@ -16450,7 +16691,7 @@ exports.encodeReserved = function (str) {
     }).join('');
 };
 
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 /**
  * Promise adapter.
  */
@@ -16561,7 +16802,7 @@ p.always = function (callback) {
 
 module.exports = Promise;
 
-},{"./lib/promise":41,"./util":50}],44:[function(require,module,exports){
+},{"./lib/promise":42,"./util":51}],45:[function(require,module,exports){
 /**
  * Service for interacting with RESTful services.
  */
@@ -16673,7 +16914,7 @@ Resource.actions = {
 
 module.exports = _.resource = Resource;
 
-},{"./util":50}],45:[function(require,module,exports){
+},{"./util":51}],46:[function(require,module,exports){
 /**
  * Service for URL templating.
  */
@@ -16805,7 +17046,7 @@ function serialize(params, obj, scope) {
 
 module.exports = _.url = Url;
 
-},{"../util":50,"./legacy":46,"./query":47,"./root":48,"./template":49}],46:[function(require,module,exports){
+},{"../util":51,"./legacy":47,"./query":48,"./root":49,"./template":50}],47:[function(require,module,exports){
 /**
  * Legacy Transform.
  */
@@ -16853,7 +17094,7 @@ function encodeUriQuery(value, spaces) {
         replace(/%20/g, (spaces ? '%20' : '+'));
 }
 
-},{"../util":50}],47:[function(require,module,exports){
+},{"../util":51}],48:[function(require,module,exports){
 /**
  * Query Parameter Transform.
  */
@@ -16879,7 +17120,7 @@ module.exports = function (options, next) {
     return url;
 };
 
-},{"../util":50}],48:[function(require,module,exports){
+},{"../util":51}],49:[function(require,module,exports){
 /**
  * Root Prefix Transform.
  */
@@ -16897,7 +17138,7 @@ module.exports = function (options, next) {
     return url;
 };
 
-},{"../util":50}],49:[function(require,module,exports){
+},{"../util":51}],50:[function(require,module,exports){
 /**
  * URL Template (RFC 6570) Transform.
  */
@@ -16915,7 +17156,7 @@ module.exports = function (options) {
     return url;
 };
 
-},{"../lib/url-template":42}],50:[function(require,module,exports){
+},{"../lib/url-template":43}],51:[function(require,module,exports){
 /**
  * Utility functions.
  */
@@ -17039,7 +17280,7 @@ function merge(target, source, deep) {
     }
 }
 
-},{}],51:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 /*!
  * Vue.js v1.0.14
  * (c) 2016 Evan You
@@ -26557,12 +26798,24 @@ function merge(target, source, deep) {
   return Vue;
 
 }));
-},{}],52:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 'use strict';
 
 var _vue = require('vue');
 
 var _vue2 = _interopRequireDefault(_vue);
+
+var _eventAdsTable = require('./components/eventAdsTable.vue');
+
+var _eventAdsTable2 = _interopRequireDefault(_eventAdsTable);
+
+var _audioAdsTable = require('./components/audioAdsTable.vue');
+
+var _audioAdsTable2 = _interopRequireDefault(_audioAdsTable);
+
+var _infoBox = require('./components/infoBox.vue');
+
+var _infoBox2 = _interopRequireDefault(_infoBox);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26577,17 +26830,19 @@ _vue2.default.filter('abbreviate', function (value) {
 
 new _vue2.default({
     el: "section.content",
-    components: {},
+    components: { EventAdsTable: _eventAdsTable2.default, AudioAdsTable: _audioAdsTable2.default, InfoBox: _infoBox2.default },
     methods: {
         saveCompany: function saveCompany() {
+            var _this = this;
+
             var name = this.newCompany.name.trim();
             if (name) {
                 this.savingCompany = true;
                 this.$http.post("internal/companies", { name: name }).then(function (response) {
                     console.log(response);
-                    this.clearFields(this.newCompany);
-                    this.companies.push(response.data.data);
-                    this.savingCompany = false;
+                    _this.clearFields(_this.newCompany);
+                    _this.companies.push(response.data.data);
+                    _this.savingCompany = false;
                 }, function (response) {
                     console.log(response);
                     this.savingCompany = false;
@@ -26701,25 +26956,34 @@ new _vue2.default({
             });
         },
         loadCompanies: function loadCompanies() {
+            var _this2 = this;
+
             this.$http.get("internal/companies").then(function (response) {
                 console.log(response);
-                this.companies = response.data.data;
+                _this2.companies = response.data.data;
+                _this2.totalCompanies.total = _this2.companies.length;
             }, function (response) {
                 console.log(response);
             });
         },
         loadAudioAds: function loadAudioAds() {
+            var _this3 = this;
+
             this.$http.get("internal/audio-ads").then(function (response) {
                 console.log(response);
-                this.audioAds = response.data.data;
+                _this3.audioAds = response.data.data;
+                _this3.activeAudioAds.total = _this3.audioAds.length;
             }, function (response) {
                 console.log(response);
             });
         },
         loadEventAds: function loadEventAds() {
+            var _this4 = this;
+
             this.$http.get("internal/event-ads").then(function (response) {
                 console.log(response);
-                this.eventAds = response.data.data;
+                _this4.eventAds = response.data.data;
+                _this4.activeEventAds.total = _this4.eventAds.length;
             }, function (response) {
                 console.log(response);
             });
@@ -26742,6 +27006,18 @@ new _vue2.default({
         }
     },
     data: {
+        activeAudioAds: {
+            title: 'Active Audio Ads',
+            total: null
+        },
+        activeEventAds: {
+            title: 'Active Event Ads',
+            total: null
+        },
+        totalCompanies: {
+            title: 'Total Companies',
+            total: null
+        },
         savingCompany: false,
         savingAd: false,
         savingSession: false,
@@ -26781,16 +27057,116 @@ new _vue2.default({
             image_file: null
         }
     },
-    created: function created() {},
-    ready: function ready() {
+    created: function created() {
         this.loadCompanies();
         this.loadAudioAds();
         this.loadEventAds();
         this.loadSections();
         this.loadCategories();
-    }
+    },
+    ready: function ready() {}
 });
 
-},{"lodash":1,"mout/number":7,"vue":51,"vue-resource":40}]},{},[52]);
+},{"./components/audioAdsTable.vue":54,"./components/eventAdsTable.vue":55,"./components/infoBox.vue":56,"lodash":1,"mout/number":7,"vue":52,"vue-resource":41}],54:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    props: ['ads']
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<table class=\"table table-striped\">\n    <thead>\n        <tr>\n            <th>Title</th>\n            <th>Schedule</th>\n            <th>Started On</th>\n            <th>Ending On</th>\n            <th>Action</th>\n        </tr>\n    </thead>\n    <tbody>\n        <tr v-for=\"ad in ads\">\n            <td>Update software</td>\n            <td>Update software</td>\n            <td>Update software</td>\n            <td>Update software</td>\n            <td>\n                <button type=\"button\">stop</button>\n            </td>\n        </tr>\n    </tbody>\n</table>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\audioAdsTable.vue"
+  if (!module.hot.data) {
+    hotAPI.createRecord(id, module.exports)
+  } else {
+    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":52,"vue-hot-reload-api":27}],55:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    props: ['ads']
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<table class=\"table table-striped\">\n    <thead>\n    <tr>\n        <th>Title</th>\n        <th>Schedule</th>\n        <th>Started On</th>\n        <th>Ending On</th>\n        <th>Action</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr v-for=\"ad in ads\">\n        <td>Update software</td>\n        <td>Update software</td>\n        <td>Update software</td>\n        <td>Update software</td>\n        <td>\n            <button type=\"button\">stop</button>\n        </td>\n    </tr>\n    </tbody>\n</table>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\eventAdsTable.vue"
+  if (!module.hot.data) {
+    hotAPI.createRecord(id, module.exports)
+  } else {
+    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":52,"vue-hot-reload-api":27}],56:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = {
+	methods: {},
+	props: ['data'],
+	computed: {
+		icon: function icon() {
+			switch (this.data.title) {
+				case "users":
+					return "fa fa-users";
+					break;
+				case "tracks":
+					return "fa fa-play";
+					break;
+				case "artists":
+					return "fa fa-user";
+					break;
+				case "active ads":
+					return "fa fa-tv";
+					break;
+				case 'Active Audio Ads':
+					return 'fa fa-tv';
+					break;
+				case 'Active Event Ads':
+					return 'fa fa-tv';
+					break;
+				case 'Total Companies':
+					return 'fa fa-building';
+					break;
+				default:
+					return "fa fa-user";
+					break;
+			}
+		}
+	},
+	ready: function ready() {
+		console.log("infoBox component is ready with data -> " + this.data);
+	}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"col-md-3 col-sm-6 col-xs-12\">\n      <div class=\"info-box\">\n        <span class=\"info-box-icon bg-green\"><i :class=\"icon\"></i></span>\n        <div class=\"info-box-content\">\n          <span class=\"info-box-text\">{{ data.title }}</span>\n          <span class=\"info-box-number\">{{ data.total | abbreviate }}</span>\n        </div>\n      </div>\n    </div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  var id = "C:\\Users\\GURU\\Documents\\Projects\\ryme\\ryme\\resources\\assets\\js\\components\\infoBox.vue"
+  if (!module.hot.data) {
+    hotAPI.createRecord(id, module.exports)
+  } else {
+    hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":52,"vue-hot-reload-api":27}]},{},[53]);
 
 //# sourceMappingURL=companies.js.map
