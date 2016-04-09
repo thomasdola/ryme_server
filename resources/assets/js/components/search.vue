@@ -17,7 +17,7 @@
         <div class="row">
         	<div class="col-xs-12">
 	        	<div class="input-group">
-	        	  	<input type="text" 
+	        	  	<input type="text"
 	        	  	v-model="searchQuery"
 	        	  	@keyup="search | debounce 500"
 	        	  	:placeholder="placeholder"
@@ -28,12 +28,8 @@
 	        	</div>
         	</div>
         	<div class="col-xs-12" v-if="searchResult && searchQuery">
-        		<ul class="list-group result__vew">
-        			<li class="list-group-item" v-for="result in searchResult">
-        				<a href="#">
-        					{{ result.name }}
-        				</a>
-    				</li>
+        		<ul class="list-group result__vew" v-for="item in searchResult">
+        			<search-result-item :item="item"></search-result-item>
         		</ul>
         	</div>
         </div>
@@ -41,7 +37,9 @@
 </template>
 
 <script type="text/babel">
+	import SearchResultItem from './search-item.vue';
 	export default {
+		components: {SearchResultItem},
 		data(){
 			return {
 				searchQuery:"",
@@ -50,13 +48,16 @@
 		},
         computed: {
             placeholder(){
+				let placeholder = '';
                 if(this.page == 'users'){
-                    return 'Search for users ...';
+                    placeholder = 'Search for users ...';
                 }else if(this.page == 'artists'){
-                    return 'Search for artists ...';
+                    placeholder =  'Search for artists ...';
                 }
+				return placeholder;
             }
         },
+
         props: ['page'],
 		methods: {
 			search(){
@@ -78,7 +79,7 @@
 				}
 			},
 			performSearch(query, type){
-				this.$http.get(`internal/artists/search?q=${query}&type=${type}`)
+				this.$http.get(`internal/local/search?q=${query}&type=${type}`)
                         .then((response) => {
 					this.$set('searchResult', response.data.data);
 				}, (response) => {

@@ -33,8 +33,8 @@
       <li class="{{ Request::is('admin/dashboard') ? "active" : '' }}">
           <a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
       </li>
-      <li class="{{ Request::is('admin/artists') ? "active" : '' }}">
-          <a href="{{ route('artists') }}"><i class="fa fa-male"></i> <span>Artists</span></a>
+      <li class="{{ Request::is('admin/artists') || Request::is('admin/artists/*') ? "active" : '' }}">
+          <a href="{!! route('artists') !!}"><i class="fa fa-male"></i> <span>Artists</span></a>
       </li>
       <li class="{{ Request::is('admin/categories') ? "active" : '' }}">
           <a href="{{ route('admin.categories.index') }}"><i class="fa fa-list"></i> <span>Categories</span></a>

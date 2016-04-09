@@ -134,6 +134,10 @@ class ArtistApiController extends InternalApiController
     public function search(Request $request)
     {
         $query = $request->q;
+        $type = $request->type;
+        if($type == 'users'){
+
+        }
         $artist = $this->artistRepository->findArtistByName($query);
         return $this->fractal->createData(
             new Collection($artist,
@@ -152,7 +156,7 @@ class ArtistApiController extends InternalApiController
     public function topArtists()
     {
         return $this->fractal->createData(
-            new Collection($this->artistRepository->getTrendingArtists(),
+            new Collection($this->artistRepository->getAllArtists(),
                 new ArtistCollectionTransformer))->toArray();
     }
 }

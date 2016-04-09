@@ -19,24 +19,24 @@
                 <!-- Widget: user widget style 1 -->
                 <div class="box box-widget widget-user">
                     <!-- Add the bg color to the header using any of the bg-* classes -->
-                    <div class="widget-user-header bg-black" style="background: url('{{ asset("img/photo1.png", false) }}') center center;">
-                        <h3 class="widget-user-username">Shatta Wale</h3>
-                        <h5 class="widget-user-desc">DanceHall</h5>
+                    <div class="widget-user-header bg-black" style="background: url('{{ asset($artist->get('backPic'), false) }}') center center;">
+                        <h3 class="widget-user-username">{{ $artist->get('name') }}</h3>
+                        <h5 class="widget-user-desc">{{ $artist->get('category')['name'] }}</h5>
                     </div>
                     <div class="widget-user-image">
-                        <img class="img-circle" src="{{ asset('img/user3-128x128.jpg', false) }}" alt="User Avatar">
+                        <img class="img-circle" src="{{ asset($artist->get('profilePic'), false) }}" alt="User Avatar">
                     </div>
                     <div class="box-footer">
                         <div class="row">
                             <div class="col-sm-6 border-right">
                                 <div class="description-block">
-                                    <h5 class="description-header">3,200</h5>
+                                    <h5 class="description-header">{{ $artist->get('tracks') }}</h5>
                                     <span class="description-text">TRACKS</span>
                                 </div><!-- /.description-block -->
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                                 <div class="description-block">
-                                    <h5 class="description-header">13,000</h5>
+                                    <h5 class="description-header">{{ $artist->get('followers') }}</h5>
                                     <span class="description-text">FOLLOWERS</span>
                                 </div><!-- /.description-block -->
                             </div><!-- /.col -->
@@ -57,18 +57,20 @@
                                     <thead>
                                     <tr>
                                         <th>Title</th>
-                                        <th>Artist(s)</th>
                                         <th>Stream(s)</th>
                                         <th>Download(s)</th>
-                                        <th>Favorite(s)</th>
+                                        <th>Like(s)</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
-                                        <td class="mailbox-subject"><b>AdminLTE 2.0 Issue</b> - Trying to find a solution to this problem...</td>
-                                        <td class="mailbox-attachment"></td>
-                                    </tr>
+                                    @foreach($tracks as $track)
+                                        <tr>
+                                            <td class="mailbox-name">{{ $track['title'] }}</td>
+                                            <td class="mailbox-name">{{ $track['streams'] }}</td>
+                                            <td class="mailbox-name">{{ $track['downloads'] }}</td>
+                                            <td class="mailbox-name">{{ $track['likes'] }}</td>
+                                        </tr>
+                                    @endforeach
                                     </tbody>
                                 </table><!-- /.table -->
                             </div>

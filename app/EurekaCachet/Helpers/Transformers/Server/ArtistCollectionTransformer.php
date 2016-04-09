@@ -24,7 +24,8 @@ class ArtistCollectionTransformer extends TransformerAbstract
                 ?"localhost:8000". $artist->photos->where('type', 'background')->first()->path : null,
             'followers' => $artist->followers->count(),
             'tracks' => $artist->uploadedTracks->count(),
-            'genre' => $artist->category->name
+            'genre' => $artist->category->name,
+            'is_artist' => (boolean)$artist->is_artist
         ];
     }
 }

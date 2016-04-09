@@ -26,9 +26,9 @@ class ArtistItemTransformer extends TransformerAbstract
             'followers' => $artist->followers->count(),
             'tracks' => $artist->uploadedTracks->count(),
             "profilePic" =>  $artist->photos->where('type', 'avatar')->first()
-                ?"localhost:8000". $artist->photos->where('type', 'avatar')->first()->path : null,
+                ? $artist->photos->where('type', 'avatar')->first()->path : null,
             "backPic" => $artist->photos->where('type', 'background')->first()
-                ?"localhost:8000". $artist->photos->where('type', 'background')->first()->path : null,
+                ? $artist->photos->where('type', 'background')->first()->path : null,
         ];
     }
 }

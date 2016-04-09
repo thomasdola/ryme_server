@@ -19,7 +19,8 @@
                 <div class="box-body">
                     <div class="form-group">
                         <label for="email">Email address</label>
-                        <input name="email" type="email" class="form-control" id="email" placeholder="Enter email">
+                        <input name="email" type="email" value="{{ Auth::user()->email }}"
+                               class="form-control" id="email" placeholder="Enter email">
                     </div>
                 </div><!-- /.box-body -->
 

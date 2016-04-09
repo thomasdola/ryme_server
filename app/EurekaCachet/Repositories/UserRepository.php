@@ -209,4 +209,13 @@ class UserRepository
         }
         return true;
     }
+
+    public function findUserByName($name, $withRequestOn)
+    {
+        return $this->user->where('stage_name', 'like', "%{$name}%")
+            ->where(function($query) use ($withRequestOn){
+                $query->where('is_request_active', $withRequestOn);
+            })
+            ->get();
+    }
 }

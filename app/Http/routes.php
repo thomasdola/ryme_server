@@ -20,7 +20,7 @@ Route::group(['middleware' => ['web'], 'prefix'=>'admin'], function () {
     Route::group(['middleware' => 'auth'], function(){
         Route::get('/dashboard',['as'=>'dashboard', 'uses'=>'PagesController@dashboard']);
         Route::get('/artists', ['as'=>'artists', 'uses'=>'ArtistsController@index']);
-        Route::get('/artists/show', ['as'=>'artist', 'uses'=>'ArtistsController@show']);
+        Route::get('/artists/{id}', ['as'=>'artists.show', 'uses'=>'ArtistsController@show']);
         Route::resource('categories', 'CategoriesController');
         Route::resource('users', 'UsersController');
         Route::resource('ads', 'AdsController');
@@ -33,6 +33,8 @@ Route::group(['prefix'=>'admin/internal', 'middleware' => ['api']], function(){
 
     Route::group(['namespace'=>'InternalApi'], function(){
 
+        Route::get('/local/search', ['as'=>'users.search', 'uses'=>'SearchLocalApiController@search']);
+
         Route::get('/dashboard/total-users', ['uses'=>'UsersApiController@totalUsers']);
         Route::get('/dashboard/total-tracks', ['uses'=>'TrackApiController@totalTracks']);
         Route::get('/dashboard/total-artists', ['uses'=>'ArtistApiController@totalArtists']);
@@ -43,7 +45,6 @@ Route::group(['prefix'=>'admin/internal', 'middleware' => ['api']], function(){
         //Artists Page Internal Api ==> sort of (:)
         Route::get('/artists', ['as'=>'artists.all', 'uses'=>'ArtistApiController@all']);
         Route::get('/artists/data', ['as'=>'artists.page.data', 'uses'=>'ArtistApiController@getIndexPageData']);
-        Route::get('/artists/search', ['as'=>'artists.search', 'uses'=>'ArtistApiController@search']);
         Route::get('/artists/trending', ['as'=>'artists.trending', 'uses'=>'ArtistApiController@trending']);
         Route::get('/artists/requests', ['as'=>'artists.requests', 'uses'=>'ArtistApiController@requests']);
         Route::get('/artists/{id}', ['as'=>'artists.single', 'uses'=>'ArtistApiController@single']);

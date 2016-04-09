@@ -11295,12 +11295,15 @@ exports.default = {
 	props: ['artist'],
 	computed: {
 		avatar: function avatar() {
-			return this.artist.profilePic;
+			return 'this.artist.profilePic}';
+		},
+		profile_link: function profile_link() {
+			return 'artists/' + this.artist.id;
 		}
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<img :src=\"avatar\" alt=\"Artist Image\">\n<a class=\"users-list-name\" href=\"#\">{{ artist.name }}</a>\n<!-- <span class=\"users-list-date\">Today</span> -->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<img :src=\"avatar\" alt=\"Artist Image\">\n<a class=\"users-list-name\" :href=\"profile_link\">{{ artist.name }}</a>\n<!-- <span class=\"users-list-date\">Today</span> -->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
